@@ -9,6 +9,11 @@
     home-manager.url = "github:nix-community/home-manager/release-23.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    darwin = {
+      url = "github:LnL7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
 
@@ -23,9 +28,24 @@
     nixosConfigurations = {
       # FIXME replace with your hostname
       your-hostname = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; }; # Pass flake inputs to our config
+        specialArgs = {
+          inherit inputs;
+          vars = (import ./lib/vars.nix) { isDarwin = false; };
+        }; # Pass flake inputs to our config
+        system = "x86_64-linux";
         # > Our main nixos configuration file <
-        modules = [ ./nixos/configuration.nix ];
+        modules = [
+          ./nixos/configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useUserPackages = true;
+            home-manager.users.dan = import ./home-manager/home.nix;
+            home-manager.extraSpecialArgs = {
+              inherit inputs;
+              vars = (import ./lib/vars.nix) { isDarwin = false; };
+            };
+          }
+        ];
       };
     };
 
@@ -33,10 +53,21 @@
     # Available through 'home-manager --flake .#your-username@your-hostname'
     homeConfigurations = {
       # FIXME replace with your username@hostname
-      "your-username@your-hostname" = home-manager.lib.homeManagerConfiguration {
+      "dan@arcee.local" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = { inherit inputs; }; # Pass flake inputs to our config
+        extraSpecialArgs = {
+          inherit inputs;
+          vars = (import ./lib/vars.nix) { isDarwin = false; };
+        }; # Pass flake inputs to our config
         # > Our main home-manager configuration file <
+        modules = [ ./home-manager/home.nix ];
+      };
+      "mac" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+        extraSpecialArgs = {
+          inherit inputs;
+          vars = (import ./lib/vars.nix) { isDarwin = true; };
+        };
         modules = [ ./home-manager/home.nix ];
       };
     };
