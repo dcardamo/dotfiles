@@ -55,6 +55,9 @@ defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
 # (e.g. enable Tab in modal dialogs)
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
+# enable press and hold to repeat keys
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
 # Disable machine sleep while charging
 #sudo pmset -c sleep 0
 

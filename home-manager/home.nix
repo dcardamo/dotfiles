@@ -1,21 +1,12 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 
-{ inputs, lib, config, pkgs, ... }: 
+{ inputs, lib, config, pkgs, ... }:
 let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
   inherit (stdenv) isDarwin;
 in {
-  # You can import other home-manager modules here
-  imports = [
-    # If you want to use home-manager modules from other flakes (such as nix-colors):
-    # inputs.nix-colors.homeManagerModule
-
-    # You can also split up your configuration and import pieces of it here:
-    # ./nvim.nix
-  ];
-
   nixpkgs = {
     # You can add overlays here
     overlays = [
@@ -34,7 +25,7 @@ in {
       # Disable if you don't want unfree packages
       allowUnfree = true;
       # Workaround for https://github.com/nix-community/home-manager/issues/2942
-      allowUnfreePredicate = (_: true);
+      # allowUnfreePredicate = (_: true);
     };
   };
 
@@ -42,11 +33,11 @@ in {
   home.homeDirectory = if isLinux then "/home/dan" else "/Users/dan";
 
   programs.neovim.enable = true;
-  home.packages = with pkgs; 
-    [ spotify ];
+  home.packages = with pkgs;
+    [ spotify ]
     ++ lib.lists.optionals isDarwin [
       # put macOS specific packages here
-      xcodes
+      # TODO
     ] ++ lib.lists.optionals isLinux [
       #put Linux specific packages here
       vlc
@@ -56,16 +47,34 @@ in {
     builtins.elem (lib.getName pkg) [
       "spotify"
       "discord"
+      "1password"
+      "1password-cli"
       # This is required for pkgs.nodePackages_latest.vscode-langservers-extracted on NixOS
       # however VS Code should NOT be installed on this system!
       # Use VS Codium instead: https://github.com/VSCodium/vscodium
       "vscode"
     ];
-   
+
+  # You can import other home-manager modules here
+  imports = [
+    ./modules/base.nix
+    #./modules/nvim.nix
+    ./modules/fish.nix
+    ./modules/fzf.nix
+    ./modules/starship.nix
+    ./modules/bat.nix
+    ./modules/git.nix
+    ./modules/ssh.nix
+    ./modules/wezterm.nix
+  ];
 
   # Enable home-manager and git
   programs.home-manager.enable = true;
   programs.git.enable = true;
+  # direnv integration for flakes
+  programs.direnv.enable = true;
+  programs.direnv.nix-direnv.enable = true;
+
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
