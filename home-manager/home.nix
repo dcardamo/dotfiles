@@ -41,9 +41,27 @@ in {
   home.username = "dan";
   home.homeDirectory = if isLinux then "/home/dan" else "/Users/dan";
 
-  # Add stuff for your user as you see fit:
-  # programs.neovim.enable = true;
-  # home.packages = with pkgs; [ steam ];
+  programs.neovim.enable = true;
+  home.packages = with pkgs; 
+    [ spotify ];
+    ++ lib.lists.optionals isDarwin [
+      # put macOS specific packages here
+      xcodes
+    ] ++ lib.lists.optionals isLinux [
+      #put Linux specific packages here
+      vlc
+    ];
+
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [
+      "spotify"
+      "discord"
+      # This is required for pkgs.nodePackages_latest.vscode-langservers-extracted on NixOS
+      # however VS Code should NOT be installed on this system!
+      # Use VS Codium instead: https://github.com/VSCodium/vscodium
+      "vscode"
+    ];
+   
 
   # Enable home-manager and git
   programs.home-manager.enable = true;

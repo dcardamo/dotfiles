@@ -1,0 +1,36 @@
+tap "homebrew/cask"
+tap "homebrew/cask-fonts"
+
+brew "mas"
+
+cask "betterdisplay"
+cask "github"
+cask "docker"
+cask "font-fira-code-nerd-font"
+cask "github"
+cask "google-drive"
+cask "hazel"
+cask "raycast"
+cask "spotify"
+cask "stats"
+cask "soulver"
+cask "wez/wezterm/wezterm"
+cask "visual-studio-code"
+#cask "steermouse"  -- hammerspoon?
+
+mas "Kindle", id: 405399194
+mas "Microsoft Excel", id: 462058435
+mas "Microsoft Word", id: 462054704
+mas "1Password for Safari", id: 1569813296
+mas "Home Assistant", id: 1099568401
+mas "Numbers", id:  409203825
+mas "Paprika Recipe Manager 3", id: 1303222628
+mas "WireGuard", id: 1451685025
+mas "Save to Reader", id: 1640236961
+mas "Kagi Inc.", id: 1622835804
+mas "Keynote", id: 409183694
+mas "Pages", id: 409201541
+mas "AdGuard for Safari", id: 1440147259
+mas "Soulver 3", id: 1508732804
+mas "Darkroom", id: 953286746
+mas "Pixelmator Pro", id: 1289583905
