@@ -21,5 +21,3 @@ Make sure that this repo is checked out first to ~/git/dotfiles
     * mouse keybindings so I don't need steermouse
     * keyboard bindings.  capslock is control
     * homerow mods
-* setup astronvim
-* Try catppuccin theme
