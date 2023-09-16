@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
-let
+{
+  config,
+  pkgs,
+  ...
+}: let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
 in {

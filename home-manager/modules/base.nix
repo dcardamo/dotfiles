@@ -1,5 +1,9 @@
-{ pkgs, lib, vars, ... }:
-let
+{
+  pkgs,
+  lib,
+  vars,
+  ...
+}: let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
   inherit (stdenv) isDarwin;
@@ -13,9 +17,7 @@ in {
       [languages]
       rust = ["${pkgs.rustfmt}/bin/rustfmt"]
       go = ["${pkgs.go}/bin/gofmt"]
-      lua = ["${pkgs.stylua}/bin/stylua --config-path ${
-        ../../conf/stylua.toml
-      } -s -"]
+      lua = ["${pkgs.stylua}/bin/stylua --config-path ${../../conf/stylua.toml} -s -"]
       nix = ["${pkgs.nixfmt}/bin/nixfmt"]
     '';
     "ripgrep_ignore".text = ''
@@ -46,6 +48,7 @@ in {
 
       # formatters and linters
       nixfmt
+      alejandra
       rustfmt
       shfmt
       cbfmt
@@ -83,6 +86,6 @@ in {
       clippy
       glow
     ]
-    ++ lib.lists.optionals isLinux [  ]
-    ++ lib.lists.optionals isDarwin [  ];
+    ++ lib.lists.optionals isLinux []
+    ++ lib.lists.optionals isDarwin [];
 }

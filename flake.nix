@@ -21,6 +21,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    alejandra = {
+      url = "github:kamadorueda/alejandra/3.0.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
@@ -30,7 +34,14 @@
     # nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs = { nixpkgs, home-manager, ... }@inputs: {
+  outputs = {
+    nixpkgs,
+    home-manager,
+    ...
+  } @ inputs: {
+    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
+    formmater.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixpkgs-fmt;
+
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
@@ -38,7 +49,7 @@
       your-hostname = nixpkgs.lib.nixosSystem {
         specialArgs = {
           inherit inputs;
-          vars = (import ./lib/vars.nix) { isDarwin = false; };
+          vars = (import ./lib/vars.nix) {isDarwin = false;};
         }; # Pass flake inputs to our config
         system = "x86_64-linux";
         # > Our main nixos configuration file <
@@ -50,7 +61,7 @@
             home-manager.users.dan = import ./home-manager/home.nix;
             home-manager.extraSpecialArgs = {
               inherit inputs;
-              vars = (import ./lib/vars.nix) { isDarwin = false; };
+              vars = (import ./lib/vars.nix) {isDarwin = false;};
             };
           }
         ];
@@ -65,16 +76,16 @@
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = {
           inherit inputs;
-          vars = (import ./lib/vars.nix) { isDarwin = false; };
+          vars = (import ./lib/vars.nix) {isDarwin = false;};
         }; # Pass flake inputs to our config
         # > Our main home-manager configuration file <
-        modules = [ ./home-manager/home.nix ];
+        modules = [./home-manager/home.nix];
       };
       "mac" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.aarch64-darwin;
         extraSpecialArgs = {
           inherit inputs;
-          vars = (import ./lib/vars.nix) { isDarwin = true; };
+          vars = (import ./lib/vars.nix) {isDarwin = true;};
         };
         modules = [
           ./home-manager/home.nix

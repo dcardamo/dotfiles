@@ -1,5 +1,9 @@
-{ pkgs, lib, vars, ... }:
-let
+{
+  pkgs,
+  lib,
+  vars,
+  ...
+}: let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
 in {
@@ -13,42 +17,45 @@ in {
   };
 
   home.packages = with pkgs;
-    [ thefuck tealdeer tokei cachix _1password ]
-    ++ lib.lists.optionals isLinux [ xclip ];
+    [thefuck tealdeer tokei cachix _1password]
+    ++ lib.lists.optionals isLinux [xclip];
 
   programs.gh.enable = true;
 
   programs.fish = {
     enable = true;
 
-    plugins = [{
-      name = "foreign-env";
-      inherit (pkgs.fishPlugins.foreign-env) src;
-    }];
+    plugins = [
+      {
+        name = "foreign-env";
+        inherit (pkgs.fishPlugins.foreign-env) src;
+      }
+    ];
 
-    shellAliases = {
-      copy = vars.copyCmd;
-      paste = vars.pasteCmd;
-      cat = "bat";
-      gogit = "cd ~/git";
-      "!!" = "eval \\$history[1]";
-      ls = "${pkgs.lsd}/bin/lsd --group-directories-first";
-      la = "ls -a";
-      ll = "ls -l --git";
-      l = "ls -laH";
-      lg = "ls -lG";
-      vi = "nvim";
-      clear = "clear && _prompt_move_to_bottom";
-      nix-apply = if pkgs.stdenv.isDarwin then
-        "home-manager switch --flake ~/git/dotfiles/.#mac"
-      else
-        "sudo nixos-rebuild switch --flake ~/git/dotfiles/.#pc";
-      oplocal =
-        "./js/oph/dist/mac-arm64/1Password.app/Contents/MacOS/1Password";
-    } // pkgs.lib.optionalAttrs isLinux {
-      cfgnix = "sudo nvim /etc/nixos/configuration.nix";
-      restart-gui = "sudo systemctl restart display-manager.service";
-    };
+    shellAliases =
+      {
+        copy = vars.copyCmd;
+        paste = vars.pasteCmd;
+        cat = "bat";
+        gogit = "cd ~/git";
+        "!!" = "eval \\$history[1]";
+        ls = "${pkgs.lsd}/bin/lsd --group-directories-first";
+        la = "ls -a";
+        ll = "ls -l --git";
+        l = "ls -laH";
+        lg = "ls -lG";
+        vi = "nvim";
+        clear = "clear && _prompt_move_to_bottom";
+        nix-apply =
+          if pkgs.stdenv.isDarwin
+          then "home-manager switch --flake ~/git/dotfiles/.#mac"
+          else "sudo nixos-rebuild switch --flake ~/git/dotfiles/.#pc";
+        oplocal = "./js/oph/dist/mac-arm64/1Password.app/Contents/MacOS/1Password";
+      }
+      // pkgs.lib.optionalAttrs isLinux {
+        cfgnix = "sudo nvim /etc/nixos/configuration.nix";
+        restart-gui = "sudo systemctl restart display-manager.service";
+      };
 
     shellInit = ''
       set -g fish_prompt_pwd_dir_length 20
@@ -139,7 +146,11 @@ in {
         set -l PROJECT_PATH (git config --get remote.origin.url | sed 's/^ssh.*@[^/]*\(\/.*\).git/\1/g')
         set -l CURRENT_BRANCH_NAME (git branch --show-current)
         set -l GITLAB_MR_URL "$GITLAB_BASE_URL$PROJECT_PATH/-/merge_requests/new?merge_request%5Bsource_branch%5D=$CURRENT_BRANCH_NAME"
-        ${if isLinux then "xdg-open" else "open"} "$GITLAB_MR_URL"
+        ${
+          if isLinux
+          then "xdg-open"
+          else "open"
+        } "$GITLAB_MR_URL"
       '';
       pr = ''
         set -l PROJECT_PATH (git config --get remote.origin.url)
@@ -153,8 +164,10 @@ in {
           echo "Error: not a git repository"
         else
           ${
-            if isLinux then "xdg-open" else "open"
-          } "https://github.com/$PROJECT_PATH/compare/$MASTER_BRANCH...$GIT_BRANCH"
+          if isLinux
+          then "xdg-open"
+          else "open"
+        } "https://github.com/$PROJECT_PATH/compare/$MASTER_BRANCH...$GIT_BRANCH"
         end
       '';
       login = {
@@ -174,13 +187,16 @@ in {
             # otherwise append query string with ?
             set -f fill_session_url "$url?$id=$id"
           end
-          ${if isLinux then "xdg-open" else "open"} "$fill_session_url"
+          ${
+            if isLinux
+            then "xdg-open"
+            else "open"
+          } "$fill_session_url"
         '';
       };
       opauthsock = {
-        argumentNames = [ "mode" ];
-        description =
-          "Configure 1Password SSH agent to use production or debug socket path";
+        argumentNames = ["mode"];
+        description = "Configure 1Password SSH agent to use production or debug socket path";
         body = ''
           # complete -c opauthsock -n __fish_use_subcommand -xa prod -d 'use production socket path'
           # complete -c opauthsock -n __fish_use_subcommand -xa debug -d 'use debug socket path'

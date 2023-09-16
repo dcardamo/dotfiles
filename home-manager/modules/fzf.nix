@@ -1,5 +1,8 @@
-{ pkgs, lib, ... }:
-let
+{
+  pkgs,
+  lib,
+  ...
+}: let
   key-bindings = [
     # you can use the command `fish_key_reader` to get the key codes to use
     {
@@ -45,8 +48,9 @@ in {
     interactiveShellInit = ''
       for mode in insert default normal
       ${lib.concatMapStrings (keybind: ''
-        bind -M $mode ${keybind.lhs} ${keybind.rhs}
-      '') key-bindings}
+          bind -M $mode ${keybind.lhs} ${keybind.rhs}
+        '')
+        key-bindings}
       end
     '';
     functions = {
