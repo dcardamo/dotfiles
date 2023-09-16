@@ -1,7 +1,12 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 
-{ inputs, lib, config, pkgs, ... }: {
+{ inputs, lib, config, pkgs, ... }: 
+let
+  inherit (pkgs) stdenv;
+  inherit (stdenv) isLinux;
+  inherit (stdenv) isDarwin;
+in {
   # You can import other home-manager modules here
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
@@ -33,11 +38,8 @@
     };
   };
 
-  # TODO: Set your username
-  home = {
-    username = "your-username";
-    homeDirectory = "/home/your-username";
-  };
+  home.username = "dan";
+  home.homeDirectory = if isLinux then "/home/dan" else "/Users/dan";
 
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
