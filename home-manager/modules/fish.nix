@@ -37,6 +37,7 @@ in {
       ll = "ls -l --git";
       l = "ls -laH";
       lg = "ls -lG";
+      vi = "nvim";
       clear = "clear && _prompt_move_to_bottom";
       nix-apply = if pkgs.stdenv.isDarwin then
         "home-manager switch --flake ~/git/dotfiles/.#mac"

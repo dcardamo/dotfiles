@@ -32,7 +32,6 @@ in {
   home.username = "dan";
   home.homeDirectory = if isLinux then "/home/dan" else "/Users/dan";
 
-  programs.neovim.enable = true;
   home.packages = with pkgs;
     [ spotify ]
     ++ lib.lists.optionals isDarwin [
@@ -58,7 +57,8 @@ in {
   # You can import other home-manager modules here
   imports = [
     ./modules/base.nix
-    #./modules/nvim.nix
+    ./modules/editors/nvim
+    #./modules/editors/helix/helix.nix
     ./modules/fish.nix
     ./modules/fzf.nix
     ./modules/starship.nix
