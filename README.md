@@ -3,10 +3,13 @@
 ## Installation
 Make sure that this repo is checked out first to ~/git/dotfiles
 ```
-./init.bash
+make install
 ```
 
 ## Update
+```
+make update
+```
 
 
 ## Inspiration
