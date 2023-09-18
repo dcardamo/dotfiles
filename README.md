@@ -24,10 +24,3 @@ make update
     * mouse keybindings so I don't need steermouse
     * keyboard bindings.  capslock is control
     * homerow mods
-* setup raycast fully
-    * export its settings
-* setup mackup to backup/restore settings for some apps:
-    * Raycast
-    * Hazel
-    * Adobe Phototshop Lightroom CC
-    * Stats
