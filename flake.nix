@@ -55,6 +55,7 @@
         # > Our main nixos configuration file <
         modules = [
           ./nixos/configuration.nix
+          inputs.nixvim.homeManagerModules.nixvim
           home-manager.nixosModules.home-manager
           {
             home-manager.useUserPackages = true;
@@ -79,7 +80,10 @@
           vars = (import ./lib/vars.nix) {isDarwin = false;};
         }; # Pass flake inputs to our config
         # > Our main home-manager configuration file <
-        modules = [./home-manager/home.nix];
+        modules = [
+          ./home-manager/home.nix
+          inputs.nixvim.homeManagerModules.nixvim
+        ];
       };
       "mac" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.aarch64-darwin;

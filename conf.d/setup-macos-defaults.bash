@@ -57,6 +57,8 @@ defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 # enable press and hold to repeat keys
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+defaults write -g InitialKeyRepeat -int 20 # normal minimum is 15 (225 ms)
+defaults write -g KeyRepeat -int 1 # normal minimum is 2 (30 ms)
 
 # Disable machine sleep while charging
 #sudo pmset -c sleep 0
@@ -130,6 +132,12 @@ defaults write com.apple.dock autohide -bool true
 
 # Don’t show recent applications in Dock
 defaults write com.apple.dock show-recents -bool false
+
+defaults write com.apple.dock "tilesize" -int "36"
+
+mkdir -p ~/Pictures/Screenshots
+defaults write com.apple.screencapture location ~/Pictures/Screenshots
+defaults write com.apple.screencapture type jpg
 
 # Hot corners
 # Possible values:

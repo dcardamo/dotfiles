@@ -6,6 +6,7 @@
 }: let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
+  inherit (stdenv) isDarwin;
 in {
   home.sessionVariables = {
     DOTNET_CLI_TELEMETRY_OPTOUT = "1";
@@ -19,8 +20,6 @@ in {
   home.packages = with pkgs;
     [thefuck tealdeer tokei cachix _1password]
     ++ lib.lists.optionals isLinux [xclip];
-
-  programs.gh.enable = true;
 
   programs.fish = {
     enable = true;
@@ -78,16 +77,20 @@ in {
       end
     '';
 
-    interactiveShellInit = ''
-      # fish_vi_key_bindings
-      # bind -M insert jk "if commandline -P; commandline -f cancel; else; set fish_bind_mode default; commandline -f backward-char force-repaint; end"
+    interactiveShellInit =
+      ''
+        # fish_vi_key_bindings
+        # bind -M insert jk "if commandline -P; commandline -f cancel; else; set fish_bind_mode default; commandline -f backward-char force-repaint; end"
 
-      # I like to keep the prompt at the bottom rather than the top
-      # of the terminal window so that running `clear` doesn't make
-      # me move my eyes from the bottom back to the top of the screen;
-      # keep the prompt consistently at the bottom
-      _prompt_move_to_bottom # call function manually to load it since event handlers don't get autoloaded
-    '';
+        # I like to keep the prompt at the bottom rather than the top
+        # of the terminal window so that running `clear` doesn't make
+        # me move my eyes from the bottom back to the top of the screen;
+        # keep the prompt consistently at the bottom
+        _prompt_move_to_bottom # call function manually to load it since event handlers don't get autoloaded
+      ''
+      + lib.strings.optionalString isDarwin ''
+        fish_add_path /opt/homebrew/bin
+      '';
 
     functions = {
       fish_greeting = "";
@@ -139,84 +142,6 @@ in {
             end
           end
           command nix-shell $argv --run "exec fish"
-        '';
-      };
-      mr = ''
-        set -l GITLAB_BASE_URL "https://gitlab.1password.io"
-        set -l PROJECT_PATH (git config --get remote.origin.url | sed 's/^ssh.*@[^/]*\(\/.*\).git/\1/g')
-        set -l CURRENT_BRANCH_NAME (git branch --show-current)
-        set -l GITLAB_MR_URL "$GITLAB_BASE_URL$PROJECT_PATH/-/merge_requests/new?merge_request%5Bsource_branch%5D=$CURRENT_BRANCH_NAME"
-        ${
-          if isLinux
-          then "xdg-open"
-          else "open"
-        } "$GITLAB_MR_URL"
-      '';
-      pr = ''
-        set -l PROJECT_PATH (git config --get remote.origin.url)
-        set -l PROJECT_PATH (string replace "git@github.com:" "" "$PROJECT_PATH")
-        set -l PROJECT_PATH (string replace "https://github.com/" "" "$PROJECT_PATH")
-        set -l PROJECT_PATH (string replace ".git" "" "$PROJECT_PATH")
-        set -l GIT_BRANCH (git branch --show-current || echo "")
-        set -l MASTER_BRANCH (git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
-
-        if test -z "$GIT_BRANCH"
-          echo "Error: not a git repository"
-        else
-          ${
-          if isLinux
-          then "xdg-open"
-          else "open"
-        } "https://github.com/$PROJECT_PATH/compare/$MASTER_BRANCH...$GIT_BRANCH"
-        end
-      '';
-      login = {
-        description = "Select a 1Password item via fzf and open it in browser";
-        body = ''
-          set -l selected (op item list --categories login --format json | ${pkgs.jq}/bin/jq -r '.[].title' | fzf --height 40% --layout reverse | xargs op item get --format=json | ${pkgs.jq}/bin/jq -r '.id, .urls[0].href')
-          if [ -z "$selected" ]
-            commandline -f repaint
-            return
-          end
-          set -l id $selected[1]
-          set -l url $selected[2]
-          # if it has a ? then append query string with &
-          if string match -e -- '\?' "$url"
-            set -f fill_session_url "$url&$id=$id"
-          else
-            # otherwise append query string with ?
-            set -f fill_session_url "$url?$id=$id"
-          end
-          ${
-            if isLinux
-            then "xdg-open"
-            else "open"
-          } "$fill_session_url"
-        '';
-      };
-      opauthsock = {
-        argumentNames = ["mode"];
-        description = "Configure 1Password SSH agent to use production or debug socket path";
-        body = ''
-          # complete -c opauthsock -n __fish_use_subcommand -xa prod -d 'use production socket path'
-          # complete -c opauthsock -n __fish_use_subcommand -xa debug -d 'use debug socket path'
-          # complete -c opauthsock -n 'not __fish_use_subcommand' -f
-
-            if test -z $mode
-              echo $SSH_AUTH_SOCK
-            else
-              set -f prefix "$HOME/.1password"
-              if [ "$(uname)" = Darwin ]
-                set -f prefix "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password"
-              end
-              echo "setting ssh auth sock to: $mode"
-              switch $mode
-                case prod
-                  set -g -x SSH_AUTH_SOCK "$prefix/t/agent.sock"
-                case debug
-                  set -g -x SSH_AUTH_SOCK "$prefix/t/debug/agent.sock"
-              end
-            end
         '';
       };
     };

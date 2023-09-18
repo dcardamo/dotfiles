@@ -1,25 +1,23 @@
-tap "homebrew/cask"
-tap "homebrew/cask-fonts"
 tap "buo/cask-upgrade"
 
 # set arguments for all 'brew install --cask' commands
 cask_args appdir: "~/Applications", require_sha: true
 
 brew "mas"
+brew "mackup"
 
 cask "betterdisplay"
 cask "github"
 cask "docker"
 cask "font-fira-code-nerd-font"
-cask "github"
 cask "google-drive", { require_sha: false }
 cask "hazel"
 cask "raycast"
 cask "spotify"
 cask "stats"
-cask "soulver"
-cask "wez/wezterm/wezterm"
+cask "wezterm"
 cask "visual-studio-code"
+cask "spaceman"
 #cask "steermouse"  -- hammerspoon?
 
 mas "Kindle", id: 405399194

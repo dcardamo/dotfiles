@@ -88,4 +88,6 @@ in {
     ]
     ++ lib.lists.optionals isLinux []
     ++ lib.lists.optionals isDarwin [];
+
+  programs.gh.enable = true;
 }

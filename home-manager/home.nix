@@ -65,8 +65,7 @@ in {
   # You can import other home-manager modules here
   imports = [
     ./modules/base.nix
-    ./modules/editors/nvim
-    #./modules/editors/helix/helix.nix
+    ./modules/nvim.nix
     ./modules/fish.nix
     ./modules/fzf.nix
     ./modules/starship.nix
@@ -74,6 +73,7 @@ in {
     ./modules/git.nix
     ./modules/ssh.nix
     ./modules/wezterm.nix
+    ./modules/darwin/mackup.nix
   ];
 
   # Enable home-manager and git

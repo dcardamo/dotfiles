@@ -11,3 +11,9 @@ update: update-nix update-mac
 
 format:
 	alejandra .
+
+backup:
+	mackup backup
+
+restore:
+	mackup restore
