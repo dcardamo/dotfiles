@@ -143,7 +143,7 @@
         }
       },
       "google-drive": {
-        "version": "81.0.4",
+        "version": "81.0.5",
         "options": {
           "require_sha": false,
           "full_name": "google-drive",
@@ -174,7 +174,7 @@
         }
       },
       "spotify": {
-        "version": "1.2.19.941,bf202593,417",
+        "version": "1.2.20.1216,e7a7b92f,1160",
         "options": {
           "full_name": "spotify",
           "args": {
@@ -223,6 +223,16 @@
         "version": "1.0",
         "options": {
           "full_name": "spaceman",
+          "args": {
+            "appdir": "~/Applications",
+            "require_sha": true
+          }
+        }
+      },
+      "hammerspoon": {
+        "version": "0.9.100",
+        "options": {
+          "full_name": "hammerspoon",
           "args": {
             "appdir": "~/Applications",
             "require_sha": true
@@ -295,13 +305,17 @@
       "Adobe Lightroom": {
         "id": "1451544217",
         "version": "6.5"
+      },
+      "Hidden Bar": {
+        "id": "1452453066",
+        "version": "1.8"
       }
     }
   },
   "system": {
     "macos": {
       "sonoma": {
-        "HOMEBREW_VERSION": "4.1.11",
+        "HOMEBREW_VERSION": "4.1.12",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "15.0.0.0.1.1694021235",

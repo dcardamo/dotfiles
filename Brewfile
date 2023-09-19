@@ -4,20 +4,19 @@ tap "buo/cask-upgrade"
 cask_args appdir: "~/Applications", require_sha: true
 
 brew "mas"
-brew "mackup"
 
 cask "betterdisplay"
-cask "github"
 cask "docker"
 cask "font-fira-code-nerd-font"
+cask "github"
 cask "google-drive", { require_sha: false }
+cask "hammerspoon"
 cask "hazel"
 cask "raycast"
 cask "spotify"
 cask "stats"
 cask "wezterm"
 cask "visual-studio-code"
-cask "spaceman"
 #cask "steermouse"  -- hammerspoon?
 
 mas "Kindle", id: 405399194
@@ -37,3 +36,4 @@ mas "Soulver 3", id: 1508732804
 mas "Darkroom", id: 953286746
 mas "Pixelmator Pro", id: 1289583905
 mas "Adobe Lightroom", id: 1451544217
+mas "Hidden Bar", id: 1452453066

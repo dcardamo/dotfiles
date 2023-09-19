@@ -73,8 +73,17 @@ in {
     ./modules/git.nix
     ./modules/ssh.nix
     ./modules/wezterm.nix
-    ./modules/darwin/mackup.nix
+    ./modules/darwin/hammerspoon
   ];
+
+  xdg.configFile = {
+    "nix/nix.conf".text = ''
+      experimental-features = nix-command flakes
+      # see https://github.com/nix-community/nix-direnv#via-home-manager
+      keep-derivations = true
+      keep-outputs = true
+    '';
+  };
 
   # Enable home-manager and git
   programs.home-manager.enable = true;

@@ -82,6 +82,9 @@ in {
         # fish_vi_key_bindings
         # bind -M insert jk "if commandline -P; commandline -f cancel; else; set fish_bind_mode default; commandline -f backward-char force-repaint; end"
 
+        # abbreviations auto expand
+        abbr -a --position anywhere -- R "| rg "
+
         # I like to keep the prompt at the bottom rather than the top
         # of the terminal window so that running `clear` doesn't make
         # me move my eyes from the bottom back to the top of the screen;
