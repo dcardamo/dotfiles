@@ -74,6 +74,7 @@ in {
     ./modules/git.nix
     ./modules/ssh.nix
     ./modules/wezterm.nix
+    ./modules/zellij
     ./modules/darwin/hammerspoon
   ];
 
