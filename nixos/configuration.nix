@@ -3,7 +3,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   imports =
@@ -69,20 +69,20 @@
   # Allow unfree packages
   nixpkgs = {
     overlays = [
-    # If you want to use overlays exported from other flakes:
-    # neovim-nightly-overlay.overlays.default
+      # If you want to use overlays exported from other flakes:
+      # neovim-nightly-overlay.overlays.default
 
-    # Or define it inline, for example:
-    # (final: prev: {
-    #   hi = final.hello.overrideAttrs (oldAttrs: {
-    #     patches = [ ./change-hello-to-hi.patch ];
-    #   });
-    # })
-  ];
-  config = {
+      # Or define it inline, for example:
+      # (final: prev: {
+      #   hi = final.hello.overrideAttrs (oldAttrs: {
+      #     patches = [ ./change-hello-to-hi.patch ];
+      #   });
+      # })
+    ];
+    config = {
       allowUnfree = true;
-    }
-  }
+    };
+  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -105,9 +105,9 @@
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
-    permitRootLogin = "no"
+    permitRootLogin = "no";
     passwordAuthentication = true;
-  }
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
