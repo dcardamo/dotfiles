@@ -42,6 +42,8 @@ in {
       cargo
       jq
       mosh
+      zellij
+      gnumake
 
       # for compiling Treesitter parsers
       gcc

@@ -168,6 +168,7 @@ in {
       register = "unnamedplus";
     };
     options = {
+      swapfile = false;
       autoindent = true;
       expandtab = true;
       hidden = true;

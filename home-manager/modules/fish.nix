@@ -15,6 +15,8 @@ in {
     GOPATH = "$HOME/go";
     GIT_MERGE_AUTOEDIT = "no";
     NEXT_TELEMETRY_DISABLED = "1";
+    EDITOR = "nvim";
+    VISUAL = "nvim";
   };
 
   home.packages = with pkgs;
