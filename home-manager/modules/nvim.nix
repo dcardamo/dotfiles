@@ -158,7 +158,7 @@ in {
         # Noice -- End
       };
       insert = {
-        "jj" = {
+        "jk" = {
           desc = "Esc";
           action = "<Esc>";
         };
