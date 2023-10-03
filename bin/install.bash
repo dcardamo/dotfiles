@@ -41,12 +41,12 @@ if [ "$(uname -s)" == "Darwin" ]; then
   esac
 elif ! command -v nixos-version >/dev/null 2>&1; then
   # if NOT on NixOS
-  if ! test -f "/etc/NIXOS"; then
-    # if on Linux but not NixOS, install nixGL
-    echo "Installing nixGL"
-    nix-channel --add https://github.com/guibou/nixGL/archive/main.tar.gz nixgl && nix-channel --update
-    nix-env -iA nixgl.auto.nixGLDefault
-  fi
+  #if ! test -f "/etc/NIXOS"; then
+  #  # if on Linux but not NixOS, install nixGL
+  #  echo "Installing nixGL"
+  #  nix-channel --add https://github.com/guibou/nixGL/archive/main.tar.gz nixgl && nix-channel --update
+  #  nix-env -iA nixgl.auto.nixGLDefault
+  #fi
 fi
 
 if [ "$(uname -s)" == "Darwin" ] && ! test -f /opt/homebrew; then
