@@ -65,6 +65,7 @@ in {
   # You can import other home-manager modules here
   imports = [
     ./modules/base.nix
+    inputs.nixvim.homeManagerModules.nixvim
     ./modules/nvim.nix
     ./modules/fish.nix
     ./modules/fzf.nix

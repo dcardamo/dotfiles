@@ -59,17 +59,6 @@ in {
     shellInit = ''
       set -g fish_prompt_pwd_dir_length 20
 
-      # Setting up SSH_AUTH_SOCK here rather than ~/.ssh/config
-      # because that overrides the environment variables,
-      # meaning I can't easily switch between the production and
-      # debug auth sockets while working on the 1Password desktop app
-      set -g -x SSH_TTY (tty)
-      if [ "$(uname)" = Darwin ]
-        set -g -x SSH_AUTH_SOCK "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-      else
-        set -g -x SSH_AUTH_SOCK "$HOME/.1password/agent.sock"
-      end
-
       # Source nix files, required to set fish as default shell, otherwise
       # it doesn't have the nix env vars
       if [ -e "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]
@@ -79,8 +68,8 @@ in {
 
     interactiveShellInit =
       ''
-        # fish_vi_key_bindings
-        # bind -M insert jk "if commandline -P; commandline -f cancel; else; set fish_bind_mode default; commandline -f backward-char force-repaint; end"
+        fish_vi_key_bindings
+        bind -M insert jj "if commandline -P; commandline -f cancel; else; set fish_bind_mode default; commandline -f backward-char force-repaint; end"
 
         # abbreviations auto expand
         abbr -a --position anywhere -- R "| rg "
