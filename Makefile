@@ -1,13 +1,8 @@
 install:
 	./bin/install.bash
 
-update-nix:
+update:
 	./bin/update.bash
-
-update-mac:
-	./bin/update-mac.bash
-
-update: update-nix update-mac
 
 format:
 	alejandra .
