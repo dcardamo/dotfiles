@@ -53,8 +53,7 @@
         system = "x86_64-linux";
         # > Our main nixos configuration file <
         modules = [
-          ./nixos/configuration.nix
-          inputs.nixvim.homeManagerModules.nixvim
+          ./nixos/beast/configuration.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useUserPackages = true;
@@ -64,6 +63,7 @@
               vars = (import ./lib/vars.nix) {isDarwin = false;};
             };
           }
+          inputs.nixvim.homeManagerModules.nixvim
         ];
       };
     };
@@ -71,18 +71,6 @@
     # Standalone home-manager configuration entrypoint
     # Available through 'home-manager --flake .#your-username@your-hostname'
     homeConfigurations = {
-      "beast" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {
-          inherit inputs;
-          vars = (import ./lib/vars.nix) {isDarwin = false;};
-        }; # Pass flake inputs to our config
-        # > Our main home-manager configuration file <
-        modules = [
-          ./home-manager/home.nix
-          inputs.nixvim.homeManagerModules.nixvim
-        ];
-      };
       "dan@arcee.local" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = {
