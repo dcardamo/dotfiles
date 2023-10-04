@@ -82,6 +82,9 @@ in {
           desc = "Git Hunk Undo Stage";
           action = "<cmd>lua require('gitsigns').undo_stage_hunk()<CR>";
         };
+        "<leader>gs" = {
+          action = ":Neogit<CR>";
+        };
         # end git signs mappings
         # LSP -- Start
         "<leader>ll" = {
@@ -146,14 +149,14 @@ in {
         };
         # Telescope -- End
         # Noice -- Start
-        "<leader>c" = {
-          desc = "Clear Messages";
-          action = "<cmd>lua require('noice').cmd('dismiss')<CR>";
-        };
-        "<leader>fm" = {
-          desc = "Find Messages";
-          action = "<cmd>lua require('noice').cmd('telescope')<CR>";
-        };
+        # "<leader>c" = {
+        #   desc = "Clear Messages";
+        #   action = "<cmd>lua require('noice').cmd('dismiss')<CR>";
+        # };
+        # "<leader>fm" = {
+        #   desc = "Find Messages";
+        #   action = "<cmd>lua require('noice').cmd('telescope')<CR>";
+        # };
         # Noice -- End
       };
       insert = {
@@ -226,7 +229,26 @@ in {
           lua-ls.enable = true;
           nil_ls.enable = true;
           yamlls.enable = true;
-          pylsp.enable = true;
+          bashls.enable = true;
+          pylsp = {
+            enable = true;
+            settings = {
+              plugins = {
+                autopep8.enabled = false;
+                black.enabled = false;
+                flake8.enabled = false;
+                mccabe.enabled = false;
+                memestra.enabled = false;
+                pycodestyle.enabled = false;
+                pydocstyle.enabled = false;
+                isort.enabled = true;
+                pyflakes.enabled = false;
+                pylint.enabled = false;
+                pylsp_mypy.enabled = true;
+                yapf.enabled = false;
+              };
+            };
+          };
         };
       };
       lspkind = {
@@ -236,18 +258,51 @@ in {
         enable = true;
         server.check.command = "clippy";
       };
-      null-ls.enable = true;
+      null-ls = {
+        enable = true;
+        sources = {
+          diagnostics = {
+            shellcheck.enable = true;
+            # vale.enable = true;
+            # alex.enable = true;
+            gitlint.enable = true;
+            # protolint.enable = true;
+            # hadolint.enable = true;
+            # luacheck.enable = true;
+            # mypy.enable = true;
+            # yamllint.enable = true;
+            # eslint_d.enable = true;
+            deadnix.enable = true;
+            statix.enable = true;
+          };
+          formatting = {
+            # isort.enable = true;
+            # taplo.enable = true;
+            # jq.enable = true;
+            stylua.enable = true;
+            # markdownlint.enable = true;
+            prettier.enable = true;
+            # rustfmt.enable = true;
+            black.enable = true;
+            # clang_format.enable = true;
+            # sqlfluff.enable = true;
+          };
+        };
+      };
       lsp-lines.enable = true;
+      #nvim-lightbulb.enable = true;
       lspsaga = {
         enable = true;
-        # lightbulb = {
-        #   enable = true;
-        #   virtualText = false;
-        # };
+        #lightbulb = {
+        #  enable = true;
+        #  virtualText = false;
+        #};
         # symbolInWinbar.enable = false;
         # ui.border = "rounded";
       };
       luasnip.enable = true;
+      neogit.enable = true;
+      #diffview.enable = true;
       nvim-cmp = {
         enable = true;
         sources = [
@@ -299,6 +354,9 @@ in {
         };
       };
       # LUA Line End
+      trouble.enable = true;
+      crates-nvim.enable = true;
+      undotree.enable = true;
       telescope = {
         enable = true;
         defaults = {
