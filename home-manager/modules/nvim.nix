@@ -1,11 +1,4 @@
 {
-  config,
-  pkgs,
-  ...
-}: let
-  inherit (pkgs) stdenv;
-  inherit (stdenv) isLinux;
-in {
   home.sessionVariables = {
     MANPAGER = "nvim -c 'Man!' -o -";
   };
@@ -48,6 +41,10 @@ in {
         "<C-t>" = {
           desc = "Toggle Tree";
           action = "<cmd>lua require('nvim-tree.api').tree.toggle()<CR>";
+        };
+        "<leader>t" = {
+          desc = "Trouble Toggle";
+          action = ":TroubleToggle<CR>";
         };
         # Git signs mappings
         "<leader>gd" = {
@@ -211,6 +208,7 @@ in {
         enable = true;
         currentLineBlame = false;
       };
+      alpha.enable = true;
       nvim-tree = {
         enable = true;
         git = {
@@ -292,13 +290,14 @@ in {
       lsp-lines.enable = true;
       #nvim-lightbulb.enable = true;
       lspsaga = {
-        enable = true;
+        enable = false;
         #lightbulb = {
         #  enable = true;
         #  virtualText = false;
         #};
-        # symbolInWinbar.enable = false;
+        #symbolInWinbar.enable = false;
         # ui.border = "rounded";
+        icons.codeAction = null; # hide the lightbulb icon, annoying
       };
       luasnip.enable = true;
       neogit.enable = true;
