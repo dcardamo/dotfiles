@@ -45,6 +45,8 @@ in {
       zellij
       gnumake
       direnv
+      htop
+      neofetch
 
       # for compiling Treesitter parsers
       gcc
