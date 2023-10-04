@@ -6,7 +6,6 @@
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
 in {
-
   home.sessionVariables = {
     MANPAGER = "nvim -c 'Man!' -o -";
   };

@@ -4,6 +4,9 @@ install:
 update:
 	./bin/update.bash
 
+update-nixos:
+	./bin/update-nixos.bash
+
 format:
 	alejandra .
 

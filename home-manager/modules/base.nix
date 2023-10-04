@@ -44,6 +44,7 @@ in {
       mosh
       zellij
       gnumake
+      direnv
 
       # for compiling Treesitter parsers
       gcc
@@ -76,7 +77,6 @@ in {
       nodePackages_latest.vscode-langservers-extracted
 
       # other utils and plugin dependencies
-      ripgrep
       fd
       catimg
       sqlite

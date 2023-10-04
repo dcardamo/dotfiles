@@ -76,6 +76,7 @@ in {
     ./modules/wezterm.nix
     ./modules/zellij
     ./modules/darwin/hammerspoon
+    ./modules/devenv.nix
   ];
 
   xdg.configFile = {

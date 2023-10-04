@@ -20,6 +20,8 @@
       url = "github:kamadorueda/alejandra/3.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    devenv.url = "github:cachix/devenv/latest";
   };
 
   outputs = {

@@ -76,6 +76,9 @@ in {
         # abbreviations auto expand
         abbr -a --position anywhere -- R "| rg "
 
+        # setup direnv
+        direnv hook fish | source
+
         # I like to keep the prompt at the bottom rather than the top
         # of the terminal window so that running `clear` doesn't make
         # me move my eyes from the bottom back to the top of the screen;
