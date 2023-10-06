@@ -8,7 +8,7 @@
         "revision": "98121832979674cad09c2515283cc2e6cab8d000"
       },
       "buo/cask-upgrade": {
-        "revision": "9cfd04381733b6d39c35cfbd95b382fb2c533376"
+        "revision": "54eb3f990c81c545f626b98e6b60a9d18010ef9d"
       }
     },
     "brew": {
@@ -18,6 +18,11 @@
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
           "files": {
+            "arm64_sonoma": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/mas/blobs/sha256:7b11bfefcb43e9a423ff301f7bbc29b0fb86044bf93442f243c5a8a67d8d4869",
+              "sha256": "7b11bfefcb43e9a423ff301f7bbc29b0fb86044bf93442f243c5a8a67d8d4869"
+            },
             "arm64_ventura": {
               "cellar": ":any_skip_relocation",
               "url": "https://ghcr.io/v2/homebrew/core/mas/blobs/sha256:e49511dd1283813c4420aec9fc3b3167d18f9fdbb51d82b1e479b628d5312342",
@@ -32,6 +37,11 @@
               "cellar": ":any_skip_relocation",
               "url": "https://ghcr.io/v2/homebrew/core/mas/blobs/sha256:918a1484de106940f7bebc936e1ded87d7b65652054b09204887ad0651937ec4",
               "sha256": "918a1484de106940f7bebc936e1ded87d7b65652054b09204887ad0651937ec4"
+            },
+            "sonoma": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/mas/blobs/sha256:24e3057991ea1eed52eb4a27c0f17d794106770621e5a8bb975477dae135b82d",
+              "sha256": "24e3057991ea1eed52eb4a27c0f17d794106770621e5a8bb975477dae135b82d"
             },
             "ventura": {
               "cellar": ":any_skip_relocation",
@@ -103,7 +113,7 @@
     },
     "cask": {
       "betterdisplay": {
-        "version": "2.0.9",
+        "version": "2.0.11",
         "options": {
           "full_name": "betterdisplay",
           "args": {
@@ -113,7 +123,7 @@
         }
       },
       "github": {
-        "version": "3.3.1-831a92de",
+        "version": "3.3.3-abf8a692",
         "options": {
           "full_name": "github",
           "args": {
@@ -123,7 +133,7 @@
         }
       },
       "docker": {
-        "version": "4.23.0,120376",
+        "version": "4.24.0,122432",
         "options": {
           "full_name": "docker",
           "args": {
@@ -143,7 +153,7 @@
         }
       },
       "google-drive": {
-        "version": "81.0.5",
+        "version": "82.0.1",
         "options": {
           "require_sha": false,
           "full_name": "google-drive",
@@ -164,7 +174,7 @@
         }
       },
       "raycast": {
-        "version": "1.58.1",
+        "version": "1.59.0",
         "options": {
           "full_name": "raycast",
           "args": {
@@ -174,7 +184,7 @@
         }
       },
       "spotify": {
-        "version": "1.2.20.1216,e7a7b92f,1160",
+        "version": "1.2.21.1104,42cf0a50,307",
         "options": {
           "full_name": "spotify",
           "args": {
@@ -184,7 +194,7 @@
         }
       },
       "stats": {
-        "version": "2.9.7",
+        "version": "2.9.8",
         "options": {
           "full_name": "stats",
           "args": {
@@ -210,7 +220,7 @@
         }
       },
       "visual-studio-code": {
-        "version": "1.82.2",
+        "version": "1.83.0",
         "options": {
           "full_name": "visual-studio-code",
           "args": {
@@ -244,11 +254,11 @@
       "Kindle": null,
       "Microsoft Excel": {
         "id": "462058435",
-        "version": "16.77"
+        "version": "16.77.1"
       },
       "Microsoft Word": {
         "id": "462054704",
-        "version": "16.76.1"
+        "version": "16.77.1"
       },
       "1Password for Safari": {
         "id": "1569813296",
@@ -260,7 +270,7 @@
       },
       "Numbers": {
         "id": "409203825",
-        "version": "13.1"
+        "version": "13.2"
       },
       "Paprika Recipe Manager 3": {
         "id": "1303222628",
@@ -280,11 +290,11 @@
       },
       "Keynote": {
         "id": "409183694",
-        "version": "13.1"
+        "version": "13.2"
       },
       "Pages": {
         "id": "409201541",
-        "version": "13.1"
+        "version": "13.2"
       },
       "AdGuard for Safari": {
         "id": "1440147259",
@@ -292,7 +302,7 @@
       },
       "Soulver 3": {
         "id": "1508732804",
-        "version": "3.9.0"
+        "version": "3.9.1"
       },
       "Darkroom": {
         "id": "953286746",
@@ -300,7 +310,7 @@
       },
       "Pixelmator Pro": {
         "id": "1289583905",
-        "version": "3.4.1"
+        "version": "3.4.2"
       },
       "Adobe Lightroom": {
         "id": "1451544217",
@@ -315,7 +325,7 @@
   "system": {
     "macos": {
       "sonoma": {
-        "HOMEBREW_VERSION": "4.1.12",
+        "HOMEBREW_VERSION": "4.1.14",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "15.0.0.0.1.1694021235",

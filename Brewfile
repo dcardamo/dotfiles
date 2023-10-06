@@ -1,4 +1,5 @@
 tap "buo/cask-upgrade"
+tap "homebrew/cask-fonts"
 
 # set arguments for all 'brew install --cask' commands
 cask_args appdir: "~/Applications", require_sha: true
