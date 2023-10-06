@@ -5,7 +5,7 @@
         "revision": "ff97a8d9407184eea205b6da9cc872c7342c8068"
       },
       "homebrew/cask-fonts": {
-        "revision": "98121832979674cad09c2515283cc2e6cab8d000"
+        "revision": "81bf750832ccb8bb6eda9372b6250603d1932b23"
       },
       "buo/cask-upgrade": {
         "revision": "54eb3f990c81c545f626b98e6b60a9d18010ef9d"
@@ -298,7 +298,7 @@
       },
       "AdGuard for Safari": {
         "id": "1440147259",
-        "version": "1.11.14"
+        "version": "1.11.15"
       },
       "Soulver 3": {
         "id": "1508732804",

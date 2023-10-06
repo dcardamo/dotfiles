@@ -68,7 +68,10 @@
     extraGroups = ["networkmanager" "wheel"];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
+      # ipad
       "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLXszGZpaxJ0RietixvF30y3BLfw5bKj7rsXkGVSDL0RdCE3uercsAQT4oUyX2lWNh1QW9K/X7PRK2AKZ0K49kE= dan@ipad"
+      # mac
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKZ02W1AEyMEG9w1LBpolM8FXIGHfJkgfT7l2qwyeXR"
     ];
     packages = with pkgs; [];
   };
