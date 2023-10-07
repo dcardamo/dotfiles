@@ -4,6 +4,7 @@
     #enableTransience = true;
     settings = {
       format = lib.concatStrings [
+        "$hostname"
         "$directory"
         "\${custom.git_server_icon}"
         "$git_branch"
@@ -31,6 +32,9 @@
         style = "bold #586068";
       };
       directory = {read_only = " 󰌾";};
+      hostname = {
+        ssh_only = false;
+      };
       custom = {
         git_server_icon = {
           description = "Show a GitLab or GitHub icon depending on current git remote";
