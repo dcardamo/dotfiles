@@ -47,6 +47,7 @@ in {
       direnv
       htop
       neofetch
+      pgcli
 
       # for compiling Treesitter parsers
       gcc

@@ -204,6 +204,9 @@
       which-key.enable = true;
       nvim-autopairs.enable = true;
       comment-nvim.enable = true;
+      tmux-navigator = {
+        enable = true;
+      };
       gitsigns = {
         enable = true;
         currentLineBlame = false;

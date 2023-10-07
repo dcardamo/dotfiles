@@ -77,6 +77,7 @@ in {
     ./modules/zellij
     ./modules/darwin/hammerspoon
     ./modules/devenv.nix
+    ./modules/tmux.nix
   ];
 
   xdg.configFile = {
