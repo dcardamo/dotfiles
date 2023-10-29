@@ -36,5 +36,5 @@ mas "AdGuard for Safari", id: 1440147259
 mas "Soulver 3", id: 1508732804
 mas "Darkroom", id: 953286746
 mas "Pixelmator Pro", id: 1289583905
-mas "Adobe Lightroom", id: 1451544217
 mas "Hidden Bar", id: 1452453066
+mas "Photomator", id: 1444636541
