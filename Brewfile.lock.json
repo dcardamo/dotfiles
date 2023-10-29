@@ -5,10 +5,10 @@
         "revision": "ff97a8d9407184eea205b6da9cc872c7342c8068"
       },
       "homebrew/cask-fonts": {
-        "revision": "b43fb53ccaf819743b71983636b9aa6ac80bef79"
+        "revision": "c37b90d427afd8a8c7ee98af89f1eb6b8e9aa4f2"
       },
       "buo/cask-upgrade": {
-        "revision": "54eb3f990c81c545f626b98e6b60a9d18010ef9d"
+        "revision": "e1aadd4c97203c0de552f0c0e00baee47604e2c7"
       }
     },
     "brew": {
@@ -123,7 +123,7 @@
         }
       },
       "github": {
-        "version": "3.3.3-abf8a692",
+        "version": "3.3.4-59d46573",
         "options": {
           "full_name": "github",
           "args": {
@@ -133,7 +133,7 @@
         }
       },
       "docker": {
-        "version": "4.24.0,122432",
+        "version": "4.25.0,126437",
         "options": {
           "full_name": "docker",
           "args": {
@@ -153,7 +153,7 @@
         }
       },
       "google-drive": {
-        "version": "82.0.1",
+        "version": "83.0.2",
         "options": {
           "require_sha": false,
           "full_name": "google-drive",
@@ -174,7 +174,7 @@
         }
       },
       "raycast": {
-        "version": "1.59.0",
+        "version": "1.60.1",
         "options": {
           "full_name": "raycast",
           "args": {
@@ -184,7 +184,7 @@
         }
       },
       "spotify": {
-        "version": "1.2.21.1104,42cf0a50,307",
+        "version": "1.2.22.982,794acc0a,915",
         "options": {
           "full_name": "spotify",
           "args": {
@@ -194,7 +194,7 @@
         }
       },
       "stats": {
-        "version": "2.9.8",
+        "version": "2.9.10",
         "options": {
           "full_name": "stats",
           "args": {
@@ -220,7 +220,7 @@
         }
       },
       "visual-studio-code": {
-        "version": "1.83.0",
+        "version": "1.83.1",
         "options": {
           "full_name": "visual-studio-code",
           "args": {
@@ -254,19 +254,19 @@
       "Kindle": null,
       "Microsoft Excel": {
         "id": "462058435",
-        "version": "16.77.1"
+        "version": "16.78"
       },
       "Microsoft Word": {
         "id": "462054704",
-        "version": "16.77.1"
+        "version": "16.78"
       },
       "1Password for Safari": {
         "id": "1569813296",
-        "version": "2.15.1"
+        "version": "2.16.0"
       },
       "Home Assistant": {
         "id": "1099568401",
-        "version": "2023.4"
+        "version": "2023.7"
       },
       "Numbers": {
         "id": "409203825",
@@ -310,7 +310,7 @@
       },
       "Pixelmator Pro": {
         "id": "1289583905",
-        "version": "3.4.2"
+        "version": "3.4.3"
       },
       "Adobe Lightroom": {
         "id": "1451544217",
@@ -319,18 +319,22 @@
       "Hidden Bar": {
         "id": "1452453066",
         "version": "1.8"
+      },
+      "Photomator": {
+        "id": "1444636541",
+        "version": "3.1.2"
       }
     }
   },
   "system": {
     "macos": {
       "sonoma": {
-        "HOMEBREW_VERSION": "4.1.14",
+        "HOMEBREW_VERSION": "4.1.17",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "15.0.0.0.1.1694021235",
         "Xcode": "15.0",
-        "macOS": "14.0"
+        "macOS": "14.1"
       }
     }
   }

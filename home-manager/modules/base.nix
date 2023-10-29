@@ -48,6 +48,8 @@ in {
       htop
       neofetch
       pgcli
+      zoxide
+      wget
 
       # for compiling Treesitter parsers
       gcc
