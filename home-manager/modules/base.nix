@@ -92,7 +92,9 @@ in {
       glow
     ]
     ++ lib.lists.optionals isLinux []
-    ++ lib.lists.optionals isDarwin [];
+    ++ lib.lists.optionals isDarwin [
+      exiftool
+    ];
 
   programs.gh.enable = true;
 }
