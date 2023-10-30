@@ -92,6 +92,7 @@ in {
       cargo-nextest
       clippy
       glow
+      pv
     ]
     ++ lib.lists.optionals isLinux []
     ++ lib.lists.optionals isDarwin [
