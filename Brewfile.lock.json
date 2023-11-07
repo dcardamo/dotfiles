@@ -5,7 +5,7 @@
         "revision": "ff97a8d9407184eea205b6da9cc872c7342c8068"
       },
       "homebrew/cask-fonts": {
-        "revision": "c37b90d427afd8a8c7ee98af89f1eb6b8e9aa4f2"
+        "revision": "59438ee340e93fc5251982179d32cc55cb7dc68d"
       },
       "buo/cask-upgrade": {
         "revision": "e1aadd4c97203c0de552f0c0e00baee47604e2c7"
@@ -123,7 +123,7 @@
         }
       },
       "github": {
-        "version": "3.3.4-59d46573",
+        "version": "3.3.5-76560059",
         "options": {
           "full_name": "github",
           "args": {
@@ -174,7 +174,7 @@
         }
       },
       "raycast": {
-        "version": "1.60.1",
+        "version": "1.61.1",
         "options": {
           "full_name": "raycast",
           "args": {
@@ -184,7 +184,7 @@
         }
       },
       "spotify": {
-        "version": "1.2.22.982,794acc0a,915",
+        "version": "1.2.23.1125,920a7ada,870",
         "options": {
           "full_name": "spotify",
           "args": {
@@ -194,7 +194,7 @@
         }
       },
       "stats": {
-        "version": "2.9.10",
+        "version": "2.9.11",
         "options": {
           "full_name": "stats",
           "args": {
@@ -220,7 +220,7 @@
         }
       },
       "visual-studio-code": {
-        "version": "1.83.1",
+        "version": "1.84.1",
         "options": {
           "full_name": "visual-studio-code",
           "args": {
@@ -254,11 +254,11 @@
       "Kindle": null,
       "Microsoft Excel": {
         "id": "462058435",
-        "version": "16.78"
+        "version": "16.78.3"
       },
       "Microsoft Word": {
         "id": "462054704",
-        "version": "16.78"
+        "version": "16.78.3"
       },
       "1Password for Safari": {
         "id": "1569813296",
@@ -302,7 +302,7 @@
       },
       "Soulver 3": {
         "id": "1508732804",
-        "version": "3.9.1"
+        "version": "3.9.2"
       },
       "Darkroom": {
         "id": "953286746",
@@ -329,7 +329,7 @@
   "system": {
     "macos": {
       "sonoma": {
-        "HOMEBREW_VERSION": "4.1.17",
+        "HOMEBREW_VERSION": "4.1.19",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "15.0.0.0.1.1694021235",

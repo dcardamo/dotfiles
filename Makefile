@@ -7,6 +7,9 @@ update:
 update-nixos:
 	./bin/update-nixos.bash
 
+update-macos:
+	./bin/update-macos.bash
+
 format:
 	alejandra .
 

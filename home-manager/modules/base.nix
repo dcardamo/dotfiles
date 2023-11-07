@@ -93,10 +93,12 @@ in {
       clippy
       glow
       pv
+      gnutar
     ]
     ++ lib.lists.optionals isLinux []
     ++ lib.lists.optionals isDarwin [
       exiftool
+      ffmpeg
     ];
 
   programs.gh.enable = true;
