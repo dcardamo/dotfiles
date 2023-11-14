@@ -5,7 +5,7 @@
         "revision": "ff97a8d9407184eea205b6da9cc872c7342c8068"
       },
       "homebrew/cask-fonts": {
-        "revision": "59438ee340e93fc5251982179d32cc55cb7dc68d"
+        "revision": "45d77e5752ea310e1974d161fb05e44d7706d1c7"
       },
       "buo/cask-upgrade": {
         "revision": "e1aadd4c97203c0de552f0c0e00baee47604e2c7"
@@ -174,7 +174,7 @@
         }
       },
       "raycast": {
-        "version": "1.61.1",
+        "version": "1.61.2",
         "options": {
           "full_name": "raycast",
           "args": {
@@ -184,7 +184,7 @@
         }
       },
       "spotify": {
-        "version": "1.2.23.1125,920a7ada,870",
+        "version": "1.2.24.756,7a7fc7f0,642",
         "options": {
           "full_name": "spotify",
           "args": {
@@ -220,7 +220,7 @@
         }
       },
       "visual-studio-code": {
-        "version": "1.84.1",
+        "version": "1.84.2",
         "options": {
           "full_name": "visual-studio-code",
           "args": {

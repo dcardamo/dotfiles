@@ -99,6 +99,7 @@ in {
     ++ lib.lists.optionals isDarwin [
       exiftool
       ffmpeg
+      imapsync
     ];
 
   programs.gh.enable = true;
