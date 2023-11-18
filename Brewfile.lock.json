@@ -5,7 +5,7 @@
         "revision": "ff97a8d9407184eea205b6da9cc872c7342c8068"
       },
       "homebrew/cask-fonts": {
-        "revision": "45d77e5752ea310e1974d161fb05e44d7706d1c7"
+        "revision": "efbbbbbfd34d3cffc26d3da6d3dec4858aa52af7"
       },
       "buo/cask-upgrade": {
         "revision": "e1aadd4c97203c0de552f0c0e00baee47604e2c7"
@@ -133,7 +133,7 @@
         }
       },
       "docker": {
-        "version": "4.25.0,126437",
+        "version": "4.25.1,128006",
         "options": {
           "full_name": "docker",
           "args": {
@@ -153,7 +153,7 @@
         }
       },
       "google-drive": {
-        "version": "83.0.2",
+        "version": "84.0.1",
         "options": {
           "require_sha": false,
           "full_name": "google-drive",
@@ -262,7 +262,7 @@
       },
       "1Password for Safari": {
         "id": "1569813296",
-        "version": "2.16.0"
+        "version": "2.17.0"
       },
       "Home Assistant": {
         "id": "1099568401",
@@ -306,7 +306,7 @@
       },
       "Darkroom": {
         "id": "953286746",
-        "version": "6.5.2"
+        "version": "6.6.2"
       },
       "Pixelmator Pro": {
         "id": "1289583905",
@@ -329,12 +329,12 @@
   "system": {
     "macos": {
       "sonoma": {
-        "HOMEBREW_VERSION": "4.1.19",
+        "HOMEBREW_VERSION": "4.1.20",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "15.0.0.0.1.1694021235",
         "Xcode": "15.0",
-        "macOS": "14.1"
+        "macOS": "14.1.1"
       }
     }
   }
