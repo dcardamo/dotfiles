@@ -10,7 +10,6 @@ cask "betterdisplay"
 cask "docker"
 cask "font-fira-code-nerd-font"
 cask "github"
-cask "google-drive", { require_sha: false }
 cask "hammerspoon"
 cask "hazel"
 cask "raycast"
