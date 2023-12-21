@@ -14,11 +14,12 @@ cask "hammerspoon"
 cask "hazel"
 cask "raycast"
 cask "spotify"
+cask "steermouse"
 cask "stats"
+cask "steam"
 cask "wezterm"
-cask "visual-studio-code"
-#cask "steermouse"  -- hammerspoon?
 cask "whisky"
+cask "visual-studio-code"
 
 mas "Kindle", id: 405399194
 mas "Microsoft Excel", id: 462058435

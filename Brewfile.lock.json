@@ -5,7 +5,7 @@
         "revision": "ff97a8d9407184eea205b6da9cc872c7342c8068"
       },
       "homebrew/cask-fonts": {
-        "revision": "60a087f8f3b4824c8a96279ec0a62346de58b6c2"
+        "revision": "6f04e418dc2bbb72fc438b25de315e0d48aff286"
       },
       "buo/cask-upgrade": {
         "revision": "e1aadd4c97203c0de552f0c0e00baee47604e2c7"
@@ -113,7 +113,7 @@
     },
     "cask": {
       "betterdisplay": {
-        "version": "2.0.11",
+        "version": "2.1.3",
         "options": {
           "full_name": "betterdisplay",
           "args": {
@@ -133,7 +133,7 @@
         }
       },
       "docker": {
-        "version": "4.26.0,130397",
+        "version": "4.26.1,131620",
         "options": {
           "full_name": "docker",
           "args": {
@@ -174,7 +174,7 @@
         }
       },
       "raycast": {
-        "version": "1.63.0",
+        "version": "1.64.4",
         "options": {
           "full_name": "raycast",
           "args": {
@@ -194,7 +194,7 @@
         }
       },
       "stats": {
-        "version": "2.9.14",
+        "version": "2.9.16",
         "options": {
           "full_name": "stats",
           "args": {
@@ -220,7 +220,7 @@
         }
       },
       "visual-studio-code": {
-        "version": "1.85.0",
+        "version": "1.85.1",
         "options": {
           "full_name": "visual-studio-code",
           "args": {
@@ -243,6 +243,26 @@
         "version": "0.9.100",
         "options": {
           "full_name": "hammerspoon",
+          "args": {
+            "appdir": "~/Applications",
+            "require_sha": true
+          }
+        }
+      },
+      "steermouse": {
+        "version": "5.6.8",
+        "options": {
+          "full_name": "steermouse",
+          "args": {
+            "appdir": "~/Applications",
+            "require_sha": true
+          }
+        }
+      },
+      "whisky": {
+        "version": "2.2.2",
+        "options": {
+          "full_name": "whisky",
           "args": {
             "appdir": "~/Applications",
             "require_sha": true
@@ -329,12 +349,12 @@
   "system": {
     "macos": {
       "sonoma": {
-        "HOMEBREW_VERSION": "4.1.24",
+        "HOMEBREW_VERSION": "4.2.0",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
-        "CLT": "15.0.0.0.1.1694021235",
+        "CLT": "15.1.0.0.1.1700200546",
         "Xcode": "15.0",
-        "macOS": "14.1.2"
+        "macOS": "14.2.1"
       }
     }
   }
