@@ -5,7 +5,7 @@
         "revision": "ff97a8d9407184eea205b6da9cc872c7342c8068"
       },
       "homebrew/cask-fonts": {
-        "revision": "bccf1a73fddbd5ba1245d94c51912c29a4738065"
+        "revision": "60a087f8f3b4824c8a96279ec0a62346de58b6c2"
       },
       "buo/cask-upgrade": {
         "revision": "e1aadd4c97203c0de552f0c0e00baee47604e2c7"
@@ -164,7 +164,7 @@
         }
       },
       "hazel": {
-        "version": "5.3",
+        "version": "5.3.1",
         "options": {
           "full_name": "hazel",
           "args": {
@@ -184,7 +184,7 @@
         }
       },
       "spotify": {
-        "version": "1.2.25.1011,0348b2ea,716",
+        "version": "1.2.26.1187,36b715a1,272",
         "options": {
           "full_name": "spotify",
           "args": {
@@ -220,7 +220,7 @@
         }
       },
       "visual-studio-code": {
-        "version": "1.84.2",
+        "version": "1.85.0",
         "options": {
           "full_name": "visual-studio-code",
           "args": {
@@ -262,7 +262,7 @@
       },
       "1Password for Safari": {
         "id": "1569813296",
-        "version": "2.17.1"
+        "version": "2.18.0"
       },
       "Home Assistant": {
         "id": "1099568401",
@@ -298,7 +298,7 @@
       },
       "AdGuard for Safari": {
         "id": "1440147259",
-        "version": "1.11.15"
+        "version": "1.11.16"
       },
       "Soulver 3": {
         "id": "1508732804",

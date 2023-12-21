@@ -47,6 +47,9 @@ in {
         lg = "ls -lG";
         vi = "nvim";
         clear = "clear && _prompt_move_to_bottom";
+        # Mac gaming FPS graph
+        fps_on = "launchctl setenv MTL_HUD_ENABLED 1";
+        fps_off = "launchctl setenv MTL_HUD_ENABLED 0";
         nix-apply =
           if pkgs.stdenv.isDarwin
           then "home-manager switch --flake ~/git/dotfiles/.#mac"

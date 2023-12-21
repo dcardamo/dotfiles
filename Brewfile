@@ -18,6 +18,7 @@ cask "stats"
 cask "wezterm"
 cask "visual-studio-code"
 #cask "steermouse"  -- hammerspoon?
+cask "whisky"
 
 mas "Kindle", id: 405399194
 mas "Microsoft Excel", id: 462058435
