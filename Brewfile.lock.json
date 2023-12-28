@@ -5,7 +5,7 @@
         "revision": "ff97a8d9407184eea205b6da9cc872c7342c8068"
       },
       "homebrew/cask-fonts": {
-        "revision": "6f04e418dc2bbb72fc438b25de315e0d48aff286"
+        "revision": "e80db5cea332c518263535cd24b47d3fe60519bc"
       },
       "buo/cask-upgrade": {
         "revision": "e1aadd4c97203c0de552f0c0e00baee47604e2c7"
@@ -109,6 +109,8 @@
             }
           }
         }
+      },
+      "osxphotos": {
       }
     },
     "cask": {
@@ -194,7 +196,7 @@
         }
       },
       "stats": {
-        "version": "2.9.16",
+        "version": "2.9.17",
         "options": {
           "full_name": "stats",
           "args": {
@@ -270,7 +272,7 @@
         }
       },
       "steam": {
-        "version": null,
+        "version": "4.0",
         "options": {
           "full_name": "steam",
           "args": {
@@ -336,7 +338,7 @@
       },
       "Darkroom": {
         "id": "953286746",
-        "version": "6.6.5"
+        "version": "6.6.7"
       },
       "Pixelmator Pro": {
         "id": "1289583905",
@@ -359,11 +361,11 @@
   "system": {
     "macos": {
       "sonoma": {
-        "HOMEBREW_VERSION": "4.2.0",
+        "HOMEBREW_VERSION": "4.2.1",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "15.1.0.0.1.1700200546",
-        "Xcode": "15.0",
+        "Xcode": "15.1",
         "macOS": "14.2.1"
       }
     }
