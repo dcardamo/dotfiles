@@ -268,21 +268,31 @@
             "require_sha": true
           }
         }
+      },
+      "steam": {
+        "version": null,
+        "options": {
+          "full_name": "steam",
+          "args": {
+            "appdir": "~/Applications",
+            "require_sha": true
+          }
+        }
       }
     },
     "mas": {
       "Kindle": null,
       "Microsoft Excel": {
         "id": "462058435",
-        "version": "16.79.1"
+        "version": "16.80"
       },
       "Microsoft Word": {
         "id": "462054704",
-        "version": "16.79.1"
+        "version": "16.80"
       },
       "1Password for Safari": {
         "id": "1569813296",
-        "version": "2.18.0"
+        "version": "2.18.2"
       },
       "Home Assistant": {
         "id": "1099568401",
@@ -330,7 +340,7 @@
       },
       "Pixelmator Pro": {
         "id": "1289583905",
-        "version": "3.4.3"
+        "version": "3.5.2"
       },
       "Adobe Lightroom": {
         "id": "1451544217",
@@ -342,7 +352,7 @@
       },
       "Photomator": {
         "id": "1444636541",
-        "version": "3.2"
+        "version": "3.2.1"
       }
     }
   },

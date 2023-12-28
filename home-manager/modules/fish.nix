@@ -144,6 +144,18 @@ in {
           command nix-shell $argv --run "exec fish"
         '';
       };
+      photos-backup-first-run = {
+        description = "Backup the Mac Photos library original files to external USB.  Use this for the first run";
+        body = ''
+          osxphotos export --export-by-date --download-missing --use-photokit --exiftool --library ~/Pictures/Photos Library.photoslibrary /Volumes/DanPhotoOriginal/osxphotos_export
+        '';
+      };
+      photos-backup = {
+        description = "Backup the Mac Photos library original files to external USB.  Use this for the update runs";
+        body = ''
+          osxphotos export --export-by-date --download-missing --use-photokit --exiftool --update --library ~/Pictures/Photos Library.photoslibrary /Volumes/DanPhotoOriginal/osxphotos_export
+        '';
+      };
     };
   };
 }

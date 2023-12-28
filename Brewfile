@@ -5,6 +5,7 @@ tap "homebrew/cask-fonts"
 cask_args appdir: "~/Applications", require_sha: true
 
 brew "mas"
+brew "osxphotos"
 
 cask "betterdisplay"
 cask "docker"
@@ -18,7 +19,7 @@ cask "steermouse"
 cask "stats"
 cask "steam"
 cask "wezterm"
-cask "whisky"
+#cask "whisky"
 cask "visual-studio-code"
 
 mas "Kindle", id: 405399194
