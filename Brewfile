@@ -6,6 +6,7 @@ cask_args appdir: "~/Applications", require_sha: true
 
 brew "mas"
 
+cask "arq"
 cask "betterdisplay"
 cask "docker"
 cask "font-fira-code-nerd-font"
