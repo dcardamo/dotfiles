@@ -5,10 +5,10 @@
         "revision": "ff97a8d9407184eea205b6da9cc872c7342c8068"
       },
       "homebrew/cask-fonts": {
-        "revision": "e80db5cea332c518263535cd24b47d3fe60519bc"
+        "revision": "cb5a031b8b969be9685c5e5106dc52e9484172c9"
       },
       "buo/cask-upgrade": {
-        "revision": "e1aadd4c97203c0de552f0c0e00baee47604e2c7"
+        "revision": "ddcf0f3be9c568517aa3076d8f99a44249a20057"
       }
     },
     "brew": {
@@ -176,7 +176,7 @@
         }
       },
       "raycast": {
-        "version": "1.64.4",
+        "version": "1.65.0",
         "options": {
           "full_name": "raycast",
           "args": {
@@ -196,7 +196,7 @@
         }
       },
       "stats": {
-        "version": "2.9.17",
+        "version": "2.9.19",
         "options": {
           "full_name": "stats",
           "args": {
@@ -294,11 +294,11 @@
       },
       "1Password for Safari": {
         "id": "1569813296",
-        "version": "2.18.2"
+        "version": "2.19.0"
       },
       "Home Assistant": {
         "id": "1099568401",
-        "version": "2023.12"
+        "version": "2023.12.1"
       },
       "Numbers": {
         "id": "409203825",
@@ -316,7 +316,10 @@
         "id": "1640236961",
         "version": "0.15.22"
       },
-      "Kagi Inc.": null,
+      "Kagi Inc.": {
+        "id": "1622835804",
+        "version": "2.1.0"
+      },
       "Keynote": {
         "id": "409183694",
         "version": "13.2"
@@ -358,7 +361,7 @@
   "system": {
     "macos": {
       "sonoma": {
-        "HOMEBREW_VERSION": "4.2.1",
+        "HOMEBREW_VERSION": "4.2.3",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "15.1.0.0.1.1700200546",

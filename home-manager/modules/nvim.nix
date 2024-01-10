@@ -294,13 +294,10 @@
       #nvim-lightbulb.enable = true;
       lspsaga = {
         enable = false;
-        #lightbulb = {
-        #  enable = true;
-        #  virtualText = false;
-        #};
-        #symbolInWinbar.enable = false;
-        # ui.border = "rounded";
-        icons.codeAction = null; # hide the lightbulb icon, annoying
+        # use this when upgrade to 23.11
+        # extraOptions = {
+        #   icons.codeAction = null; # hide the lightbulb icon, annoying
+        # };
       };
       luasnip.enable = true;
       neogit.enable = true;
@@ -378,9 +375,7 @@
       indent-blankline = {
         enable = true;
         char = "";
-        useTreesitter = true;
         showCurrentContext = false;
-        showEndOfLine = true;
       };
       lastplace.enable = true;
       # noice = {
