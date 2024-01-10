@@ -40,6 +40,7 @@ if [ "$(uname -s)" == "Darwin" ]; then
   *) ;;
   esac
 elif ! command -v nixos-version >/dev/null 2>&1; then
+  echo "ignore"
   # if NOT on NixOS
   #if ! test -f "/etc/NIXOS"; then
   #  # if on Linux but not NixOS, install nixGL
@@ -53,6 +54,3 @@ if [ "$(uname -s)" == "Darwin" ] && ! test -f /opt/homebrew; then
   echo "Installing homebrew to its default location"
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
-
-(cd bin/zellij/runner; cargo install zellij-runner)
-(cd bin/zellij/statusbar; cargo install zellij-runner)

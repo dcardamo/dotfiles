@@ -1,2 +1,4 @@
 *.swp
 LOG_*
+flake.lock
+Brewfile.lock.json
