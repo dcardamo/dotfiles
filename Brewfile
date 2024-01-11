@@ -14,10 +14,10 @@ cask "github"
 cask "hammerspoon"
 cask "hazel"
 cask "raycast"
-cask "spotify"
+# cask "spotify" # no sha
 cask "steermouse"
 cask "stats"
-cask "steam"
+# cask "steam" # no sha
 cask "wezterm"
 #cask "whisky"
 cask "visual-studio-code"
