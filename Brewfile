@@ -8,10 +8,11 @@ brew "mas"
 
 cask "arq"
 cask "betterdisplay"
+cask "brave-browser"
 cask "docker"
 cask "font-fira-code-nerd-font"
 cask "github"
-cask "hammerspoon"
+#cask "hammerspoon"
 cask "hazel"
 cask "raycast"
 # cask "spotify" # no sha
@@ -22,6 +23,8 @@ cask "wezterm"
 #cask "whisky"
 cask "visual-studio-code"
 
+mas "Affinity Photo 2", id: 1616822987
+mas "Daisy Disk", id: 411643860
 mas "Kindle", id: 405399194
 mas "Microsoft Excel", id: 462058435
 mas "Microsoft Word", id: 462054704
