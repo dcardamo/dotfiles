@@ -14,7 +14,7 @@ cask "font-fira-code-nerd-font"
 #cask "github"
 #cask "hammerspoon"
 cask "hazel"
-cask "raycast"
+# cask "raycast"   # spotlight is better than it used to be
 # cask "spotify" # no sha
 cask "steermouse"
 cask "stats"
@@ -33,8 +33,8 @@ mas "Home Assistant", id: 1099568401
 mas "Numbers", id:  409203825
 mas "Paprika Recipe Manager 3", id: 1303222628
 mas "WireGuard", id: 1451685025
-mas "Save to Reader", id: 1640236961
-mas "Kagi Inc.", id: 1622835804
+# mas "Save to Reader", id: 1640236961
+# mas "Kagi Inc.", id: 1622835804
 mas "Keynote", id: 409183694
 mas "Pages", id: 409201541
 #mas "AdGuard for Safari", id: 1440147259
