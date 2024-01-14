@@ -11,7 +11,7 @@ cask "betterdisplay"
 cask "brave-browser"
 cask "docker"
 cask "font-fira-code-nerd-font"
-cask "github"
+#cask "github"
 #cask "hammerspoon"
 cask "hazel"
 cask "raycast"
@@ -37,9 +37,9 @@ mas "Save to Reader", id: 1640236961
 mas "Kagi Inc.", id: 1622835804
 mas "Keynote", id: 409183694
 mas "Pages", id: 409201541
-mas "AdGuard for Safari", id: 1440147259
+#mas "AdGuard for Safari", id: 1440147259
 mas "Soulver 3", id: 1508732804
 mas "Darkroom", id: 953286746
 mas "Pixelmator Pro", id: 1289583905
-mas "Hidden Bar", id: 1452453066
+#mas "Hidden Bar", id: 1452453066
 mas "Photomator", id: 1444636541
