@@ -6,6 +6,7 @@ cask_args appdir: "~/Applications", require_sha: true
 
 brew "mas"
 
+cask "adobe-dng-converter"
 cask "arq"
 cask "betterdisplay"
 cask "brave-browser"
