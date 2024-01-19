@@ -1,3 +1,4 @@
 *.swp
 LOG_*
 Brewfile.lock.json
+Brewfile

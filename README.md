@@ -5,6 +5,7 @@ Make sure that this repo is checked out first to ~/git/dotfiles
 ```
 make install
 ```
+`ln -sf Brewfile.$HOSTNAME Brewfile`
 
 ## Update
 ```

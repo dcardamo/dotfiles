@@ -7,21 +7,19 @@ cask_args appdir: "~/Applications", require_sha: true
 brew "mas"
 
 cask "adobe-dng-converter"
-cask "arq"
 cask "betterdisplay"
 cask "brave-browser"
 cask "docker"
 cask "font-fira-code-nerd-font"
-#cask "github"
 #cask "hammerspoon"
 cask "hazel"
+cask "little-snitch"
 # cask "raycast"   # spotlight is better than it used to be
 # cask "spotify" # no sha
 cask "steermouse"
 cask "stats"
 # cask "steam" # no sha
 cask "wezterm"
-#cask "whisky"
 cask "visual-studio-code"
 
 mas "Affinity Photo 2", id: 1616822987
