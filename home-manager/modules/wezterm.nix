@@ -103,7 +103,7 @@ in {
       config.webgpu_power_preference = 'HighPerformance'
 
       -- simulate tmux prefix with leader
-      config.leader = { key = "b", mods = "CTRL", timeout_milliseconds = 1000 }
+      config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
       config.keys = {
         -- create split panes
         {
