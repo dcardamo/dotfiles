@@ -16,6 +16,7 @@ cask "hazel"
 cask "little-snitch"
 cask "orion"
 # cask "raycast"   # spotlight is better than it used to be
+cask "reader"
 # cask "spotify" # no sha
 cask "steermouse"
 cask "stats"
