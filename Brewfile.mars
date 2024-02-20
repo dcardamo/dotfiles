@@ -6,7 +6,7 @@ cask_args appdir: "~/Applications", require_sha: true
 
 brew "mas"
 
-cask "adobe-dng-converter"
+#cask "adobe-dng-converter"
 cask "betterdisplay"
 cask "brave-browser"
 cask "docker"
@@ -24,7 +24,7 @@ cask "stats"
 cask "wezterm"
 cask "visual-studio-code"
 
-mas "Affinity Photo 2", id: 1616822987
+#mas "Affinity Photo 2", id: 1616822987
 mas "Daisy Disk", id: 411643860
 mas "Kindle", id: 405399194
 mas "Microsoft Excel", id: 462058435
@@ -40,7 +40,7 @@ mas "Keynote", id: 409183694
 mas "Pages", id: 409201541
 #mas "AdGuard for Safari", id: 1440147259
 mas "Soulver 3", id: 1508732804
-mas "Darkroom", id: 953286746
-mas "Pixelmator Pro", id: 1289583905
+#mas "Darkroom", id: 953286746
+#mas "Pixelmator Pro", id: 1289583905
 #mas "Hidden Bar", id: 1452453066
-mas "Photomator", id: 1444636541
+#mas "Photomator", id: 1444636541
