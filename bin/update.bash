@@ -10,6 +10,8 @@ cd ..
 
 export NIXPKGS_ALLOW_UNFREE=1
 
+nix-channel --update
+
 darwin_build() {
     echo "${GREEN}Building for darwin...${CLEAR}"
     home-manager switch --flake ~/git/dotfiles/.#mac
