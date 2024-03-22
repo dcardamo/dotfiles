@@ -14,7 +14,9 @@ cask "font-fira-code-nerd-font"
 #cask "hammerspoon"
 cask "hazel"
 cask "little-snitch"
+cask "microsoft-teams"
 cask "orion"
+cask "obsidian"
 # cask "raycast"   # spotlight is better than it used to be
 cask "reader"
 # cask "spotify" # no sha
