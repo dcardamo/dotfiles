@@ -5,8 +5,8 @@
 #
 
 #export EXPORT_TO="/Volumes/BackupDrive/osxphotos"
-export EXPORT_TO="/Volumes/BigData/osxphotos"
-export LIBRARY_AT="/Volumes/BigDataTemp/Pictures/Photos Library.photoslibrary"
+export EXPORT_TO="/Volumes/BackupDrive/osxphotos"
+export LIBRARY_AT="/Volumes/ApplePhotos/Photos Library.photoslibrary"
 
 osxphotos export "$EXPORT_TO" \
     --library "$LIBRARY_AT" \
@@ -15,6 +15,6 @@ osxphotos export "$EXPORT_TO" \
     --sidecar xmp \
     --keyword-template "PhotosExport>{folder_album(>)}" \
     --keyword-template "{edited?edited-before-lightroom,}" \
-    --directory "{created.year}/{created.month}"
+    --directory "{created.year}/{created.month}" \
+    --update  #uncomment if running again.
     #--export-by-date  \
-    # --update  #uncomment if running again.
