@@ -26,7 +26,8 @@ cask "stats"
 cask "wezterm"
 cask "visual-studio-code"
 
-#mas "Affinity Photo 2", id: 1616822987
+mas "Affinity Photo 2", id: 1616822987
+mas "Affinity Publisher 2", id: 1606941598
 mas "Daisy Disk", id: 411643860
 mas "Kindle", id: 405399194
 mas "Microsoft Excel", id: 462058435
