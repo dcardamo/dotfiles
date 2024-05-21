@@ -8,13 +8,13 @@ brew "mas"
 
 #cask "adobe-dng-converter"
 cask "arq"
-cask "brave-browser"
+#cask "brave-browser"
 cask "docker"
 cask "font-fira-code-nerd-font"
 #cask "github"
 #cask "hammerspoon"
-cask "hazel"
-cask "little-snitch"
+#cask "hazel"
+#cask "little-snitch"
 # cask "raycast"   # spotlight is better than it used to be
 # cask "spotify" # no sha
 cask "stats"
