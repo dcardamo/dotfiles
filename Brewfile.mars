@@ -1,5 +1,4 @@
 tap "buo/cask-upgrade"
-tap "homebrew/cask-fonts"
 
 # set arguments for all 'brew install --cask' commands
 cask_args appdir: "~/Applications", require_sha: true
@@ -17,6 +16,7 @@ cask "font-fira-code-nerd-font"
 #cask "microsoft-teams"
 #cask "orion"
 cask "obsidian"
+cask "qmk-toolbox"
 # cask "raycast"   # spotlight is better than it used to be
 cask "reader"
 # cask "spotify" # no sha
