@@ -73,6 +73,7 @@ in {
     ./modules/base.nix
     inputs.nixvim.homeManagerModules.nixvim
     ./modules/nvim.nix
+    ./modules/helix.nix
     ./modules/fish.nix
     ./modules/fzf.nix
     ./modules/starship.nix
