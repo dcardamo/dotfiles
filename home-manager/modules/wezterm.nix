@@ -102,57 +102,6 @@ in {
       config.front_end = 'WebGpu'
       config.webgpu_power_preference = 'HighPerformance'
 
-      -- simulate tmux prefix with leader
-      config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
-      config.keys = {
-        -- create split panes
-        {
-          key = '\\',
-          mods = 'LEADER',
-          action = w.action.SplitPane({ direction = 'Right', size = { Percent = 30 } }),
-        },
-        {
-          key = '-',
-          mods = 'LEADER',
-          action = w.action.SplitPane({ direction = 'Down', size = { Percent = 20 } }),
-        },
-        -- move between split panes
-        split_nav('move', 'h'),
-        split_nav('move', 'j'),
-        split_nav('move', 'k'),
-        split_nav('move', 'l'),
-        -- resize panes
-        split_nav('resize', 'h'),
-        split_nav('resize', 'j'),
-        split_nav('resize', 'k'),
-        split_nav('resize', 'l'),
-        -- new window
-        {
-          key = 'n',
-          mods = 'META',
-          action = w.action.SpawnCommandInNewTab({
-            args = { '${pkgs.fish}/bin/fish' },
-            cwd = w.home_dir,
-          }),
-        },
-        {
-          key = 'LeftArrow',
-          mods = 'META',
-          action = w.action.ActivateTabRelative(-1),
-        },
-        {
-          key = 'RightArrow',
-          mods = 'META',
-          action = w.action.ActivateTabRelative(1),
-        },
-        { key = '-', mods = 'SUPER', action = w.action.DecreaseFontSize },
-        { key = '0', mods = 'SUPER', action = w.action.ResetFontSize },
-        { key = '=', mods = 'SUPER', action = w.action.IncreaseFontSize },
-        { key = 'c', mods = 'SUPER', action = w.action.CopyTo('Clipboard') },
-        { key = 'v', mods = 'SUPER', action = w.action.PasteFrom('Clipboard') },
-        { key = '[', mods = 'LEADER', action = w.action.ActivateCopyMode },
-      }
-
       return config
     '';
   };
