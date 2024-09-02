@@ -5,7 +5,7 @@
 }: {
   home.packages = [
     inputs.devenv.packages."${pkgs.system}".devenv
-    pkgs.cachix
+    #pkgs.cachix
   ];
 
   programs.direnv = {
