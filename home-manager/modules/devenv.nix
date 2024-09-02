@@ -4,8 +4,9 @@
   ...
 }: {
   home.packages = [
-    inputs.devenv.packages."${pkgs.system}".devenv
+    #inputs.devenv.packages."${pkgs.system}".devenv
     #pkgs.cachix
+    pkgs.devenv
   ];
 
   programs.direnv = {

@@ -3,25 +3,26 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Home manager
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
+      #url = "github:nix-community/home-manager/release-24.05";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixvim = {
-      url = "github:nix-community/nixvim/nixos-23.11";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+#    nixvim = {
+#      url = "github:nix-community/nixvim/nixos-24.05";
+#      inputs.nixpkgs.follows = "nixpkgs";
+#    };
 
     alejandra = {
       url = "github:kamadorueda/alejandra/3.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    devenv.url = "github:cachix/devenv/latest";
+    # devenv.url = "github:cachix/devenv/latest";
   };
 
   outputs = {
