@@ -23,8 +23,8 @@ cask "reader"
 #cask "steermouse"
 #cask "stats"
 # cask "steam" # no sha
-cask "wezterm"
-cask "visual-studio-code"
+#cask "wezterm"
+#cask "visual-studio-code"
 
 mas "AdGuard for Safari", id: 1440147259
 #mas "Affinity Photo 2", id: 1616822987
