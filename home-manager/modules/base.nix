@@ -1,9 +1,5 @@
-{
-  pkgs,
-  lib,
-  vars,
-  ...
-}: let
+{ pkgs, lib, vars, ... }:
+let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
   inherit (stdenv) isDarwin;
@@ -17,7 +13,9 @@ in {
       [languages]
       rust = ["${pkgs.rustfmt}/bin/rustfmt"]
       go = ["${pkgs.go}/bin/gofmt"]
-      lua = ["${pkgs.stylua}/bin/stylua --config-path ${../../conf/stylua.toml} -s -"]
+      lua = ["${pkgs.stylua}/bin/stylua --config-path ${
+        ../../conf/stylua.toml
+      } -s -"]
       nix = ["${pkgs.nixfmt}/bin/nixfmt"]
     '';
     "ripgrep_ignore".text = ''
@@ -57,7 +55,6 @@ in {
       # formatters and linters
       nixfmt
       alejandra
-      rustfmt
       shfmt
       cbfmt
       stylua
@@ -69,9 +66,7 @@ in {
       # LSP servers
       efm-langserver
       nil
-      rust-analyzer
       taplo
-      gopls
       lua
       shellcheck
       marksman
@@ -89,18 +84,11 @@ in {
       luajitPackages.jsregexp
       fzf
       cargo
-      cargo-nextest
-      clippy
       glow
       pv
       gnutar
-    ]
-    ++ lib.lists.optionals isLinux []
-    ++ lib.lists.optionals isDarwin [
-      exiftool
-      ffmpeg
-      imapsync
-    ];
+    ] ++ lib.lists.optionals isLinux [ ]
+    ++ lib.lists.optionals isDarwin [ exiftool ffmpeg imapsync ];
 
   programs.gh.enable = true;
 }
