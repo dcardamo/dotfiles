@@ -10,6 +10,12 @@ right one gets used.
 Then install all dependencies:
 ```
 make install
+
+Add self to trusted-users list in /etc/nix/nix.conf
+```
+trusted-users = root dan
+
+sudo pkill nix-daemon
 ```
 
 ## Update
