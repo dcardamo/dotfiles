@@ -13,7 +13,9 @@
       };
       keys = {
         # insert = { esc = [ "collapse_selection" "normal_mode" ]; };
+        insert = { "C-e" = "insert_at_line_end"; };
         normal = {
+          "C-e" = "goto_line_end";
           "Z" = {
             "Q" = ":quit!";
             "Z" = ":x";
@@ -22,6 +24,11 @@
           "$" = "goto_line_end";
           "%" = "match_brackets";
           "G" = "goto_file_end";
+          # to allow natural movement while tmux swallows the CTRL versions of these keys
+          "A-h" = "jump_view_left";
+          "A-j" = "jump_view_down";
+          "A-k" = "jump_view_up";
+          "A-l" = "jump_view_right";
         };
       };
     };

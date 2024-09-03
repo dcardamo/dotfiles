@@ -15,14 +15,6 @@ nix-channel --update
 darwin_build() {
     echo "${GREEN}Building for darwin...${CLEAR}"
     home-manager switch --flake ~/git/dotfiles/.#mac
-
-    echo "Update homebrew"
-    /opt/homebrew/bin/brew analytics off
-    /opt/homebrew/bin/brew bundle
-    /opt/homebrew/bin/brew update
-    /opt/homebrew/bin/brew bundle --force cleanup
-    /opt/homebrew/bin/mas upgrade
-
     echo "${GREEN}Done${CLEAR}"
 }
 
