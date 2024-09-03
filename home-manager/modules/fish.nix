@@ -37,7 +37,7 @@ in {
       ll = "ls -l --git";
       l = "ls -laH";
       lg = "ls -lG";
-      vi = "nvim";
+      # Take away muscle memory:  vi = "nvim";
       e = "hx";
       clear = "clear && _prompt_move_to_bottom";
       # Mac gaming FPS graph

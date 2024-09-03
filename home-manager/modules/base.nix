@@ -71,10 +71,18 @@ in {
       shellcheck
       marksman
       sumneko-lua-language-server
-      nodePackages_latest.typescript-language-server
-
-      # this includes css-lsp, html-lsp, json-lsp, eslint-lsp
-      nodePackages_latest.vscode-langservers-extracted
+      (python3.withPackages (ps:
+        with ps;
+        [
+          python-lsp-server
+          python-lsp-black
+          black
+          isort
+          jedi
+          pyflakes
+          pylint
+          pyls-isort
+        ] ++ python-lsp-server.optional-dependencies.all))
 
       # other utils and plugin dependencies
       fd
