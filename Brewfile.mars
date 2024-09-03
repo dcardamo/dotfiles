@@ -23,7 +23,7 @@ cask "reader"
 #cask "steermouse"
 #cask "stats"
 # cask "steam" # no sha
-#cask "wezterm"
+cask "wezterm"
 #cask "visual-studio-code"
 
 mas "AdGuard for Safari", id: 1440147259

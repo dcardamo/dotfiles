@@ -1,12 +1,7 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
-{
-  inputs,
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
+{ inputs, lib, config, pkgs, ... }:
+let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
   inherit (stdenv) isDarwin;
@@ -40,18 +35,13 @@ in {
   manual.json.enable = false;
 
   home.username = "dan";
-  home.homeDirectory =
-    if isLinux
-    then "/home/dan"
-    else "/Users/dan";
+  home.homeDirectory = if isLinux then "/home/dan" else "/Users/dan";
 
   home.packages = with pkgs;
-    [spotify]
-    ++ lib.lists.optionals isDarwin [
+    [ spotify ] ++ lib.lists.optionals isDarwin [
       # put macOS specific packages here
       # TODO
-    ]
-    ++ lib.lists.optionals isLinux [
+    ] ++ lib.lists.optionals isLinux [
       #put Linux specific packages here
       vlc
     ];

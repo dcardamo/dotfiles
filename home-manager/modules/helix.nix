@@ -2,7 +2,7 @@
   programs.helix = {
     enable = true;
     settings = {
-      theme = "doom_acario_dark";
+      theme = "bogster";
       editor.cursor-shape = {
         normal = "block";
         insert = "bar";
@@ -15,6 +15,10 @@
             "Q" = ":quit!";
             "Z" = ":x";
           };
+          "0" = "goto_line_start";
+          "$" = "goto_line_end";
+          "%" = "match_brackets";
+          "G" = "goto_file_end";
 
           /* comment out vim like stuff
 
@@ -320,16 +324,16 @@
         */
       };
     };
-    languages.language = [{
-      name = "nix";
-      auto-format = true;
-      formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
-    }];
-    themes = {
-      autumn_night_transparent = {
-        "inherits" = "autumn_night";
-        "ui.background" = { };
-      };
-    };
+    languages.language = [
+      {
+        name = "nix";
+        auto-format = true;
+        formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
+      }
+      {
+        name = "rust";
+        auto-format = true;
+      }
+    ];
   };
 }
