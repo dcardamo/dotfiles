@@ -24,6 +24,7 @@
           "$" = "goto_line_end";
           "%" = "match_brackets";
           "G" = "goto_file_end";
+          "D" = "kill_to_line_end";
           # to allow natural movement while tmux swallows the CTRL versions of these keys
           "A-h" = "jump_view_left";
           "A-j" = "jump_view_down";

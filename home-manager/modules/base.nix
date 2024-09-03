@@ -37,66 +37,21 @@ in {
   home.packages = with pkgs;
     [
       ripgrep
-      cargo
-      jq
       mosh
-      zellij
-      gnumake
-      direnv
       htop
       neofetch
-      pgcli
-      zoxide
       wget
-
-      # for compiling Treesitter parsers
-      gcc
-
-      # formatters and linters
-      nixfmt
-      alejandra
-      shfmt
-      cbfmt
-      stylua
-      codespell
-      statix
-      luajitPackages.luacheck
-      #prettierd
-
-      # LSP servers
-      efm-langserver
-      nil
-      taplo
-      lua
-      shellcheck
-      marksman
-      sumneko-lua-language-server
-      (python3.withPackages (ps:
-        with ps;
-        [
-          python-lsp-server
-          python-lsp-black
-          black
-          isort
-          jedi
-          pyflakes
-          pylint
-          pyls-isort
-        ] ++ python-lsp-server.optional-dependencies.all))
 
       # other utils and plugin dependencies
       fd
       catimg
-      sqlite
-      lemmy-help
-      luajitPackages.jsregexp
+      #luajitPackages.jsregexp #not sure what this is for.  comment out for now.
       fzf
-      cargo
-      glow
-      pv
+      # pv # visualize pipe streams
       gnutar
-    ] ++ lib.lists.optionals isLinux [ ]
-    ++ lib.lists.optionals isDarwin [ exiftool ffmpeg imapsync ];
-
-  programs.gh.enable = true;
+    ] ++ lib.lists.optionals isLinux [ ] ++ lib.lists.optionals isDarwin [
+      #exiftool
+      #ffmpeg
+      #imapsync 
+    ];
 }

@@ -1,16 +1,8 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{
-  config,
-  pkgs,
-  lib,
-  inputs,
-  ...
-}: {
-  imports = [
-    ./hardware-configuration.nix
-  ];
+{ config, pkgs, lib, inputs, ... }: {
+  imports = [ ./hardware-configuration.nix ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -19,11 +11,12 @@
   nix = {
     # This will add each flake input as a registry
     # To make nix3 commands consistent with your flake
-    registry = lib.mapAttrs (_: value: {flake = value;}) inputs;
+    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
 
     # This will additionally add your inputs to the system's legacy channels
     # Making legacy nix commands consistent as well, awesome!
-    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
+    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}")
+      config.nix.registry;
 
     settings = {
       # Enable flakes and new 'nix' command
@@ -65,7 +58,7 @@
   users.users.dan = {
     isNormalUser = true;
     description = "Dan Cardamore";
-    extraGroups = ["networkmanager" "wheel"];
+    extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
       # ipad
@@ -75,7 +68,7 @@
       # mac
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKZ02W1AEyMEG9w1LBpolM8FXIGHfJkgfT7l2qwyeXR"
     ];
-    packages = with pkgs; [];
+    packages = with pkgs; [ ];
   };
 
   # Allow unfree packages
@@ -91,18 +84,12 @@
       #   });
       # })
     ];
-    config = {
-      allowUnfree = true;
-    };
+    config = { allowUnfree = true; };
   };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    neovim
-    home-manager
-    git
-  ];
+  environment.systemPackages = with pkgs; [ neovim home-manager git ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

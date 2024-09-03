@@ -48,14 +48,14 @@ in {
 
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
-      "spotify"
-      "discord"
-      "1password"
-      "1password-cli"
+      #"spotify"
+      #"discord"
+      #"1password"
+      #"1password-cli"
       # This is required for pkgs.nodePackages_latest.vscode-langservers-extracted on NixOS
       # however VS Code should NOT be installed on this system!
       # Use VS Codium instead: https://github.com/VSCodium/vscodium
-      "vscode"
+      #"vscode"
     ];
 
   # You can import other home-manager modules here
@@ -63,7 +63,7 @@ in {
     ./modules/base.nix
     ./modules/dev.nix
     #inputs.nixvim.homeManagerModules.nixvim
-    ./modules/lazyvim
+    #./modules/lazyvim
     #./modules/nixvim.nix
     ./modules/helix.nix
     ./modules/fish.nix
@@ -73,8 +73,7 @@ in {
     ./modules/git.nix
     ./modules/ssh.nix
     ./modules/wezterm.nix
-    ./modules/zellij
-    ./modules/darwin/hammerspoon
+    #./modules/zellij
     ./modules/devenv.nix
     ./modules/tmux.nix
   ];
