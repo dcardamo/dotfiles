@@ -5,7 +5,7 @@
     defaultEditor = true;
 
     settings = {
-      theme = "bogster";
+      theme = "tokyonight_moon";
       editor.cursor-shape = {
         normal = "block";
         insert = "bar";
@@ -38,7 +38,7 @@
         {
           name = "nix";
           auto-format = true;
-          formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
+          formatter.command = "${pkgs.nixfmt-classic}/bin/nixfmt";
         }
         {
           name = "rust";
