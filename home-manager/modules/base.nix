@@ -16,7 +16,7 @@ in {
       lua = ["${pkgs.stylua}/bin/stylua --config-path ${
         ../../conf/stylua.toml
       } -s -"]
-      nix = ["${pkgs.nixfmt}/bin/nixfmt"]
+      nix = ["${pkgs.nixfmt-classic}/bin/nixfmt"]
     '';
     "ripgrep_ignore".text = ''
       .git/
@@ -53,7 +53,7 @@ in {
       gcc
 
       # formatters and linters
-      nixfmt
+      nixfmt-classic
       alejandra
       shfmt
       cbfmt
