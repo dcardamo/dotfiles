@@ -5,7 +5,7 @@
     defaultEditor = true;
 
     settings = {
-      theme = "bogster";
+      theme = "tokyonight_moon";
       editor.cursor-shape = {
         normal = "block";
         insert = "bar";
