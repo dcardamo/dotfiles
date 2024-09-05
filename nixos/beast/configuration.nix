@@ -61,12 +61,14 @@
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
-      # ipad
-      "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBbeNjgDVQRBqrmJalbt2YOeYFmSFihW/jVd94fqlIRYiCqFMSyO4joyXjfwvQScru5UeQsw+MWodgV8aHQM1QY= dan@ipad"
-      # iphone
+      # dan ipad m4 pro:
+      ''
+        ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJ0uue7ICe3WJiXuKbFlsO9kZY+Az6TCDrn67Tl/KReHJPq4V86XdihWCG08IFUqSFzBqIC8zw6rmVJ+rduTYDU= dan@ipad
+      ''
+      # mac laptop mars
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFe+4bVpPWZTF344M5TRzaz5/90s5finWdYFXhs+mwac dan@dans-mbp.lan"
+      # dan iphone 15 pro
       "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEaCACN0Pby6uZWYBZ3umr8SCobH6OQgQ5gYs7IQUM55kiTY0A+l5HJ7FYKNUcYXq+HPbwkZ33ixjkfaZc99OTU= dan@iphone"
-      # mac
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKZ02W1AEyMEG9w1LBpolM8FXIGHfJkgfT7l2qwyeXR"
     ];
     packages = with pkgs; [ ];
   };

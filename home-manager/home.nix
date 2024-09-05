@@ -38,12 +38,11 @@ in {
   home.homeDirectory = if isLinux then "/home/dan" else "/Users/dan";
 
   home.packages = with pkgs;
-    [ spotify ] ++ lib.lists.optionals isDarwin [
+    [ ] ++ lib.lists.optionals isDarwin [
       # put macOS specific packages here
       # TODO
     ] ++ lib.lists.optionals isLinux [
       #put Linux specific packages here
-      vlc
     ];
 
   nixpkgs.config.allowUnfreePredicate = pkg:
@@ -61,21 +60,17 @@ in {
   # You can import other home-manager modules here
   imports = [
     ./modules/base.nix
+    ./modules/bat.nix
     ./modules/dev.nix
-    #inputs.nixvim.homeManagerModules.nixvim
-    #./modules/lazyvim
-    #./modules/nixvim.nix
-    ./modules/helix.nix
+    ./modules/devenv.nix
     ./modules/fish.nix
     ./modules/fzf.nix
-    ./modules/starship.nix
-    ./modules/bat.nix
     ./modules/git.nix
+    ./modules/helix.nix
     ./modules/ssh.nix
-    ./modules/wezterm.nix
-    #./modules/zellij
-    ./modules/devenv.nix
+    ./modules/starship.nix
     ./modules/tmux.nix
+    ./modules/wezterm.nix
   ];
 
   xdg.configFile = {

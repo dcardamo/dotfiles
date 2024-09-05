@@ -1,6 +1,6 @@
 # Dan's configuration as a nix Flake for darwin and maybe NixOS/Linux too
 
-## Installation
+## Installation MacOS
 Make sure that this repo is checked out first to ~/git/dotfiles
 First, if on Mac, symlink the Brewfile.$HOSTNAME to Brewfile so that the
 right one gets used.
@@ -22,6 +22,16 @@ sudo pkill nix-daemon
 ```
 make update
 ```
+
+## Installation on a new NixOS machine
+Using nix-anywhere:
+https://github.com/nix-community/nixos-anywhere/blob/main/docs/quickstart.md
+https://github.com/nix-community/nixos-anywhere/blob/main/docs/howtos/no-os.md#installing-on-a-machine-with-no-operating-system
+
+1. Boot into a new nixos installer
+2. Set the ssh password for the nixos user:  `passwd`
+3. Generate the nixos configuration files in /mnt/etc/nix.   Copy them to this project:
+  `nixos-generate-config --no-filesystems --dir /mnt`
 
 ## Inspiration
 * https://github.com/mrjones2014/dotfiles
