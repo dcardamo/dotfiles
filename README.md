@@ -10,6 +10,7 @@ right one gets used.
 Then install all dependencies:
 ```
 make install
+```
 
 Add self to trusted-users list in /etc/nix/nix.conf
 ```
@@ -32,6 +33,11 @@ https://github.com/nix-community/nixos-anywhere/blob/main/docs/howtos/no-os.md#i
 2. Set the ssh password for the nixos user:  `passwd`
 3. Generate the nixos configuration files in /mnt/etc/nix.   Copy them to this project:
   `nixos-generate-config --no-filesystems --dir /mnt`
+4. build the machine:
+    pluto:
+    ```
+      nix run github:nix-community/nixos-anywhere -- --flake ~/git/dotfiles/.#pluto nixos@pluto
+    ```
 
 ## Inspiration
 * https://github.com/mrjones2014/dotfiles
