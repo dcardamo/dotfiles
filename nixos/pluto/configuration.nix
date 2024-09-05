@@ -24,11 +24,6 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-  console = {
-    font = "Lat2-Terminus16";
-    keyMap = "us";
-    useXkbConfig = true; # use xkb.options in tty.
-  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.dan = {
@@ -52,6 +47,8 @@
   environment.systemPackages = with pkgs; [ helix gitMinimal ];
 
   services.openssh.enable = true;
+  programs.fish.enable = true;
+  programs.mosh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
