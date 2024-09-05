@@ -22,7 +22,11 @@ if [ "$(uname)" == "Darwin" ]; then
     darwin_build
 elif [ "$(uname)" == "Linux" ]; then
     echo "${GREEN}Building for nixos...${CLEAR}"
-    sudo nixos-rebuild switch --flake ~/git/dotfiles/.#linuxstandalone
+    if [ "$(hostname)" == "pluto" ]; then
+        sudo nixos-rebuild switch --flake ~/git/dotfiles/.#$(hostname)
+    else
+        echo "${RED}Unknown hostname${CLEAR}"
+    fi
 else
     echo "${RED}Unknown platform${CLEAR}"
 fi

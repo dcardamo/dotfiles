@@ -30,14 +30,15 @@ https://github.com/nix-community/nixos-anywhere/blob/main/docs/quickstart.md
 https://github.com/nix-community/nixos-anywhere/blob/main/docs/howtos/no-os.md#installing-on-a-machine-with-no-operating-system
 
 1. Boot into a new nixos installer
-2. Set the ssh password for the nixos user:  `passwd`
-3. Generate the nixos configuration files in /mnt/etc/nix.   Copy them to this project:
+2. Partition and format drives:  https://nixos.wiki/wiki/NixOS_Installation_Guide
+3. Set the ssh password for the nixos user:  `passwd`
+4. Copy an ssh key onto the system that has access to github and then checkout this repo
+5. Generate the nixos configuration files in /mnt/etc/nix.   Copy them to this project:
   `nixos-generate-config --no-filesystems --dir /mnt`
-4. build the machine:
+6. install the machine:
     pluto:
     ```
-      nix run github:nix-community/nixos-anywhere -- \
-        --flake ~/git/dotfiles/.#pluto nixos@pluto
+      sudo nixos-install --flake .#pluto
     ```
 
 ## Inspiration
