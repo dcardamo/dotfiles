@@ -36,7 +36,8 @@ https://github.com/nix-community/nixos-anywhere/blob/main/docs/howtos/no-os.md#i
 4. build the machine:
     pluto:
     ```
-      nix run github:nix-community/nixos-anywhere -- --flake ~/git/dotfiles/.#pluto nixos@pluto
+      nix run github:nix-community/nixos-anywhere -- \
+        --flake ~/git/dotfiles/.#pluto nixos@pluto
     ```
 
 ## Inspiration

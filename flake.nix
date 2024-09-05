@@ -33,7 +33,7 @@
       pluto = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        extraSpecialArgs = {
+        specialArgs = {
           inherit inputs;
           vars = (import ./lib/vars.nix) {
             isDarwin = false;
@@ -44,7 +44,18 @@
           disko.nixosModules.disko
           { disko.devices.disk.disk1.device = "/dev/nvme1n1"; }
           ./nixos/pluto/configuration.nix
-          ./home-manager/home.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useUserPackages = true;
+            home-manager.users.dan = import ./home-manager/home.nix;
+            home-manager.extraSpecialArgs = {
+              inherit inputs;
+              vars = (import ./lib/vars.nix) {
+                isDarwin = false;
+                isLinux = true;
+              };
+            };
+          }
         ];
       };
 

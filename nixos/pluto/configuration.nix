@@ -6,10 +6,10 @@
 
 {
   imports = [ # Include the results of the hardware scan.
-    (modulesPath + "/installer/scan-notdetected.nix")
-    (modulesPath + "/profiles/qemu-guest.nix")
-    ./pluto/hardware-configuration.nix
-    ./pluto/disk-config.nix
+    # (modulesPath + "/installer/scan/notdetected.nix")
+    # (modulesPath + "/profiles/qemu-guest.nix")
+    ./hardware-configuration.nix
+    ./disk-config.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -85,6 +85,5 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "24.05"; # Did you read the comment?
-
 }
 
