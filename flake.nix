@@ -41,8 +41,8 @@
           };
         };
         modules = [
-          disko.nixosModules.disko
-          { disko.devices.disk.disk1.device = "/dev/nvme1n1"; }
+          # disko.nixosModules.disko
+          # { disko.devices.disk.disk1.device = "/dev/nvme1n1"; }
           ./nixos/pluto/configuration.nix
           home-manager.nixosModules.home-manager
           {

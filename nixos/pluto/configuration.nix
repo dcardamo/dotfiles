@@ -6,10 +6,7 @@
 
 {
   imports = [ # Include the results of the hardware scan.
-    # (modulesPath + "/installer/scan/notdetected.nix")
-    # (modulesPath + "/profiles/qemu-guest.nix")
     ./hardware-configuration.nix
-    ./disk-config.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
