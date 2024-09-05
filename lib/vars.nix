@@ -1,4 +1,4 @@
-{isDarwin}: let
+{isDarwin, ...}: let
   usePantheon = false;
 in {
   inherit usePantheon;
