@@ -13,6 +13,21 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  nix = {
+    settings = {
+      # Enable flakes and new 'nix' command
+      experimental-features = "nix-command flakes";
+      # Deduplicate and optimize nix store
+      auto-optimise-store = true;
+    };
+
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+  };
+
   networking.hostName = "pluto";
 
   # Pick only one of the below networking options.
@@ -46,7 +61,13 @@
 
   environment.systemPackages = with pkgs; [ helix gitMinimal ];
 
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = true;
+    };
+  };
   programs.fish.enable = true;
   programs.mosh.enable = true;
 

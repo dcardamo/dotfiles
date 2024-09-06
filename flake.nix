@@ -58,27 +58,6 @@
           }
         ];
       };
-
-      # OLD, not used
-      #   beast = nixpkgs.lib.nixosSystem {
-      #     specialArgs = {
-      #       inherit inputs;
-      #       vars = (import ./lib/vars.nix) { isDarwin = false; };
-      #     }; # Pass flake inputs to our config
-      #     system = "x86_64-linux";
-      #     modules = [
-      #       ./nixos/beast/configuration.nix
-      #       home-manager.nixosModules.home-manager
-      #       {
-      #         home-manager.useUserPackages = true;
-      #         home-manager.users.dan = import ./home-manager/home.nix;
-      #         home-manager.extraSpecialArgs = {
-      #           inherit inputs;
-      #           vars = (import ./lib/vars.nix) { isDarwin = false; };
-      #         };
-      #       }
-      #     ];
-      #   };
     };
 
     # Standalone home-manager configuration entrypoint
