@@ -13,7 +13,11 @@
       };
       keys = {
         # insert = { esc = [ "collapse_selection" "normal_mode" ]; };
-        insert = { "C-e" = "insert_at_line_end"; };
+        insert = {
+          "C-e" = "insert_at_line_end";
+          # default keybinding.  Reminder its here instead of 'jj'
+          # "C-[" = "normal_mode";
+        };
         normal = {
           "C-e" = "goto_line_end";
           "Z" = {

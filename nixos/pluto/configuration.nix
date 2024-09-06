@@ -26,6 +26,22 @@
       dates = "weekly";
       options = "--delete-older-than 7d";
     };
+
+    settings = {
+      substituters = [ "https://cuda-maintainers.cachix.org" ];
+      trusted-public-keys = [
+        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+      ];
+    };
+  };
+
+  nixpkgs.config.allowUnfree = true;
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.graphics.enable = true;
+  hardware.nvidia = {
+    modesetting.enable = true;
+    open = false;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
   networking.hostName = "pluto";
