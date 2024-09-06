@@ -47,7 +47,7 @@
   environment.systemPackages = with pkgs; [ helix gitMinimal ];
 
   services.openssh.enable = true;
-  # programs.fish.enable = true;
+  programs.fish.enable = true;
   programs.mosh.enable = true;
 
   # Open ports in the firewall.
