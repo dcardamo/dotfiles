@@ -15,10 +15,11 @@ in {
     VISUAL = "hx";
     GIT_EDITOR = "hx";
     COLORTERM = "truecolor";
+    NIXPKGS_ALLOW_UNFREE = 1;
   };
 
   home.packages = with pkgs;
-    [ thefuck tealdeer tokei cachix ] ++ lib.lists.optionals isLinux [ xclip ];
+    [ tealdeer tokei ] ++ lib.lists.optionals isLinux [ ];
 
   programs.fish = {
     enable = true;
