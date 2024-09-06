@@ -14,6 +14,7 @@ in {
     EDITOR = "hx";
     VISUAL = "hx";
     GIT_EDITOR = "hx";
+    COLORTERM = "truecolor";
   };
 
   home.packages = with pkgs;
