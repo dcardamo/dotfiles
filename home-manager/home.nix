@@ -7,21 +7,7 @@ let
   inherit (stdenv) isDarwin;
 in {
   nixpkgs = {
-    # You can add overlays here
-    overlays = [
-      # If you want to use overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
-    ];
-    # Configure your nixpkgs instance
     config = {
-      # Disable if you don't want unfree packages
       allowUnfree = true;
       # Workaround for https://github.com/nix-community/home-manager/issues/2942
       # allowUnfreePredicate = (_: true);
@@ -43,18 +29,6 @@ in {
       # TODO
     ] ++ lib.lists.optionals isLinux [
       #put Linux specific packages here
-    ];
-
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [
-      #"spotify"
-      #"discord"
-      #"1password"
-      #"1password-cli"
-      # This is required for pkgs.nodePackages_latest.vscode-langservers-extracted on NixOS
-      # however VS Code should NOT be installed on this system!
-      # Use VS Codium instead: https://github.com/VSCodium/vscodium
-      #"vscode"
     ];
 
   # You can import other home-manager modules here

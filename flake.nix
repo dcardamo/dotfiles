@@ -20,11 +20,6 @@
   };
 
   outputs = { nixpkgs, disko, home-manager, ... }@inputs: {
-    # TODO: do I need these lines for formatter?
-    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
-    formmater.aarch64-darwin =
-      nixpkgs.legacyPackages.aarch64-darwin.nixpkgs-fmt;
-
     # nixos systems:
     # See reference for nix-anywhere:
     # https://github.com/nix-community/nixos-anywhere-examples/blob/main/flake.nix
@@ -32,7 +27,12 @@
       # watercooled nvidia 3090
       pluto = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        # old way
+        # pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+        };
         specialArgs = {
           inherit inputs;
           vars = (import ./lib/vars.nix) {
