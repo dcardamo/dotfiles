@@ -23,12 +23,7 @@
     codespell
     statix
     luajitPackages.luacheck
-    #prettierd
-
-    # LSP servers
-    nil
-    taplo
-    lua
     shellcheck
+    #prettierd
   ];
 }

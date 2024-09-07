@@ -75,9 +75,9 @@
             "file-line-ending"
             "position"
           ];
-          mode.normal = "";
-          mode.insert = "I";
-          mode.select = "S";
+          mode.normal = "󰅬";
+          mode.insert = "";
+          mode.select = "󰫙";
         };
       };
       keys = {
