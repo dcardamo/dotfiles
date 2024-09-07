@@ -5,10 +5,11 @@
     baseIndex = 1;
     escapeTime = 0;
 
-    plugins = with pkgs; [
-      tmuxPlugins.better-mouse-mode
-      tmuxPlugins.vim-tmux-navigator
-    ];
+    plugins = with pkgs;
+      [
+        tmuxPlugins.better-mouse-mode
+        # tmuxPlugins.vim-tmux-navigator
+      ];
 
     extraConfig = ''
       set -g default-terminal "xterm-256color"

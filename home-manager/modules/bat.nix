@@ -1,6 +1,9 @@
 {
   programs.bat = {
     enable = true;
-    config = {theme = "ansi";};
+    config = {
+      plain = true;
+      theme = "1337";
+    };
   };
 }

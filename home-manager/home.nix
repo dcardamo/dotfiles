@@ -34,6 +34,7 @@ in {
   # You can import other home-manager modules here
   imports = [
     ./modules/base.nix
+    ./modules/ripgrep.nix
     ./modules/bat.nix
     ./modules/dev.nix
     ./modules/devenv.nix

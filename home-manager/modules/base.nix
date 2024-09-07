@@ -36,7 +36,6 @@ in {
 
   home.packages = with pkgs;
     [
-      ripgrep
       mosh
       htop
       neofetch

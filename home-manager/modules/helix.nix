@@ -1,89 +1,333 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
+    bash-language-server
+    biome
+    clang-tools
+    docker-compose-language-service
+    dockerfile-language-server-nodejs
+    golangci-lint
+    golangci-lint-langserver
+    gopls
+    gotools
+    helix-gpt
     marksman
-    efm-langserver
-    sumneko-lua-language-server
-    (python3.withPackages (ps:
-      with ps;
-      [
-        python-lsp-server
-        python-lsp-black
-        black
-        isort
-        jedi
-        pyflakes
-        pylint
-        pyls-isort
-      ] ++ python-lsp-server.optional-dependencies.all))
+    nil
+    nixfmt
+    nodePackages.prettier
+    nodePackages.typescript-language-server
+    pgformatter
+    (python3.withPackages
+      (p: (with p; [ black isort python-lsp-black python-lsp-server ])))
+    rust-analyzer
+    taplo
+    taplo-lsp
+    # terraform-ls
+    typescript
+    vscode-langservers-extracted
+    yaml-language-server
   ];
   programs.helix = {
     enable = true;
-
     defaultEditor = true;
 
     settings = {
       theme = "tokyonight_moon";
-      editor.cursor-shape = {
-        normal = "block";
-        insert = "bar";
-        select = "underline";
+      editor = {
+        color-modes = true;
+        cursorline = true;
+        bufferline = "multiple";
+        auto-save = {
+          focus-lost = true;
+          after-delay.enable = true;
+        };
+        cursor-shape = {
+          normal = "block";
+          insert = "bar";
+          select = "underline";
+        };
+        file-picker = {
+          hidden = false;
+          ignore = false;
+        };
+        indent-guides = {
+          character = "┊";
+          render = true;
+          skip-levels = 1;
+        };
+        lsp = {
+          display-inlay-hints = true;
+          display-messages = true;
+        };
+
+        statusline = {
+          left = [
+            "mode"
+            "file-name"
+            "spinner"
+            "read-only-indicator"
+            "file-modification-indicator"
+          ];
+          right = [
+            "diagnostics"
+            "selections"
+            "register"
+            "file-type"
+            "file-line-ending"
+            "position"
+          ];
+          mode.normal = "";
+          mode.insert = "I";
+          mode.select = "S";
+        };
       };
       keys = {
         # insert = { esc = [ "collapse_selection" "normal_mode" ]; };
         insert = {
-          "C-e" = "insert_at_line_end";
+          C-e = "insert_at_line_end";
           # default keybinding.  Reminder its here instead of 'jj'
-          # "C-[" = "normal_mode";
+          # C-[ = "normal_mode";
         };
+
         normal = {
-          "C-e" = "goto_line_end";
-          "Z" = {
-            "Q" = ":quit!";
-            "Z" = ":x";
+          C-e = "goto_line_end";
+          Z = {
+            Q = ":quit!";
+            Z = ":x";
           };
           "0" = "goto_line_start";
           "$" = "goto_line_end";
           "%" = "match_brackets";
-          "G" = "goto_file_end";
-          "D" = "kill_to_line_end";
+          G = "goto_file_end";
+          D = "kill_to_line_end";
           # to allow natural movement while tmux swallows the CTRL versions of these keys
-          "A-h" = "jump_view_left";
-          "A-j" = "jump_view_down";
-          "A-k" = "jump_view_up";
-          "A-l" = "jump_view_right";
+          A-h = "jump_view_left";
+          A-j = "jump_view_down";
+          A-k = "jump_view_up";
+          A-l = "jump_view_right";
+        };
+
+        select = {
+          G = "goto_file_end";
         };
       };
     };
     languages = {
       language = [
         {
-          name = "nix";
+          name = "css";
+          language-servers = [ "vscode-css-language-server" "gpt" ];
+          formatter = {
+            command = "prettier";
+            args = [ "--stdin-filepath" "file.css" ];
+          };
           auto-format = true;
-          formatter.command = "${pkgs.nixfmt-classic}/bin/nixfmt";
         }
         {
-          name = "rust";
+          name = "go";
+          language-servers = [ "gopls" "golangci-lint-lsp" "gpt" ];
+          formatter = { command = "goimports"; };
+          auto-format = true;
+        }
+        {
+          name = "html";
+          language-servers = [ "vscode-html-language-server" "gpt" ];
+          formatter = {
+            command = "prettier";
+            args = [ "--stdin-filepath" "file.html" ];
+          };
+          auto-format = true;
+        }
+        {
+          name = "javascript";
+          language-servers = [
+            {
+              name = "typescript-language-server";
+              except-features = [ "format" ];
+            }
+            "biome"
+            "gpt"
+          ];
+          auto-format = true;
+        }
+        {
+          name = "json";
+          language-servers = [
+            {
+              name = "vscode-json-language-server";
+              except-features = [ "format" ];
+            }
+            "biome"
+          ];
+          formatter = {
+            command = "biome";
+            args = [
+              "format"
+              "--indent-style"
+              "space"
+              "--stdin-file-path"
+              "file.json"
+            ];
+          };
+          auto-format = true;
+        }
+        {
+          name = "jsonc";
+          language-servers = [
+            {
+              name = "vscode-json-language-server";
+              except-features = [ "format" ];
+            }
+            "biome"
+          ];
+          formatter = {
+            command = "biome";
+            args = [
+              "format"
+              "--indent-style"
+              "space"
+              "--stdin-file-path"
+              "file.jsonc"
+            ];
+          };
+          file-types = [ "jsonc" "hujson" ];
+          auto-format = true;
+        }
+        {
+          name = "jsx";
+          language-servers = [
+            {
+              name = "typescript-language-server";
+              except-features = [ "format" ];
+            }
+            "biome"
+            "gpt"
+          ];
+          formatter = {
+            command = "biome";
+            args = [
+              "format"
+              "--indent-style"
+              "space"
+              "--stdin-file-path"
+              "file.jsx"
+            ];
+          };
+          auto-format = true;
+        }
+        {
+          name = "markdown";
+          language-servers = [ "marksman" "gpt" ];
+          formatter = {
+            command = "prettier";
+            args = [ "--stdin-filepath" "file.md" ];
+          };
           auto-format = true;
         }
         {
           name = "python";
-          auto-format = true;
-          indent = {
-            tab-width = 4;
-            unit = "    ";
+          language-servers = [ "pylsp" "gpt" ];
+          formatter = {
+            command = "sh";
+            args = [ "-c" "isort --profile black - | black -q -" ];
           };
+          auto-format = true;
+        }
+        {
+          name = "rust";
+          language-servers = [ "rust-analyzer" "gpt" ];
+          auto-format = true;
+        }
+        {
+          name = "scss";
+          language-servers = [ "vscode-css-language-server" "gpt" ];
+          formatter = {
+            command = "prettier";
+            args = [ "--stdin-filepath" "file.scss" ];
+          };
+          auto-format = true;
+        }
+        {
+          name = "sql";
+          language-servers = [ "gpt" ];
+          formatter = {
+            command = "pg_format";
+            args = [ "-iu1" "--no-space-function" "-" ];
+          };
+          auto-format = true;
+        }
+        {
+          name = "toml";
+          language-servers = [ "taplo" ];
+          formatter = {
+            command = "taplo";
+            args = [ "fmt" "-o" "column_width=120" "-" ];
+          };
+          auto-format = true;
+        }
+        {
+          name = "tsx";
+          language-servers = [
+            {
+              name = "typescript-language-server";
+              except-features = [ "format" ];
+            }
+            "biome"
+            "gpt"
+          ];
+          formatter = {
+            command = "biome";
+            args = [
+              "format"
+              "--indent-style"
+              "space"
+              "--stdin-file-path"
+              "file.tsx"
+            ];
+          };
+          auto-format = true;
+        }
+        {
+          name = "typescript";
+          language-servers = [
+            {
+              name = "typescript-language-server";
+              except-features = [ "format" ];
+            }
+            "biome"
+            "gpt"
+          ];
+          formatter = {
+            command = "biome";
+            args = [
+              "format"
+              "--indent-style"
+              "space"
+              "--stdin-file-path"
+              "file.ts"
+            ];
+          };
+          auto-format = true;
+        }
+        {
+          name = "yaml";
+          language-servers = [ "yaml-language-server" ];
+          formatter = {
+            command = "prettier";
+            args = [ "--stdin-filepath" "file.yaml" ];
+          };
+          auto-format = true;
         }
       ];
-      language-server.pylsp = {
-        config.pylsp = {
-          plugins.black.enabled = true;
-          plugins.pyline.enabled = true;
-          plugins.pyflakes.enabled = false;
-          plugins.pyls_mypy.enabled = true;
-          plugins.pyls_mypy.live_mode = false;
-          plugins.isort.enabled = true;
-          plugins.rope_autoimport.enabled = true;
-        };
+      language-server.gpt = {
+        command = "helix-gpt";
+        args = [ "--handler" "copilot" ];
+      };
+      language-server.rust-analyzer.config.check = { command = "clippy"; };
+      language-server.yaml-language-server.config.yaml.schemas = {
+        kubernetes = "k8s/*.yaml";
+      };
+      language-server.typescript-language-server.config.tsserver = {
+        path = "${pkgs.typescript}/lib/node_modules/typescript/lib/tsserver.js";
       };
     };
   };

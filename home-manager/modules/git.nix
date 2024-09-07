@@ -1,89 +1,81 @@
-{ pkgs, vars, ... }:
-let
-  inherit (pkgs) git stdenv;
-  inherit (stdenv) isLinux;
-  git_checkout_fzf_script = pkgs.writeScript "git-ch.bash" ''
-    #!${pkgs.bash}/bin/bash
-    if test "$#" -ne 0; then
-      if [[ "$*" = "master" ]] || [[ "$*" = "main" ]]; then
-        git checkout "$(git branch --format '%(refname:short)' --sort=-committerdate --list master main | head -n1)"
-      else
-        git checkout "$@"
-      fi
-    else
-      git branch -a --format="%(refname:short)" | sed 's|origin/||g' | grep -v "HEAD" | grep -v "origin" | sort | uniq | ${pkgs.fzf}/bin/fzf | xargs git checkout
-    fi
-  '';
-in {
+{ lib, pkgs, ... }: {
   programs.git = {
     enable = true;
-    package = git.override {
-      guiSupport = false; # gui? never heard of her.
-    };
-    ignores = [ "Session.vim" ".DS_Store" ];
-    aliases = {
-      s = "status";
-      newbranch = "checkout -b";
-      commit-amend = "commit -a --amend --no-edit";
-      prune-branches = ''
-        !git branch --merged | grep -v \"master\" | grep -v \"main\" | grep -v \"$(git branch --show-current)\" | grep -v "[*]" >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches && git fetch --prune'';
-      ch = "!${git_checkout_fzf_script}";
-      add-ignore-whitespace =
-        "!git diff --ignore-all-space | git apply --cached";
-      copy-branch = "!git branch --show-current | ${vars.copyCmd}";
-      pending = "!git log $(git describe --tags --abbrev=0)..HEAD --oneline";
-    };
+
+    userName = "Dan Cardamore";
+    userEmail = "dan@hld.ca";
+
     extraConfig = {
-      user = {
-        name = "Dan Cardamore";
-        email = "dan@hld.ca";
-        # signingKey =
-        #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDsT6GLG7sY8YKX7JM+jqS3EAti3YMzwHKWViveqkZvu";
-      };
-      pull = { rebase = false; };
-      push = { autoSetupRemote = true; };
-      core = {
-        autocrlf = false;
-        pager = "${pkgs.delta}/bin/delta";
-        fsmonitor = true;
-        untrackedcache = true;
-      };
-      interactive = { diffFilter = "${pkgs.delta}/bin/delta --color-only"; };
-      init = { defaultBranch = "master"; };
-      delta = {
-        lineNumbers = true;
-        navigate = true;
-      };
+      advice.detachedHead = false;
+      branch.autosetuprebase = "always";
+
       color = {
-        ui = true;
-        "diff-highlight" = {
-          oldNormal = "red bold";
-          oldHighlight = "red bold 52";
-          newNormal = "green bold";
-          newHighlight = "green bold 22";
+        branch = {
+          current = "green reverse";
+          local = "green";
+          remote = "yellow";
         };
-        diff = {
-          meta = "11";
-          frag = "magenta bold";
-          func = "146 bold";
-          commit = "yellow bold";
-          old = "red bold";
-          new = "green bold";
-          whitespace = "red reverse";
+
+        status = {
+          added = "green";
+          changed = "yellow";
+          untracked = "blue";
         };
       };
-      fetch = { prune = true; };
-      checkout = { defaultRemote = "origin"; };
-      # faster git server communications
-      # https://git-scm.com/docs/protocol-v2
-      protocol = { version = 2; };
-      url = {
-        # Force GitHub to use SSH
-        "git@github.com:" = { insteadOf = "https://github.com/"; };
-        # Use HTTPS for cargo updates
-        "https://github.com/rust-lang/crates.io-index" = {
-          insteadOf = "https://github.com/rust-lang/crates.io-index";
+
+      core = {
+        autocrlf = "input";
+        untrackedCache = true;
+      };
+
+      diff = {
+        colorMoved = "default";
+
+        gpg = {
+          binary = true;
+          textconv = "${lib.getExe pkgs.gnupg} --decrypt --quiet --yes --compress-algo=none --no-encrypt-to --batch --use-agent";
         };
+      };
+
+      init.defaultBranch = "main";
+      push.default = "current";
+
+      rebase = {
+        autostash = true;
+        autosquash = true;
+      };
+
+      user.useConfigOnly = true;
+    };
+
+    ignores = [
+      ".direnv"
+      "__pycache__"
+      "node_modules"
+      "*.log"
+      ".DS_Store"
+    ];
+
+    delta = {
+      enable = true;
+      options = {
+        features = "hyperlinks";
+        # file-added-label = "[+]";
+        # file-copied-label = "[C]";
+        # file-decoration-style = "yellow ul";
+        # file-modified-label = "[M]";
+        # file-removed-label = "[-]";
+        # file-renamed-label = "[R]";
+        # file-style = "yellow bold";
+        # hunk-header-decoration-style = "omit";
+        # hunk-header-style = "syntax italic #303030";
+        # minus-emph-style = "syntax bold #780000";
+        # minus-style = "syntax #400000";
+        # plus-emph-style = "syntax bold #007800";
+        # plus-style = "syntax #004000";
+        syntax-theme = "gruvbox-dark";
+        side-by-side = true;
+        # width = 1;
       };
     };
   };
