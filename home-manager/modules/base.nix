@@ -31,6 +31,7 @@ in {
       htop
       neofetch
       wget
+      duf
 
       # other utils and plugin dependencies
       fd
