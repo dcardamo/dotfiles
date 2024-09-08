@@ -30,10 +30,6 @@ make update
 
 ## Installation on a new NixOS machine
 
-Using nix-anywhere:
-https://github.com/nix-community/nixos-anywhere/blob/main/docs/quickstart.md
-https://github.com/nix-community/nixos-anywhere/blob/main/docs/howtos/no-os.md#installing-on-a-machine-with-no-operating-system
-
 1. Boot into a new nixos installer
 2. Partition and format drives: https://nixos.wiki/wiki/NixOS_Installation_Guide
 
@@ -99,7 +95,6 @@ https://github.com/nix-community/nixos-anywhere/blob/main/docs/howtos/no-os.md#i
    ```
      cd ~/dotfiles
      sudo nixos-install --flake .#<new machine host name>
-     sudo passwd dan
    ```
 6. Before rebooting into the new system, git push the changes:
    ```
@@ -108,6 +103,7 @@ https://github.com/nix-community/nixos-anywhere/blob/main/docs/howtos/no-os.md#i
       git commit -m "installed new system <hostname>"
       git push origin
    ```
+7. after reboot: `sudo passwd dan`
 
 ## Influences
 
