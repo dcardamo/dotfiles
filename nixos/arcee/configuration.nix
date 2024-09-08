@@ -61,7 +61,7 @@
   programs.fish.enable = true;
   programs.mosh.enable = true;
 
-  virtualization.docker.enable = true;
+  virtualisation.docker.enable = true;
 
   system.stateVersion = "24.05"; # Did you read the comment?
 }

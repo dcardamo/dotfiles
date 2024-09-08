@@ -58,24 +58,47 @@
           }
         ];
       };
-    };
 
-    # Standalone home-manager configuration entrypoint
-    # Available through 'home-manager --flake .#your-username@your-hostname'
-    homeConfigurations = {
-      "dan@arcee.local" = home-manager.lib.homeManagerConfiguration {
-        pkgs =
-          nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {
+      
+      # Home docker server
+      arcee = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        # old way
+        # pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+        };
+        specialArgs = {
           inherit inputs;
           vars = (import ./lib/vars.nix) {
             isDarwin = false;
             isLinux = true;
           };
-        }; # Pass flake inputs to our config
-        # > Our main home-manager configuration file <
-        modules = [ ./home-manager/home.nix ];
+        };
+        modules = [
+          # disko.nixosModules.disko
+          # { disko.devices.disk.disk1.device = "/dev/nvme1n1"; }
+          ./nixos/arcee/configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useUserPackages = true;
+            home-manager.users.dan = import ./home-manager/home.nix;
+            home-manager.extraSpecialArgs = {
+              inherit inputs;
+              vars = (import ./lib/vars.nix) {
+                isDarwin = false;
+                isLinux = true;
+              };
+            };
+          }
+        ];
       };
+    };
+
+    # Standalone home-manager configuration entrypoint
+    # Available through 'home-manager --flake .#your-username@your-hostname'
+    homeConfigurations = {
       "mac" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.aarch64-darwin;
         extraSpecialArgs = {
