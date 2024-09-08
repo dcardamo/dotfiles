@@ -98,6 +98,41 @@
           }
         ];
       };
+
+      # cottage docker server
+      heatwave = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        # old way
+        # pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+        };
+        specialArgs = {
+          inherit inputs;
+          vars = (import ./lib/vars.nix) {
+            isDarwin = false;
+            isLinux = true;
+          };
+        };
+        modules = [
+          # disko.nixosModules.disko
+          # { disko.devices.disk.disk1.device = "/dev/nvme1n1"; }
+          ./nixos/heatwave/configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useUserPackages = true;
+            home-manager.users.dan = import ./home-manager/home.nix;
+            home-manager.extraSpecialArgs = {
+              inherit inputs;
+              vars = (import ./lib/vars.nix) {
+                isDarwin = false;
+                isLinux = true;
+              };
+            };
+          }
+        ];
+      };
     };
 
     # Standalone home-manager configuration entrypoint
@@ -108,17 +143,6 @@
         extraSpecialArgs = {
           inherit inputs;
           vars = (import ./lib/vars.nix) {isDarwin = true;};
-        };
-        modules = [./home-manager/home.nix];
-      };
-      "linuxstandalone" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        extraSpecialArgs = {
-          inherit inputs;
-          vars = (import ./lib/vars.nix) {
-            isDarwin = false;
-            isLinux = true;
-          };
         };
         modules = [./home-manager/home.nix];
       };
