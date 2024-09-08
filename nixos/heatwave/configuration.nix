@@ -7,7 +7,6 @@
 {
   imports = [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./container-services.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -20,10 +19,6 @@
       experimental-features = "nix-command flakes";
       # Deduplicate and optimize nix store
       auto-optimise-store = true;
-      substituters = [ "https://cuda-maintainers.cachix.org" ];
-      trusted-public-keys = [
-        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
-      ];
     };
 
     gc = {
@@ -33,7 +28,7 @@
     };
   };
 
-  networking.hostName = "arcee";
+  networking.hostName = "heatwave";
 
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -50,12 +45,11 @@
     isNormalUser = true;
     description = "Dan Cardamore";
     shell = pkgs.fish;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-
+    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
     openssh.authorizedKeys.keys = vars.authorizedSshKeys;
   };
 
-  environment.systemPackages = with pkgs; [ helix gitMinimal ];
+  environment.systemPackages = with pkgs; [ helix gitMinimal docker-compose ];
 
   services.openssh = {
     enable = true;
@@ -67,5 +61,8 @@
   programs.fish.enable = true;
   programs.mosh.enable = true;
 
+  virtualization.docker.enable = true;
+
   system.stateVersion = "24.05"; # Did you read the comment?
 }
+
