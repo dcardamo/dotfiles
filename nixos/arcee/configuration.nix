@@ -7,7 +7,8 @@
 {
   imports = [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./container-services.nix
+    ../../container-services.nix
+    ./container-service-hass.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -20,10 +21,6 @@
       experimental-features = "nix-command flakes";
       # Deduplicate and optimize nix store
       auto-optimise-store = true;
-      substituters = [ "https://cuda-maintainers.cachix.org" ];
-      trusted-public-keys = [
-        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
-      ];
     };
 
     gc = {
@@ -33,7 +30,7 @@
     };
   };
 
-  networking.hostName = "arcee";
+  networking.hostName = "pluto";
 
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -78,3 +75,4 @@
 
   system.stateVersion = "24.05"; # Did you read the comment?
 }
+

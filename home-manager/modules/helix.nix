@@ -106,9 +106,7 @@
           A-l = "jump_view_right";
         };
 
-        select = {
-          G = "goto_file_end";
-        };
+        select = { G = "goto_file_end"; };
       };
     };
     languages = {
@@ -221,6 +219,11 @@
             command = "prettier";
             args = [ "--stdin-filepath" "file.md" ];
           };
+          auto-format = true;
+        }
+        {
+          name = "nix";
+          formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
           auto-format = true;
         }
         {
