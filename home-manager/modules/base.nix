@@ -1,23 +1,14 @@
-{ pkgs, lib, vars, ... }:
-let
+{
+  pkgs,
+  lib,
+  vars,
+  ...
+}: let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
   inherit (stdenv) isDarwin;
 in {
   xdg.configFile = {
-    "codespell/custom_dict.txt".text = ''
-      crate
-      Crate
-    '';
-    "cbfmt.toml".text = ''
-      [languages]
-      rust = ["${pkgs.rustfmt}/bin/rustfmt"]
-      go = ["${pkgs.go}/bin/gofmt"]
-      lua = ["${pkgs.stylua}/bin/stylua --config-path ${
-        ../../conf/stylua.toml
-      } -s -"]
-      nix = ["${pkgs.nixfmt-classic}/bin/nixfmt"]
-    '';
     "ripgrep_ignore".text = ''
       .git/
       yarn.lock
@@ -48,9 +39,11 @@ in {
       fzf
       # pv # visualize pipe streams
       gnutar
-    ] ++ lib.lists.optionals isLinux [ ] ++ lib.lists.optionals isDarwin [
+    ]
+    ++ lib.lists.optionals isLinux []
+    ++ lib.lists.optionals isDarwin [
       #exiftool
       #ffmpeg
-      #imapsync 
+      #imapsync
     ];
 }

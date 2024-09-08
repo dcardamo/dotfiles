@@ -19,7 +19,12 @@
     };
   };
 
-  outputs = { nixpkgs, disko, home-manager, ... }@inputs: {
+  outputs = {
+    nixpkgs,
+    disko,
+    home-manager,
+    ...
+  } @ inputs: {
     # nixos systems:
     # See reference for nix-anywhere:
     # https://github.com/nix-community/nixos-anywhere-examples/blob/main/flake.nix
@@ -59,7 +64,6 @@
         ];
       };
 
-      
       # Home docker server
       arcee = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -103,9 +107,9 @@
         pkgs = nixpkgs.legacyPackages.aarch64-darwin;
         extraSpecialArgs = {
           inherit inputs;
-          vars = (import ./lib/vars.nix) { isDarwin = true; };
+          vars = (import ./lib/vars.nix) {isDarwin = true;};
         };
-        modules = [ ./home-manager/home.nix ];
+        modules = [./home-manager/home.nix];
       };
       "linuxstandalone" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
@@ -116,7 +120,7 @@
             isLinux = true;
           };
         };
-        modules = [ ./home-manager/home.nix ];
+        modules = [./home-manager/home.nix];
       };
     };
   };

@@ -1,11 +1,13 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
-{ pkgs, vars, ... }:
-
 {
-  imports = [ # Include the results of the hardware scan.
+  pkgs,
+  vars,
+  ...
+}: {
+  imports = [
+    # Include the results of the hardware scan.
     ./hardware-configuration.nix
   ];
 
@@ -19,7 +21,7 @@
       experimental-features = "nix-command flakes";
       # Deduplicate and optimize nix store
       auto-optimise-store = true;
-      substituters = [ "https://cuda-maintainers.cachix.org" ];
+      substituters = ["https://cuda-maintainers.cachix.org"];
       trusted-public-keys = [
         "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
       ];
@@ -49,12 +51,12 @@
     isNormalUser = true;
     description = "Dan Cardamore";
     shell = pkgs.fish;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel"]; # Enable ‘sudo’ for the user.
 
     openssh.authorizedKeys.keys = vars.authorizedSshKeys;
   };
 
-  environment.systemPackages = with pkgs; [ helix gitMinimal ];
+  environment.systemPackages = with pkgs; [helix gitMinimal];
 
   services.openssh = {
     enable = true;

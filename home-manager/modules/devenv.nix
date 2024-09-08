@@ -1,5 +1,9 @@
-{ inputs, pkgs, ... }: {
-  home.packages = [ pkgs.cachix pkgs.devenv ];
+{
+  inputs,
+  pkgs,
+  ...
+}: {
+  home.packages = [pkgs.cachix pkgs.devenv];
 
   programs.direnv = {
     enable = true;

@@ -1,8 +1,13 @@
-{ isDarwin, ... }:
-let
+{isDarwin, ...}: let
 in {
-  copyCmd = if isDarwin then "pbcopy" else "xclip -selection clipboard";
-  pasteCmd = if isDarwin then "pbpaste" else "xlip -o -selection clipboard";
+  copyCmd =
+    if isDarwin
+    then "pbcopy"
+    else "xclip -selection clipboard";
+  pasteCmd =
+    if isDarwin
+    then "pbpaste"
+    else "xlip -o -selection clipboard";
 
   authorizedSshKeys = [
     # dan ipad m4 pro:

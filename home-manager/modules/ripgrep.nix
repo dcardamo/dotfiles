@@ -1,4 +1,3 @@
-
 {
   xdg.configFile = {
     "ripgrep_ignore".text = ''

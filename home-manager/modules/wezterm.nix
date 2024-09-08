@@ -1,15 +1,18 @@
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
 in {
-  home.packages = [ (pkgs.nerdfonts.override { fonts = [ "FiraCode" ]; }) ];
+  home.packages = [(pkgs.nerdfonts.override {fonts = ["FiraCode"];})];
   programs.wezterm = {
     enable = true;
     extraConfig = ''
       local w = require('wezterm')
       local config = w.config_builder()
-      local os_name = '${if isLinux then "linux" else "macos"}'
+      local os_name = '${
+        if isLinux
+        then "linux"
+        else "macos"
+      }'
 
       local w = require('wezterm')
 
@@ -44,12 +47,11 @@ in {
       return config
     '';
   };
-  home.sessionVariables = { TERM = "wezterm"; };
+  home.sessionVariables = {TERM = "wezterm";};
   home.activation.installWeztermTerminfo = ''
     ${pkgs.ncurses}/bin/tic -x -o $HOME/.terminfo ${
       pkgs.fetchurl {
-        url =
-          "https://raw.githubusercontent.com/wez/wezterm/master/termwiz/data/wezterm.terminfo";
+        url = "https://raw.githubusercontent.com/wez/wezterm/master/termwiz/data/wezterm.terminfo";
         sha256 = "6kfDItoEvLt/MQpe8R6KKNhFIWHYTXDL1JJ+va6fG/0=";
       }
     }

@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
     gnumake
     direnv
@@ -15,7 +15,6 @@
     gcc
 
     # formatters and linters
-    nixfmt
     alejandra
     shfmt
     cbfmt

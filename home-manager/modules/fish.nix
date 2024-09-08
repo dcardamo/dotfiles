@@ -1,5 +1,9 @@
-{ pkgs, lib, vars, ... }:
-let
+{
+  pkgs,
+  lib,
+  vars,
+  ...
+}: let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
   inherit (stdenv) isDarwin;
@@ -19,42 +23,45 @@ in {
   };
 
   home.packages = with pkgs;
-    [ tealdeer tokei ] ++ lib.lists.optionals isLinux [ ];
+    [tealdeer tokei] ++ lib.lists.optionals isLinux [];
 
   programs.fish = {
     enable = true;
 
-    plugins = [{
-      name = "foreign-env";
-      inherit (pkgs.fishPlugins.foreign-env) src;
-    }];
+    plugins = [
+      {
+        name = "foreign-env";
+        inherit (pkgs.fishPlugins.foreign-env) src;
+      }
+    ];
 
-    shellAliases = {
-      copy = vars.copyCmd;
-      paste = vars.pasteCmd;
-      cat = "bat";
-      "!!" = "eval \\$history[1]";
-      ls = "${pkgs.lsd}/bin/lsd --group-directories-first";
-      la = "ls -a";
-      ll = "ls -l --git";
-      l = "ls -laH";
-      lg = "ls -lG";
-      # Take away muscle memory:  vi = "nvim";
-      e = "hx";
-      clear = "clear && _prompt_move_to_bottom";
-      # Mac gaming FPS graph
-      fps_on = "launchctl setenv MTL_HUD_ENABLED 1";
-      fps_off = "launchctl setenv MTL_HUD_ENABLED 0";
-      nix-apply = if pkgs.stdenv.isDarwin then
-        "home-manager switch --flake ~/git/dotfiles/.#mac"
-      else
-        "sudo nixos-rebuild switch --flake ~/git/dotfiles/.#pc";
-      oplocal =
-        "./js/oph/dist/mac-arm64/1Password.app/Contents/MacOS/1Password";
-    } // pkgs.lib.optionalAttrs isLinux {
-      cfgnix = "sudo nvim /etc/nixos/configuration.nix";
-      restart-gui = "sudo systemctl restart display-manager.service";
-    };
+    shellAliases =
+      {
+        copy = vars.copyCmd;
+        paste = vars.pasteCmd;
+        cat = "bat";
+        "!!" = "eval \\$history[1]";
+        ls = "${pkgs.lsd}/bin/lsd --group-directories-first";
+        la = "ls -a";
+        ll = "ls -l --git";
+        l = "ls -laH";
+        lg = "ls -lG";
+        # Take away muscle memory:  vi = "nvim";
+        e = "hx";
+        clear = "clear && _prompt_move_to_bottom";
+        # Mac gaming FPS graph
+        fps_on = "launchctl setenv MTL_HUD_ENABLED 1";
+        fps_off = "launchctl setenv MTL_HUD_ENABLED 0";
+        nix-apply =
+          if pkgs.stdenv.isDarwin
+          then "home-manager switch --flake ~/git/dotfiles/.#mac"
+          else "sudo nixos-rebuild switch --flake ~/git/dotfiles/.#pc";
+        oplocal = "./js/oph/dist/mac-arm64/1Password.app/Contents/MacOS/1Password";
+      }
+      // pkgs.lib.optionalAttrs isLinux {
+        cfgnix = "sudo nvim /etc/nixos/configuration.nix";
+        restart-gui = "sudo systemctl restart display-manager.service";
+      };
 
     shellInit = ''
       set -g fish_prompt_pwd_dir_length 20
@@ -66,25 +73,27 @@ in {
       end
     '';
 
-    interactiveShellInit = ''
-      fish_vi_key_bindings
-      bind -M insert jk "if commandline -P; commandline -f cancel; else; set fish_bind_mode default; commandline -f backward-char force-repaint; end"
+    interactiveShellInit =
+      ''
+        fish_vi_key_bindings
+        bind -M insert jk "if commandline -P; commandline -f cancel; else; set fish_bind_mode default; commandline -f backward-char force-repaint; end"
 
-      # abbreviations auto expand
-      abbr -a --position anywhere -- R "| rg "
+        # abbreviations auto expand
+        abbr -a --position anywhere -- R "| rg "
 
-      # setup direnv
-      direnv hook fish | source
+        # setup direnv
+        direnv hook fish | source
 
-      # I like to keep the prompt at the bottom rather than the top
-      # of the terminal window so that running `clear` doesn't make
-      # me move my eyes from the bottom back to the top of the screen;
-      # keep the prompt consistently at the bottom
-      _prompt_move_to_bottom # call function manually to load it since event handlers don't get autoloaded
-    '' + lib.strings.optionalString isDarwin ''
-      fish_add_path /opt/homebrew/bin
-      fish_add_path ~/.local/bin
-    '';
+        # I like to keep the prompt at the bottom rather than the top
+        # of the terminal window so that running `clear` doesn't make
+        # me move my eyes from the bottom back to the top of the screen;
+        # keep the prompt consistently at the bottom
+        _prompt_move_to_bottom # call function manually to load it since event handlers don't get autoloaded
+      ''
+      + lib.strings.optionalString isDarwin ''
+        fish_add_path /opt/homebrew/bin
+        fish_add_path ~/.local/bin
+      '';
 
     functions = {
       fish_greeting = "";
