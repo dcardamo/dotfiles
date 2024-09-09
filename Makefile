@@ -1,22 +1,14 @@
-install:
-	./bin/install.bash
+install-darwin:
+	./bin/install-darwin.bash
 
 update:
 	./bin/update.bash
 
-update-nixos:
-	./bin/update-nixos.bash
+update-system:
+	./bin/update-system.bash
 
-update-macos:
-	./bin/update-macos.bash
+update-all: update-system update
 
 format:
 	alejandra .
 
-# Only needs to be run once per app that is new
-# backups are automatic once symlinks are done
-backup:
-	mackup backup
-
-restore:
-	mackup restore
