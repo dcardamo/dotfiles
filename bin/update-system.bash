@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh -e
 
 if [ "$(uname)" = "Darwin" ]; then
   # Update the determinate systems nix installer
