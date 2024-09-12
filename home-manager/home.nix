@@ -29,9 +29,8 @@ in {
     then "/home/dan"
     else "/Users/dan";
 
-  home.packages = with pkgs;
-    []
-    ++ lib.lists.optionals isDarwin [
+  home.packages =
+    lib.lists.optionals isDarwin [
       # put macOS specific packages here
       # TODO
     ]

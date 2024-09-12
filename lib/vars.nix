@@ -1,5 +1,4 @@
-{isDarwin, ...}: let
-in {
+{isDarwin, ...}: {
   copyCmd =
     if isDarwin
     then "pbcopy"
