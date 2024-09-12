@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  vars,
   ...
 }: let
   inherit (pkgs) stdenv;
