@@ -5,12 +5,6 @@
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # for nix-anywhere
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Home manager
     home-manager = {
       #url = "github:nix-community/home-manager/release-24.05";
@@ -21,7 +15,6 @@
 
   outputs = {
     nixpkgs,
-    disko,
     home-manager,
     ...
   } @ inputs: {
@@ -46,8 +39,6 @@
           };
         };
         modules = [
-          # disko.nixosModules.disko
-          # { disko.devices.disk.disk1.device = "/dev/nvme1n1"; }
           ./nixos/pluto/configuration.nix
           home-manager.nixosModules.home-manager
           {
@@ -81,8 +72,6 @@
           };
         };
         modules = [
-          # disko.nixosModules.disko
-          # { disko.devices.disk.disk1.device = "/dev/nvme1n1"; }
           ./nixos/arcee/configuration.nix
           home-manager.nixosModules.home-manager
           {
@@ -116,8 +105,6 @@
           };
         };
         modules = [
-          # disko.nixosModules.disko
-          # { disko.devices.disk.disk1.device = "/dev/nvme1n1"; }
           ./nixos/heatwave/configuration.nix
           home-manager.nixosModules.home-manager
           {
