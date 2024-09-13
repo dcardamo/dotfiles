@@ -6,7 +6,7 @@
     jq
     sqlite
     git
-    glow # git client
+    gitui
 
     # Rust
     cargo
