@@ -50,7 +50,7 @@ in {
     ./modules/git.nix
     ./modules/helix.nix
     ./modules/ssh.nix
-    ./modules/starship.nix
+    ./modules/starship
     ./modules/tmux.nix
     ./modules/wezterm.nix
   ];
