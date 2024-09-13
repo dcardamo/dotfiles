@@ -9,7 +9,6 @@
   inherit (stdenv) isDarwin;
 in {
   home.sessionVariables = {
-    DOTNET_CLI_TELEMETRY_OPTOUT = "1";
     HOMEBREW_NO_ANALYTICS = "1";
     CARGO_NET_GIT_FETCH_WITH_CLI = "true";
     GOPATH = "$HOME/go";
@@ -53,11 +52,6 @@ in {
         # Mac gaming FPS graph
         fps_on = "launchctl setenv MTL_HUD_ENABLED 1";
         fps_off = "launchctl setenv MTL_HUD_ENABLED 0";
-        nix-apply =
-          if pkgs.stdenv.isDarwin
-          then "home-manager switch --flake ~/git/dotfiles/.#mac"
-          else "sudo nixos-rebuild switch --flake ~/git/dotfiles/.#pc";
-        oplocal = "./js/oph/dist/mac-arm64/1Password.app/Contents/MacOS/1Password";
       }
       // pkgs.lib.optionalAttrs isLinux {
         cfgnix = "sudo nvim /etc/nixos/configuration.nix";
@@ -76,6 +70,8 @@ in {
 
     interactiveShellInit =
       ''
+        # for some reason this is overriden
+        export EDITOR=hx
         #fish_vi_key_bindings
         #bind -M insert jk "if commandline -P; commandline -f cancel; else; set fish_bind_mode default; commandline -f backward-char force-repaint; end"
 

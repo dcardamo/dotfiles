@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   programs.tmux = {
     enable = true;
-    shortcut = "a";
+    shortcut = "t";
     baseIndex = 1;
     escapeTime = 0;
 
