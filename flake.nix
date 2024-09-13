@@ -18,9 +18,6 @@
     home-manager,
     ...
   } @ inputs: {
-    # nixos systems:
-    # See reference for nix-anywhere:
-    # https://github.com/nix-community/nixos-anywhere-examples/blob/main/flake.nix
     nixosConfigurations = {
       # watercooled nvidia 3090
       pluto = nixpkgs.lib.nixosSystem {

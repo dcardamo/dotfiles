@@ -49,6 +49,10 @@
         autosquash = true;
       };
 
+      pull = {
+        rebase = true;
+      };
+
       user.useConfigOnly = true;
     };
 
