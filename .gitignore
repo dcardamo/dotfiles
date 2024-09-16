@@ -2,6 +2,3 @@
 LOG_*
 Brewfile.lock.json
 Brewfile
-# don't commit the flake.lock, it'll allow multiple machines to update
-# in parallel faster.  Someday if this becomes and issue I can revisit
-flake.lock
