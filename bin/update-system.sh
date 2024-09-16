@@ -18,4 +18,8 @@ echo "Update nix system"
 nix-channel --update
 nix flake update
 
+# Navigate to the directory of this script
+cd $(dirname $(readlink -f $0))
+cd ..
+./bin/update.sh
 

@@ -2,10 +2,10 @@ install-darwin:
 	./bin/install-darwin.bash
 
 update:
-	./bin/update.bash
+	./bin/update.sh
 
 update-system:
-	./bin/update-system.bash
+	./bin/update-system.sh
 
 update-all: update-system update
 
