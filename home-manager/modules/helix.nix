@@ -25,6 +25,7 @@
     typescript
     vscode-langservers-extracted
     yaml-language-server
+    elixir-ls
   ];
   programs.helix = {
     enable = true;
@@ -118,6 +119,11 @@
             command = "prettier";
             args = ["--stdin-filepath" "file.css"];
           };
+          auto-format = true;
+        }
+        {
+          name = "elixir";
+          language-servers = ["elixir-ls"];
           auto-format = true;
         }
         {
