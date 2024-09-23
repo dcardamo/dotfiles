@@ -85,6 +85,8 @@
         # insert = { esc = [ "collapse_selection" "normal_mode" ]; };
         insert = {
           C-e = "insert_at_line_end";
+          C-f = "move_char_right";
+          C-b = "move_char_left";
           # default keybinding.  Reminder its here instead of 'jj'
           # C-[ = "normal_mode";
         };
