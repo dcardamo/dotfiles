@@ -5,33 +5,33 @@ cask_args appdir: "~/Applications", require_sha: true
 
 brew "mas"
 
-#cask "adobe-dng-converter"
 cask "bambu-studio"
 cask "betterdisplay"
+cask "font-fira-code-nerd-font"
+cask "obsidian"
+cask "qmk-toolbox"
+cask "reader"
+cask "wezterm"
+cask "zed"
+
+#cask "adobe-dng-converter"
 #cask "brave-browser"
 #cask "docker"
-cask "font-fira-code-nerd-font"
 #cask "hammerspoon"
 #cask "hazel"
 #cask "little-snitch"
 #cask "microsoft-teams"
 #cask "orion"
-cask "obsidian"
-cask "qmk-toolbox"
-# cask "raycast"   # spotlight is better than it used to be
-cask "reader"
-# cask "spotify" # no sha
+#cask "raycast"   # spotlight is better than it used to be
+#cask "spotify" # no sha
 #cask "steermouse"
 #cask "stats"
-# cask "steam" # no sha
-cask "wezterm"
+#cask "steam" # no sha
 #cask "visual-studio-code"
 
 mas "AdGuard for Safari", id: 1440147259
-#mas "Affinity Photo 2", id: 1616822987
 mas "Affinity Publisher 2", id: 1606941598
 mas "com.kagimacOS.Kagi-Search", id: 1622835804
-#mas "Daisy Disk", id: 411643860
 mas "Kindle", id: 405399194
 mas "Microsoft Excel", id: 462058435
 mas "Microsoft Word", id: 462054704
@@ -41,9 +41,12 @@ mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "Magnet", id: 441258766
 mas "Numbers", id:  409203825
-#mas "Paprika Recipe Manager 3", id: 1303222628
-# mas "Save to Reader", id: 1640236961
 mas "StopTheMadness Pro", id: 6471380298
 mas "Pages", id: 409201541
 mas "Soulver 3", id: 1508732804
 mas "WireGuard", id: 1451685025
+
+#mas "Daisy Disk", id: 411643860
+#mas "Paprika Recipe Manager 3", id: 1303222628
+#mas "Save to Reader", id: 1640236961
+#mas "Affinity Photo 2", id: 1616822987
