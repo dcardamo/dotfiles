@@ -1,13 +1,16 @@
 install-darwin:
 	./bin/install-darwin.bash
 
+backup:
+	./bin/backup-dotfiles.sh
+
 update:
 	./bin/update.sh
 
 update-system:
 	./bin/update-system.sh
 
-update-all: update-system update
+update-all: backup update-system update
 
 format:
 	alejandra .

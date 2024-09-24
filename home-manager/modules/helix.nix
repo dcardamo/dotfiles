@@ -13,6 +13,7 @@
     marksman
     nil
     alejandra
+    nixd
     nodePackages.prettier
     nodePackages.typescript-language-server
     pgformatter
@@ -646,4 +647,3 @@ comment out vim like stuff
        esc = [ "collapse_selection" "keep_primary_selection" "normal_mode" ];
      };
 */
-
