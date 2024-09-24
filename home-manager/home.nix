@@ -53,6 +53,7 @@ in {
     ./modules/starship
     ./modules/tmux.nix
     ./modules/wezterm.nix
+    ./modules/zed
   ];
 
   xdg.configFile = {
