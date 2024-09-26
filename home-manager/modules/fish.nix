@@ -70,8 +70,16 @@ in {
 
     interactiveShellInit =
       ''
-        # for some reason this is overriden
-        export EDITOR=hx
+        # Setup our editor:
+        if set -q ZED_TERM
+            set GIT_EDITOR "zed --wait"
+            set EDITOR "zed --wait"
+            set VISUAL "zed --wait"
+        else
+            set EDITOR hx
+            set VISUAL hx
+            set GIT_EDITOR hx;
+        end
         #fish_vi_key_bindings
         #bind -M insert jk "if commandline -P; commandline -f cancel; else; set fish_bind_mode default; commandline -f backward-char force-repaint; end"
 
