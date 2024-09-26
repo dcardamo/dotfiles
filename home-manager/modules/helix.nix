@@ -13,11 +13,9 @@
     marksman
     nil
     alejandra
-    nixd
     nodePackages.prettier
     nodePackages.typescript-language-server
     pgformatter
-    ruff
     (python3.withPackages
       (p: (with p; [black isort python-lsp-black python-lsp-server])))
     rust-analyzer
