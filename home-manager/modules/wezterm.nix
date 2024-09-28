@@ -26,6 +26,7 @@ in {
       config.color_scheme = 'Tokyo Night Moon'
       config.cursor_blink_rate = 0
       config.font = w.font_with_fallback({"MonoLisa", "FiraCode Nerd Font"})
+      -- config.font = w.font_with_fallback({"VictorMono Nerd Font Mono", "FiraCode Nerd Font"})
       config.font_size = 13
       config.use_fancy_tab_bar = true
       config.tab_bar_at_bottom = true

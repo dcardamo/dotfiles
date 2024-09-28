@@ -11,6 +11,7 @@ cask "docker"
 cask "font-fira-code-nerd-font"
 #cask "hazel"
 cask "stats"
+cask "font-victor-mono-nerd-font"
 cask "wezterm"
 
 mas "Daisy Disk", id: 411643860

@@ -12,6 +12,7 @@ cask "mindmac"
 cask "obsidian"
 cask "qmk-toolbox"
 cask "reader"
+cask "font-victor-mono-nerd-font"
 cask "wezterm"
 cask "zed"
 
