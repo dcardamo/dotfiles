@@ -52,7 +52,7 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "Ayu Mirage"
+    "dark": "Tokyo Night"
   },
   // Move all panel to the right
   "project_panel": {
@@ -93,6 +93,24 @@
       "EDITOR": "zed --wait"
     }
   },
+  // File scan exclusions, hide on the file explorer and search
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/.svn",
+    "**/.hg",
+    "**/CVS",
+    "**/.DS_Store",
+    "**/Thumbs.db",
+    "**/.classpath",
+    "**/.settings",
+    // above is default from Zed
+    "**/.husky",
+    "**/.turbo",
+    "**/.vscode",
+    "**/.next",
+    "**/.storybook",
+    "**/node_modules"
+  ],
   // File syntax highlighting
   "file_types": {
     "Dockerfile": ["Dockerfile", "Dockerfile.*"],
