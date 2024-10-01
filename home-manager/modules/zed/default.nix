@@ -3,6 +3,8 @@
         nixd # nix language server
         ruff # python linter
         solargraph #ruby language server
+        bash-language-server
+        shellcheck
 
         (python3.withPackages
           (p: (with p; [black isort python-lsp-black python-lsp-server])))
