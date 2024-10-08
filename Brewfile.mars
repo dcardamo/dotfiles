@@ -9,11 +9,12 @@ cask "bambu-studio"
 cask "betterdisplay"
 cask "eloston-chromium"
 cask "font-fira-code-nerd-font"
+cask "font-victor-mono-nerd-font"
 cask "mindmac"
 cask "obsidian"
 cask "qmk-toolbox"
 cask "reader"
-cask "font-victor-mono-nerd-font"
+cask "steermouse"
 cask "wezterm"
 cask "zed"
 
@@ -27,7 +28,6 @@ cask "zed"
 #cask "orion"
 #cask "raycast"   # spotlight is better than it used to be
 #cask "spotify" # no sha
-#cask "steermouse"
 #cask "stats"
 #cask "steam" # no sha
 #cask "visual-studio-code"
