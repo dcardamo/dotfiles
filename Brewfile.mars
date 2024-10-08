@@ -14,7 +14,7 @@ cask "mindmac"
 cask "obsidian"
 cask "qmk-toolbox"
 cask "reader"
-cask "steermouse"
+cask "steermouse", args: { appdir: "/Applications" } 
 cask "wezterm"
 cask "zed"
 
