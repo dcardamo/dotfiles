@@ -35,7 +35,7 @@
   "cursor_blink": false,
   "cursor_shape": "hollow",
   "load_direnv": "shell_hook",
-  "relative_line_numbers": true,
+  "relative_line_numbers": false,
   "vertical_scroll_margin": 0,
   "indent_guides": {
     "enabled": true,
@@ -52,12 +52,11 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "Tokyo Night"
+    "dark": "Ayu Dark"
   },
-  // Move all panel to the right
   "project_panel": {
     "button": true,
-    "dock": "right",
+    "dock": "left",
     "git_status": true
   },
   "tab_bar": {
@@ -123,13 +122,14 @@
       "format_on_save": "on",
       "formatter": { "language_server": { "name": "ruff" } },
       "language_servers": ["pyright", "ruff"]
-    },
-    "Nix": {
-      "formatter": {
-        "external": {
-          "command": "alejandra"
-        }
-      }
     }
+    // there is something invalid about this config
+    // "Nix": {
+    //   "formatter": {
+    //     "external": {
+    //       "command": "alejandra"
+    //     }
+    //   }
+    // }
   }
 }
