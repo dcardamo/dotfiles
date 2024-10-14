@@ -33,7 +33,7 @@
   "ui_font_size": 13,
   "buffer_font_size": 13,
   "cursor_blink": false,
-  "cursor_shape": "hollow",
+  "cursor_shape": "bar",
   "load_direnv": "shell_hook",
   "relative_line_numbers": false,
   "vertical_scroll_margin": 0,
@@ -52,15 +52,14 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "Ayu Dark"
+    "dark": "Tokyo Night"
   },
   "project_panel": {
     "button": true,
-    "dock": "left",
     "git_status": true
   },
   "tab_bar": {
-    "show": false,
+    "show": true,
     "show_nav_history_buttons": false
   },
   "tabs": {
@@ -71,21 +70,9 @@
     "breadcrumbs": false,
     "quick_actions": false
   },
-  "outline_panel": {
-    "dock": "right"
-  },
-  "collaboration_panel": {
-    "dock": "left"
-  },
-  // Move some unnecessary panels to the left
-  "notification_panel": {
-    "dock": "left"
-  },
-  "chat_panel": {
-    "dock": "left"
-  },
   // Use zed commit editor
   "terminal": {
+    "dock": "right",
     "font_family": "MonoLisa",
     "font_fallbacks": ["FiraCode Nerd Font"],
     "env": {

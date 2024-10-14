@@ -184,7 +184,8 @@
     "context": "Workspace",
     "bindings": {
       // Map VSCode like keybindings
-      "cmd-b": "workspace::ToggleRightDock"
+      "cmd-r": "workspace::ToggleRightDock",
+      "cmd-b": "workspace::ToggleLeftDock"
     }
   }
   // Subword motion is not working really nice with `ciw`, disable for now
