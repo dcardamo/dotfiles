@@ -10,7 +10,10 @@ update:
 update-system:
 	./bin/update-system.sh
 
-update-all: backup update-system update
+update-docker-services:
+	./bin/update-docker-services.sh
+
+update-all: backup update-system update update-docker-services
 
 format:
 	alejandra .
