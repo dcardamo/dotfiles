@@ -4,6 +4,7 @@ tap "buo/cask-upgrade"
 cask_args appdir: "~/Applications", require_sha: true
 
 brew "mas"
+brew "ollama", restart_service: true
 
 cask "bambu-studio"
 cask "betterdisplay"
