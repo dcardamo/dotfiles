@@ -1,3 +1,4 @@
+tap "homebrew/services"
 tap "buo/cask-upgrade"
 
 # set arguments for all 'brew install --cask' commands
@@ -33,22 +34,23 @@ cask "zed"
 #cask "steam" # no sha
 #cask "visual-studio-code"
 
+mas "1Password for Safari", id: 1569813296
 mas "AdGuard for Safari", id: 1440147259
 mas "Affinity Publisher 2", id: 1606941598
 mas "com.kagimacOS.Kagi-Search", id: 1622835804
-mas "Kindle", id: 405399194
-mas "Microsoft Excel", id: 462058435
-mas "Microsoft Word", id: 462054704
-mas "1Password for Safari", id: 1569813296
 mas "Home Assistant", id: 1099568401
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
-mas "Magnet", id: 441258766
+mas "Kindle", id: 405399194
+mas "Microsoft Excel", id: 462058435
+mas "Microsoft Word", id: 462054704
+mas "Noir", id: 1592917505
 mas "Numbers", id:  409203825
-mas "StopTheMadness Pro", id: 6471380298
 mas "Pages", id: 409201541
+mas "Passepartout", id: 1433648537
+mas "StopTheMadness Pro", id: 6471380298
 mas "Soulver 3", id: 1508732804
-mas "WireGuard", id: 1451685025
+#mas "WireGuard", id: 1451685025
 
 #mas "Daisy Disk", id: 411643860
 #mas "Paprika Recipe Manager 3", id: 1303222628
