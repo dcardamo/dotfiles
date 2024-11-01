@@ -26,7 +26,7 @@ in {
 
   home.packages = with pkgs;
     [
-      mosh
+      # mosh
       htop
       neofetch
       wget
