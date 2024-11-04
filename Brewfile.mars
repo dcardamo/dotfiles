@@ -32,7 +32,7 @@ cask "zed"
 #cask "spotify" # no sha
 #cask "stats"
 #cask "steam" # no sha
-#cask "visual-studio-code"
+cask "visual-studio-code"
 
 mas "1Password for Safari", id: 1569813296
 mas "AdGuard for Safari", id: 1440147259
