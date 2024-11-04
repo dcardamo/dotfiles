@@ -66,7 +66,7 @@
     };
   };
   programs.fish.enable = true;
-  # programs.mosh.enable = true;
+  programs.mosh.enable = true;
 
   virtualisation.docker.enable = true;
 
