@@ -9,6 +9,7 @@ brew "ollama", restart_service: true
 
 cask "bambu-studio"
 cask "betterdisplay"
+cask "cursor"
 cask "eloston-chromium"
 cask "font-fira-code-nerd-font"
 cask "font-victor-mono-nerd-font"
