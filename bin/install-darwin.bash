@@ -26,28 +26,17 @@ if ! test -f "/etc/NIXOS" && ! command -v home-manager >/dev/null 2>&1; then
 	echo
 fi
 
-if [ "$(uname -s)" == "Darwin" ]; then
-	defaults write org.hammerspoon.Hammerspoon MJConfigFile "${XDG_CONFIG_HOME:-$HOME/.config}/hammerspoon/init.lua"
-	echo "On macOS I can also set many OS settings to more sane defaults."
-	echo "This will run the following script, you should inspect the contents first if you're not familiar with it:"
-	echo "${SCRIPT_DIR/$HOME/~}/../conf.d/setup-macos-defaults.bash"
-	read -r -p "Proceed? (y/n): " input
-	case "$input" in
-	[yY] | [yY][eE][sS])
-		"$SCRIPT_DIR/../conf.d/setup-macos-defaults.bash"
-		;;
-	*) ;;
-	esac
-elif ! command -v nixos-version >/dev/null 2>&1; then
-	echo "ignore"
-	# if NOT on NixOS
-	#if ! test -f "/etc/NIXOS"; then
-	#  # if on Linux but not NixOS, install nixGL
-	#  echo "Installing nixGL"
-	#  nix-channel --add https://github.com/guibou/nixGL/archive/main.tar.gz nixgl && nix-channel --update
-	#  nix-env -iA nixgl.auto.nixGLDefault
-	#fi
-fi
+#if [ "$(uname -s)" == "Darwin" ]; then
+#	echo "On macOS I can also set many OS settings to more sane defaults."
+#	echo "This will run the following script, you should inspect the contents first if you're not familiar with it:"
+#	echo "${SCRIPT_DIR/$HOME/~}/../conf.d/setup-macos-defaults.bash"
+#	read -r -p "Proceed? (y/n): " input
+#	case "$input" in
+#	[yY] | [yY][eE][sS])
+#		"$SCRIPT_DIR/../conf.d/setup-macos-defaults.bash"
+#		;;
+#	*) ;;
+#	esac
 
 if [ "$(uname -s)" == "Darwin" ] && ! test -f /opt/homebrew; then
 	echo "Installing homebrew to its default location"
