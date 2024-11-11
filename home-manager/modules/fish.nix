@@ -52,7 +52,7 @@ in {
         # Mac gaming FPS graph
         fps_on = "launchctl setenv MTL_HUD_ENABLED 1";
         fps_off = "launchctl setenv MTL_HUD_ENABLED 0";
-        cargotest = "watchexec -r -e rs,toml cargo test -- --nocapture --color";
+        cargotest = "watchexec -r -e rs,toml cargo test -- --nocapture";
       }
       // pkgs.lib.optionalAttrs isLinux {
         cfgnix = "sudo nvim /etc/nixos/configuration.nix";
