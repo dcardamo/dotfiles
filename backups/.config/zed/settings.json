@@ -12,8 +12,8 @@
   },
   "assistant": {
     "default_model": {
-      "provider": "anthropic",
-      "model": "claude-3-5-sonnet-latest"
+      "provider": "ollama",
+      "model": "llama3.2:latest"
     },
     "version": "2"
   },
@@ -52,7 +52,7 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "Tokyo Night"
+    "dark": "Zedokai Darker (Filter Spectrum)"
   },
   "project_panel": {
     "button": true,
