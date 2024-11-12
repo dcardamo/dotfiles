@@ -16,6 +16,8 @@
       set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
       set-environment -g COLORTERM "truecolor"
 
+      set -g default-command "fish"
+
       # Mouse works as expected
       set-option -g mouse on
 
@@ -85,7 +87,6 @@
       bind D if -F '#{session_many_attached}' \
           'confirm-before -p "Detach other clients? (y/n)" "detach -a"' \
           'display "Session has only 1 client attached"'
-
 
       # Theme
       set -g status-position top
