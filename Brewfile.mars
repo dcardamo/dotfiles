@@ -7,6 +7,7 @@ cask_args appdir: "~/Applications", require_sha: true
 brew "mas"
 brew "ollama", restart_service: true
 
+cask "arq"
 cask "bambu-studio"
 cask "betterdisplay"
 cask "cursor"
@@ -17,7 +18,8 @@ cask "mindmac"
 cask "obsidian"
 cask "qmk-toolbox"
 cask "reader"
-cask "steermouse", args: { appdir: "/Applications" } 
+cask "stats"
+cask "steermouse", args: { appdir: "/Applications" }
 cask "wezterm"
 cask "zed"
 
@@ -31,9 +33,8 @@ cask "zed"
 #cask "orion"
 #cask "raycast"   # spotlight is better than it used to be
 #cask "spotify" # no sha
-#cask "stats"
 #cask "steam" # no sha
-cask "visual-studio-code"
+#cask "visual-studio-code"
 
 mas "1Password for Safari", id: 1569813296
 mas "AdGuard for Safari", id: 1440147259

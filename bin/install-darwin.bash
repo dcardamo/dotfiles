@@ -26,17 +26,17 @@ if ! test -f "/etc/NIXOS" && ! command -v home-manager >/dev/null 2>&1; then
 	echo
 fi
 
-#if [ "$(uname -s)" == "Darwin" ]; then
-#	echo "On macOS I can also set many OS settings to more sane defaults."
-#	echo "This will run the following script, you should inspect the contents first if you're not familiar with it:"
-#	echo "${SCRIPT_DIR/$HOME/~}/../conf.d/setup-macos-defaults.bash"
-#	read -r -p "Proceed? (y/n): " input
-#	case "$input" in
-#	[yY] | [yY][eE][sS])
-#		"$SCRIPT_DIR/../conf.d/setup-macos-defaults.bash"
-#		;;
-#	*) ;;
-#	esac
+if [ "$(uname -s)" == "Darwin" ]; then
+	echo "On macOS I can also set many OS settings to more sane defaults."
+	echo "This will run the following script, you should inspect the contents first if you're not familiar with it:"
+	echo "${SCRIPT_DIR/$HOME/~}/../conf.d/setup-macos-defaults.bash"
+	read -r -p "Proceed? (y/n): " input
+	case "$input" in
+	[yY] | [yY][eE][sS])
+		"$SCRIPT_DIR/../conf.d/setup-macos-defaults.bash"
+		;;
+	*) ;;
+	esac
 
 if [ "$(uname -s)" == "Darwin" ] && ! test -f /opt/homebrew; then
 	echo "Installing homebrew to its default location"

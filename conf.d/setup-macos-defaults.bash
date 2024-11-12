@@ -40,28 +40,10 @@ defaults write NSGlobalDomain NSTextShowsControlCharacters -bool true
 # in the login window
 sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 
-# Trackpad: enable tap to click for this user and for the login screen
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-
-# Disable "natural" scrolling (it should be called unnatural scrolling)
-defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
-
-# Increase sound quality for Bluetooth headphones/headsets
-#defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
-
-# Enable full keyboard access for all controls
-# (e.g. enable Tab in modal dialogs)
-defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
-
 # enable press and hold to repeat keys
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 defaults write -g InitialKeyRepeat -int 20 # normal minimum is 15 (225 ms)
 defaults write -g KeyRepeat -int 1 # normal minimum is 2 (30 ms)
-
-# Disable machine sleep while charging
-#sudo pmset -c sleep 0
 
 # Save screenshots to Downloads directory
 defaults write com.apple.screencapture location -string "${HOME}/Downloads"
@@ -74,7 +56,7 @@ defaults write com.apple.screencapture type -string "png"
 defaults write NSGlobalDomain AppleFontSmoothing -int 1
 
 # Finder: hide hidden files by default
-defaults write com.apple.finder AppleShowAllFiles -bool false
+#defaults write com.apple.finder AppleShowAllFiles -bool false
 
 # Finder: show all filename extensions
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
@@ -108,10 +90,10 @@ defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 defaults write com.apple.finder WarnOnEmptyTrash -bool false
 
 # Minimize windows into their application’s icon
-defaults write com.apple.dock minimize-to-application -bool true
+# defaults write com.apple.dock minimize-to-application -bool true
 
 # Don't indicator lights for open applications in the Dock
-defaults write com.apple.dock show-process-indicators -bool false
+#defaults write com.apple.dock show-process-indicators -bool false
 
 # Wipe all (default) app icons from the Dock
 # This is only really useful when setting up a new Mac, or if you don’t use
@@ -125,15 +107,15 @@ defaults write com.apple.dock show-process-indicators -bool false
 #defaults write com.apple.dock dashboard-in-overlay -bool true
 
 # Don’t automatically rearrange Spaces based on most recent use
-defaults write com.apple.dock mru-spaces -bool false
+# defaults write com.apple.dock mru-spaces -bool false
 
 # Automatically hide and show the Dock
 defaults write com.apple.dock autohide -bool true
 
 # Don’t show recent applications in Dock
-defaults write com.apple.dock show-recents -bool false
+# defaults write com.apple.dock show-recents -bool false
 
-defaults write com.apple.dock "tilesize" -int "36"
+#defaults write com.apple.dock "tilesize" -int "36"
 
 mkdir -p ~/Pictures/Screenshots
 defaults write com.apple.screencapture location ~/Pictures/Screenshots
@@ -195,15 +177,15 @@ defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
 defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
 
 # Remove useless icons from Safari’s bookmarks bar
-defaults write com.apple.Safari ProxiesInBookmarksBar "()"
+#defaults write com.apple.Safari ProxiesInBookmarksBar "()"
 
 # Enable the Develop menu and the Web Inspector in Safari
-defaults write com.apple.Safari IncludeDevelopMenu -bool true
-defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
+#defaults write com.apple.Safari IncludeDevelopMenu -bool true
+#defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+#defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
 
 # Add a context menu item for showing the Web Inspector in web views
-defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+#defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 # Disable AutoFill (I use 1Password for this)
 defaults write com.apple.Safari AutoFillFromAddressBook -bool false
@@ -220,17 +202,17 @@ defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebK
 defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabledForLocalFiles -bool false
 
 # Disable auto-playing video
-defaults write com.apple.Safari WebKitMediaPlaybackAllowsInline -bool false
-defaults write com.apple.SafariTechnologyPreview WebKitMediaPlaybackAllowsInline -bool false
-defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
-defaults write com.apple.SafariTechnologyPreview com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
+#defaults write com.apple.Safari WebKitMediaPlaybackAllowsInline -bool false
+#defaults write com.apple.SafariTechnologyPreview WebKitMediaPlaybackAllowsInline -bool false
+#defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
+#defaults write com.apple.SafariTechnologyPreview com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
 
 # Enable “Do Not Track”
 defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
 
 # Disable plug-ins
-defaults write com.apple.Safari WebKitPluginsEnabled -bool false
-defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2PluginsEnabled -bool false
+#defaults write com.apple.Safari WebKitPluginsEnabled -bool false
+#defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2PluginsEnabled -bool false
 
 # Update extensions automatically
 defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
