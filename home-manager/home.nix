@@ -49,6 +49,7 @@ in {
     ./modules/fzf.nix
     ./modules/git.nix
     ./modules/helix.nix
+    ./modules/nodejs.nix
     ./modules/ssh.nix
     ./modules/starship
     ./modules/tmux.nix

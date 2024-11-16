@@ -5,11 +5,11 @@
 }: let
   key-bindings = [
     # you can use the command `fish_key_reader` to get the key codes to use
-    {
-      # ctrl+e
-      lhs = "\\ce";
-      rhs = "fzf-vim-widget";
-    }
+    # {
+    #   # ctrl+e
+    #   lhs = "\\ce";
+    #   rhs = "fzf-vim-widget";
+    # }
     {
       # ctrl+g
       lhs = "\\a";
