@@ -1,0 +1,74 @@
+theme = "tokyonight_moon"
+[editor]
+evil = true             # vim keybindings instead of helix
+bufferline = "multiple"
+color-modes = true
+cursorline = true
+[editor.auto-save]
+focus-lost = true
+[editor.auto-save.after-delay]
+enable = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+ignore = false
+
+[editor.indent-guides]
+character = "┊"
+render = true
+skip-levels = 1
+
+[editor.lsp]
+display-inlay-hints = true
+display-messages = true
+
+[editor.statusline]
+left = [
+    "mode",
+    "file-name",
+    "spinner",
+    "read-only-indicator",
+    "file-modification-indicator",
+]
+right = [
+    "diagnostics",
+    "selections",
+    "register",
+    "file-type",
+    "file-line-ending",
+    "position",
+]
+
+[editor.statusline.mode]
+insert = ""
+normal = "󰅬"
+select = "󰫙"
+
+[keys.insert]
+C-b = "move_char_left"
+C-e = "insert_at_line_end"
+C-f = "move_char_right"
+
+[keys.normal]
+"$" = "goto_line_end"
+"%" = "match_brackets"
+0 = "goto_line_start"
+A-h = "jump_view_left"
+A-j = "jump_view_down"
+A-k = "jump_view_up"
+A-l = "jump_view_right"
+C-e = "goto_line_end"
+D = "kill_to_line_end"
+G = "goto_file_end"
+
+[keys.normal.Z]
+Q = ":quit!"
+Z = ":x"
+
+[keys.select]
+G = "goto_file_end"

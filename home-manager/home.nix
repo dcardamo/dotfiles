@@ -48,7 +48,7 @@ in {
     ./modules/fish.nix
     ./modules/fzf.nix
     ./modules/git.nix
-    ./modules/helix.nix
+    ./modules/helix
     ./modules/nodejs.nix
     ./modules/ssh.nix
     ./modules/starship

@@ -1,0 +1,188 @@
+[[language]]
+auto-format = true
+language-servers = ["vscode-css-language-server", "gpt"]
+name = "css"
+
+[language.formatter]
+args = ["--stdin-filepath", "file.css"]
+command = "prettier"
+
+[[language]]
+auto-format = true
+language-servers = ["elixir-ls"]
+name = "elixir"
+
+[[language]]
+auto-format = true
+language-servers = ["gopls", "golangci-lint-lsp", "gpt"]
+name = "go"
+
+[language.formatter]
+command = "goimports"
+
+[[language]]
+auto-format = true
+language-servers = ["vscode-html-language-server", "gpt"]
+name = "html"
+
+[language.formatter]
+args = ["--stdin-filepath", "file.html"]
+command = "prettier"
+
+[[language]]
+auto-format = true
+language-servers = [
+    { except-features = [
+        "format",
+    ], name = "typescript-language-server" },
+    "biome",
+    "gpt",
+]
+name = "javascript"
+
+[[language]]
+auto-format = true
+language-servers = [
+    { except-features = [
+        "format",
+    ], name = "vscode-json-language-server" },
+    "biome",
+]
+name = "json"
+
+[language.formatter]
+args = ["format", "--indent-style", "space", "--stdin-file-path", "file.json"]
+command = "biome"
+
+[[language]]
+auto-format = true
+file-types = ["jsonc", "hujson"]
+language-servers = [
+    { except-features = [
+        "format",
+    ], name = "vscode-json-language-server" },
+    "biome",
+]
+name = "jsonc"
+
+[language.formatter]
+args = ["format", "--indent-style", "space", "--stdin-file-path", "file.jsonc"]
+command = "biome"
+
+[[language]]
+auto-format = true
+language-servers = [
+    { except-features = [
+        "format",
+    ], name = "typescript-language-server" },
+    "biome",
+    "gpt",
+]
+name = "jsx"
+
+[language.formatter]
+args = ["format", "--indent-style", "space", "--stdin-file-path", "file.jsx"]
+command = "biome"
+
+[[language]]
+auto-format = true
+language-servers = ["marksman", "gpt"]
+name = "markdown"
+
+[language.formatter]
+args = ["--stdin-filepath", "file.md"]
+command = "prettier"
+
+[[language]]
+auto-format = true
+name = "nix"
+
+[language.formatter]
+command = "alejandra"
+
+[[language]]
+auto-format = true
+language-servers = ["pylsp", "gpt"]
+name = "python"
+
+[language.formatter]
+args = ["-c", "isort --profile black - | black -q -"]
+command = "sh"
+
+[[language]]
+auto-format = true
+language-servers = ["rust-analyzer", "gpt"]
+name = "rust"
+
+[[language]]
+auto-format = true
+language-servers = ["vscode-css-language-server", "gpt"]
+name = "scss"
+
+[language.formatter]
+args = ["--stdin-filepath", "file.scss"]
+command = "prettier"
+
+[[language]]
+auto-format = true
+language-servers = ["gpt"]
+name = "sql"
+
+[language.formatter]
+args = ["-iu1", "--no-space-function", "-"]
+command = "pg_format"
+
+[[language]]
+auto-format = true
+language-servers = ["taplo"]
+name = "toml"
+
+[language.formatter]
+args = ["fmt", "-o", "column_width=120", "-"]
+command = "taplo"
+
+[[language]]
+auto-format = true
+language-servers = [
+    { except-features = [
+        "format",
+    ], name = "typescript-language-server" },
+    "biome",
+    "gpt",
+]
+name = "tsx"
+
+[language.formatter]
+args = ["format", "--indent-style", "space", "--stdin-file-path", "file.tsx"]
+command = "biome"
+
+[[language]]
+auto-format = true
+language-servers = [
+    { except-features = [
+        "format",
+    ], name = "typescript-language-server" },
+    "biome",
+    "gpt",
+]
+name = "typescript"
+
+[language.formatter]
+args = ["format", "--indent-style", "space", "--stdin-file-path", "file.ts"]
+command = "biome"
+
+[[language]]
+auto-format = true
+language-servers = ["yaml-language-server"]
+name = "yaml"
+
+[language.formatter]
+args = ["--stdin-filepath", "file.yaml"]
+command = "prettier"
+
+[language-server.gpt]
+args = ["--handler", "copilot"]
+command = "helix-gpt"
+
+[language-server.rust-analyzer.config.check]
+command = "clippy"

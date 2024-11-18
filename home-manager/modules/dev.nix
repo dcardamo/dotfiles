@@ -10,6 +10,8 @@
 
     # Rust
     cargo
+    clang-tools
+    rust-analyzer
 
     # for compiling Treesitter parsers
     gcc
@@ -24,5 +26,23 @@
     luajitPackages.luacheck
     shellcheck
     #prettierd
-  ];
+
+    # Go
+    golangci-lint
+    golangci-lint-langserver
+    gopls
+    gotools
+
+    # Python
+    pgformatter
+    (python3.withPackages
+      (p: (with p; [black isort python-lsp-black python-lsp-server])))
+
+    # Language servers
+    bash-language-server
+    docker-compose-language-service
+    dockerfile-language-server-nodejs
+    yaml-language-server
+    elixir-ls
+   ];
 }
