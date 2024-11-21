@@ -56,6 +56,7 @@ in {
         cargotestnc = "cargo nextest run --nocapture";
         wcargotest = "watchexec -r -e rs,toml cargo nextest run";
         wcargotestnc = "watchexec -r -e rs,toml cargo nextest run --nocapture";
+        npm = "pnpm";
       }
       // pkgs.lib.optionalAttrs isLinux {
         cfgnix = "sudo nvim /etc/nixos/configuration.nix";
