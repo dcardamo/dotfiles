@@ -8,13 +8,12 @@
     nodePackages.typescript-language-server
 
     typescript
- ];
+  ];
 
+  home.file = {
+    ".npmrc".text = ''
+      prefix=/Users/dan/.npm-global
 
- home.file = {
-     ".npmrc".text = ''
-     prefix=/Users/dan/.npm-global
-
-     '';
- };
+    '';
+  };
 }
