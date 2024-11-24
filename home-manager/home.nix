@@ -45,7 +45,7 @@ in {
     ./modules/bat.nix
     ./modules/dev.nix
     ./modules/devenv.nix
-    ./modules/elixir.nix
+    #./modules/elixir.nix
     ./modules/fish.nix
     ./modules/fzf.nix
     ./modules/git.nix

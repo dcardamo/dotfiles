@@ -1,4 +1,4 @@
-# Run with `nix-shell cuda-shell.nix`
+# Run with `nix-shell shell-cuda.nix`
 {pkgs ? import <nixpkgs> {}}:
 pkgs.mkShell {
   name = "cuda-env-shell";
