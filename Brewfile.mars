@@ -10,7 +10,9 @@ brew "ollama", restart_service: true
 cask "arq"
 cask "bambu-studio"
 cask "betterdisplay"
+cask "chromedriver" # motive e2e tests
 cask "cursor"
+#cask "dash"
 cask "eloston-chromium"
 cask "font-fira-code-nerd-font"
 cask "font-victor-mono-nerd-font"
