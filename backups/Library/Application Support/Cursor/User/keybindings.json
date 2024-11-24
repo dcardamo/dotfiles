@@ -26,6 +26,11 @@
         "command": "workbench.action.focusBelowGroup",
         "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
     },
+    {
+        "key": "g shift+/",
+        "command": "editor.action.showHover",
+        "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
+    },
     //
     // SUGGESTIONS AND AUTOCOMPLETION SHORTCUTS
     //

@@ -12,8 +12,8 @@
   },
   "assistant": {
     "default_model": {
-      "provider": "ollama",
-      "model": "llama3.2:latest"
+      "provider": "openai",
+      "model": "gpt-4o"
     },
     "version": "2"
   },
@@ -52,7 +52,7 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "Zedokai Darker (Filter Spectrum)"
+    "dark": "Ayu Dark"
   },
   "project_panel": {
     "button": true,

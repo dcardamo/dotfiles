@@ -23,9 +23,10 @@ cask "stats"
 cask "steermouse", args: { appdir: "/Applications" }
 cask "wezterm"
 cask "zed"
+cask "zen-browser"
 
 #cask "adobe-dng-converter"
-#cask "brave-browser"
+cask "brave-browser"
 #cask "docker"
 #cask "hammerspoon"
 #cask "hazel"

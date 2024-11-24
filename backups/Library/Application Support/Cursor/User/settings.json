@@ -14,8 +14,6 @@
             }
         ]
     },
-    "workbench.startupEditor": "newUntitledFile",
-    "telemetry.telemetryLevel": "off",
     "editor.minimap.renderCharacters": false,
     "editor.minimap.enabled": false,
     "editor.formatOnPaste": true,
@@ -38,62 +36,28 @@
     "files.hotExit": "off",
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
-    "files.associations": {
-        "*.plush.html": "erb"
-    },
-    "multiCommand.commands": [
-        {
-            "command": "multiCommand.makeRoom",
-            "sequence": [
-                "workbench.action.toggleSidebarVisibility",
-                "workbench.action.toggleActivityBarVisibility"
-            ]
-        }
-    ],
     "git.autofetch": true,
-    "gitlens.codeLens.enabled": false,
-    "gitlens.statusBar.enabled": false,
     "[html]": {
         "editor.formatOnSave": false
     },
+    "[svelte]": {
+        "editor.defaultFormatter": "svelte.svelte-vscode"
+    },
     "emmet.includeLanguages": {
         "erb": "erb",
-        "html": "html"
+        "html": "html",
+        "html-eex": "html"
     },
     "workbench.editor.highlightModifiedTabs": true,
     "window.nativeTabs": true,
     "keyboard.touchbar.enabled": false,
-    "macros": {
-        "closePanelCloseEditorsToggleSidebar": [
-            "workbench.action.closePanel",
-            "workbench.action.closeEditorsInOtherGroups",
-            "workbench.action.closeOtherEditors",
-            "workbench.action.toggleSidebarVisibility"
-        ],
-        "closePanelCloseEditors": [
-            "workbench.action.closePanel",
-            "workbench.action.closeEditorsInOtherGroups",
-            "workbench.action.closeOtherEditors"
-        ],
-        "focusPanelToggleSidebar": [
-            "workbench.action.toggleSidebarVisibility",
-            "workbench.action.focusPanel"
-        ],
-        "closePanelFocusFilesExplorer": [
-            "workbench.action.closePanel",
-            "workbench.files.action.focusFilesExplorer"
-        ]
-    },
     "zenMode.centerLayout": false,
-    "diffEditor.ignoreTrimWhitespace": false,
     "files.watcherExclude": {
         "**/.bloop": true,
         "**/.metals": true,
         "**/.ammonite": true
     },
     "editor.scrollBeyondLastLine": false,
-    "redhat.telemetry.enabled": false,
-    "python.linting.flake8Enabled": true,
     "editor.cursorSmoothCaretAnimation": "on",
     "editor.inlineSuggest.enabled": true,
     "[dart]": {
@@ -108,21 +72,7 @@
         "editor.tabCompletion": "onlySnippets",
         "editor.wordBasedSuggestions": "off"
     },
-    "remote.SSH.useLocalServer": false,
-    "remote.SSH.remotePlatform": {
-        "pluto": "linux",
-        "10.0.0.5": "linux"
-    },
-    "yaml.schemas": {
-        "file:///Users/dan/.vscode/extensions/docsmsft.docs-yaml-1.0.0/dist/toc.schema.json": "/toc\\.yml/i"
-    },
     "workbench.editor.empty.hint": "hidden",
-    "github.copilot.enable": {
-        "*": false,
-        "plaintext": false,
-        "markdown": false,
-        "scminput": false
-    },
     "cursor.cpp.disabledLanguages": [
         "plaintext",
         "markdown",
@@ -455,5 +405,6 @@
             ]
         }
     },
-    "workbench.colorTheme": "Catppuccin Mocha"
+    "workbench.colorTheme": "Catppuccin Mocha",
+    "npm.packageManager": "pnpm",
 }
