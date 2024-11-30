@@ -2,7 +2,12 @@
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
 in {
-  home.packages = [(pkgs.nerdfonts.override {fonts = ["FiraCode"];})];
+  home.packages = [
+    (
+      pkgs.nerd-fonts.fira-code
+    )
+  ];
+
   programs.wezterm = {
     enable = true;
     extraConfig = ''

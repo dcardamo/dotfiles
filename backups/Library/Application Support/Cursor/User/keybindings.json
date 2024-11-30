@@ -27,6 +27,16 @@
         "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
     },
     {
+        "key": "g g",
+        "command": "cursorTop",
+        "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
+    },
+    {
+        "key": "g d",
+        "command": "editor.action.revealDefinition",
+        "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
+    },
+    {
         "key": "g shift+/",
         "command": "editor.action.showHover",
         "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
@@ -201,5 +211,5 @@
     {
         "key": "cmd+\\",
         "command": "-workbench.action.splitEditor"
-    }
+    },
 ]
