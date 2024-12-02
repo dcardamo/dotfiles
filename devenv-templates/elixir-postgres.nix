@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   dotenv.enable = true;
   difftastic.enable = true;
 
@@ -17,8 +14,8 @@
     javascript = {
       enable = true;
       pnpm = {
-      enable = true;
-      install.enable = true;
+        enable = true;
+        install.enable = true;
       };
     };
   };
@@ -31,9 +28,14 @@
 
     initialDatabases = [
       {
-        name = "mydb";
-        user = "myuser";
-        pass = "mypass";
+        name = "myapp_dev";
+        user = "postgres";
+        pass = "postgres";
+      }
+      {
+        name = "myapp_test";
+        user = "postgres";
+        pass = "postgres";
       }
     ];
   };
