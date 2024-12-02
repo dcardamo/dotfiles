@@ -1,10 +1,21 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   dotenv.enable = true;
   difftastic.enable = true;
 
-  packages = [
-    pkgs.git
-  ];
+  packages =
+    [
+      pkgs.git
+    ]
+    ++ lib.optionals pkgs.stdenv.isDarwin (with pkgs.darwin.apple_sdk; [
+      frameworks.Security
+      frameworks.SystemConfiguration
+      frameworks.CoreServices
+      frameworks.CoreFoundation
+    ]);
 
   languages = {
     elixir = {
@@ -28,12 +39,12 @@
 
     initialDatabases = [
       {
-        name = "myapp_dev";
+        name = "acme_dev";
         user = "postgres";
         pass = "postgres";
       }
       {
-        name = "myapp_test";
+        name = "acme_test";
         user = "postgres";
         pass = "postgres";
       }
@@ -41,7 +52,7 @@
   };
 
   env = {
-    DATABASE_URL = "postgresql://myuser:mypass@localhost:5432/mydb";
+    DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/acme_dev";
   };
 
   enterShell = ''
