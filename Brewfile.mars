@@ -53,7 +53,7 @@ mas "Microsoft Word", id: 462054704
 mas "Noir", id: 1592917505
 mas "Numbers", id:  409203825
 mas "Pages", id: 409201541
-mas "PDFgear", id: 6469021132
+#mas "PDFgear", id: 6469021132
 mas "Passepartout", id: 1433648537
 mas "Soulver 3", id: 1508732804
 mas "SponsorBlock", id: 1573461917

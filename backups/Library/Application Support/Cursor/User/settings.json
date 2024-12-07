@@ -49,7 +49,6 @@
         "html-eex": "html"
     },
     "workbench.editor.highlightModifiedTabs": true,
-    "window.nativeTabs": true,
     "keyboard.touchbar.enabled": false,
     "zenMode.centerLayout": false,
     "files.watcherExclude": {
@@ -416,4 +415,6 @@
     },
     "workbench.colorTheme": "Catppuccin Mocha",
     "npm.packageManager": "pnpm",
+    "window.customTitleBarVisibility": "never",
+    "window.nativeTabs": true,
 }
