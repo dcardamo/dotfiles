@@ -29,6 +29,7 @@ cask "zen-browser"
 
 #cask "adobe-dng-converter"
 cask "brave-browser"
+#cask "tor-browser"
 #cask "docker"
 #cask "hammerspoon"
 #cask "hazel"
