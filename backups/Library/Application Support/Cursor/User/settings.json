@@ -417,4 +417,6 @@
     "npm.packageManager": "pnpm",
     "window.customTitleBarVisibility": "never",
     "window.nativeTabs": true,
+    "git.enableSmartCommit": true,
+    "svelte.enable-ts-plugin": true,
 }
