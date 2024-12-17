@@ -2,7 +2,8 @@
 
 if [ "$(uname)" = "Darwin" ]; then
   # Update the determinate systems nix installer
-  sudo -i nix upgrade-nix
+  echo "Skipping upgrade-nix, its currently broken"
+  #sudo -i nix upgrade-nix
 
   echo "Updating homebrew"
   /opt/homebrew/bin/brew analytics off
