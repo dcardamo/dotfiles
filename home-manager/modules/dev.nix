@@ -44,5 +44,5 @@
     dockerfile-language-server-nodejs
     yaml-language-server
     elixir-ls
-   ];
+  ];
 }
