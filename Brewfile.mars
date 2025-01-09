@@ -21,6 +21,7 @@ cask "font-victor-mono-nerd-font"
 cask "obsidian"
 cask "orbstack"
 cask "qmk-toolbox"
+cask "raycast"
 cask "reader"
 cask "stats"
 cask "steermouse", args: { appdir: "/Applications" }
@@ -39,7 +40,6 @@ cask "brave-browser"
 #cask "little-snitch"
 #cask "microsoft-teams"
 #cask "orion"
-#cask "raycast"   # spotlight is better than it used to be
 #cask "spotify" # no sha
 #cask "steam" # no sha
 #cask "visual-studio-code"
