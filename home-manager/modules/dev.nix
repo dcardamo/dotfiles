@@ -26,6 +26,7 @@
     luajitPackages.luacheck
     shellcheck
     #prettierd
+    nixpkgs-fmt
 
     # Go
     golangci-lint
