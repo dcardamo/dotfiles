@@ -3,6 +3,6 @@
 pkgs.mkShell {
   name = "elixir-env-shell";
   buildInputs = with pkgs; [
-    elixir_1_16
+    elixir_1_18
   ];
 }
