@@ -17,6 +17,7 @@ cask "eloston-chromium"
 #cask "fmail2" # buggy
 cask "font-fira-code-nerd-font"
 cask "font-victor-mono-nerd-font"
+cask "github"
 # cask "mindmac" use zed instead.
 cask "obsidian"
 cask "orbstack"

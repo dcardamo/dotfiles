@@ -64,6 +64,10 @@
       ".DS_Store"
     ];
 
+    lfs = {
+      enable = true;
+    };
+
     delta = {
       enable = true;
       options = {
