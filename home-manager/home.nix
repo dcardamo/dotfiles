@@ -52,10 +52,11 @@ in {
     ./modules/helix
     ./modules/nodejs.nix
     ./modules/ssh.nix
-    ./modules/starship
+    # ./modules/starship
     ./modules/tmux.nix
     ./modules/wezterm.nix
     ./modules/zed
+    ./modules/zsh.nix
   ];
 
   xdg.configFile = {
