@@ -1,10 +1,9 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-{
-  pkgs,
-  vars,
-  ...
+{ pkgs
+, vars
+, ...
 }: {
   imports = [
     # Include the results of the hardware scan.
@@ -51,12 +50,12 @@
   users.users.dan = {
     isNormalUser = true;
     description = "Dan Cardamore";
-    shell = pkgs.fish;
-    extraGroups = ["wheel" "docker"]; # Enable ‘sudo’ for the user.
+    shell = pkgs.zsh;
+    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
     openssh.authorizedKeys.keys = vars.authorizedSshKeys;
   };
 
-  environment.systemPackages = with pkgs; [helix gitMinimal docker-compose];
+  environment.systemPackages = with pkgs; [ helix gitMinimal docker-compose fish zsh ];
 
   services.openssh = {
     enable = true;
