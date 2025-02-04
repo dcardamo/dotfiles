@@ -66,6 +66,7 @@
   };
   programs.fish.enable = true;
   programs.mosh.enable = true;
+  programs.zsh.enable = true;
 
   virtualisation.docker.enable = true;
 
