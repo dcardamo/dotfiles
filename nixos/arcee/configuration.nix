@@ -55,7 +55,7 @@
     openssh.authorizedKeys.keys = vars.authorizedSshKeys;
   };
 
-  environment.systemPackages = with pkgs; [ helix gitMinimal docker-compose fish zsh ];
+  environment.systemPackages = with pkgs; [ helix gitMinimal docker-compose ];
 
   services.openssh = {
     enable = true;
