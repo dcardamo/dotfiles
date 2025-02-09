@@ -58,6 +58,7 @@ in
       lg = "ls -lG";
       df = "duf";
       e = "hx";
+      tar = "tar --use-compress-program='pigz -p 24'";
       clear = "clear && tput cup \$(tput lines)";
       fps_on = "launchctl setenv MTL_HUD_ENABLED 1";
       fps_off = "launchctl setenv MTL_HUD_ENABLED 0";

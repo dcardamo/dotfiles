@@ -39,6 +39,7 @@ in {
       fzf
       # pv # visualize pipe streams
       gnutar
+      pigz
     ]
     ++ lib.lists.optionals isLinux []
     ++ lib.lists.optionals isDarwin [

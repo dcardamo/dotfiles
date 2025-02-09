@@ -48,6 +48,7 @@ in {
         df = "duf";
         # Take away muscle memory:  vi = "nvim";
         e = "hx";
+        tar = "tar --use-compress-program='pigz -p 24'";
         clear = "clear && _prompt_move_to_bottom";
         # Mac gaming FPS graph
         fps_on = "launchctl setenv MTL_HUD_ENABLED 1";
