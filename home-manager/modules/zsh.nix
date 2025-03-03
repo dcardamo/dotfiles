@@ -84,6 +84,9 @@ in
       # Add npm global bin to path
       export PATH="$HOME/.npm-global/bin:$PATH"
 
+      # Add git/dotfiles/bin to path
+      export PATH="$HOME/git/dotfiles/bin:$PATH"
+
       # Enable direnv
       eval "$(direnv hook zsh)"
     ''

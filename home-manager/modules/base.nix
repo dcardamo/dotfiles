@@ -31,6 +31,9 @@ in {
       neofetch
       wget
       duf
+      exiftool
+      rsync
+      pv
 
       # other utils and plugin dependencies
       fd
