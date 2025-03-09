@@ -7,8 +7,26 @@
 // custom settings, run `zed: open default settings` from the
 // command palette
 {
+  "ssh_connections": [
+    {
+      "host": "venus",
+      "username": "dan",
+      "projects": [
+        {
+          "paths": [
+            "~/git/dotfiles"
+          ]
+        },
+        {
+          "paths": [
+            "~/services"
+          ]
+        }
+      ]
+    }
+  ],
   "features": {
-    "inline_completion_provider": "supermaven"
+    "edit_prediction_provider": "zed"
   },
   "assistant": {
     "default_model": {

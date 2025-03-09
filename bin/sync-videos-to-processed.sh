@@ -11,6 +11,4 @@ rsync -av \
    --include='*.mkv' \
    --exclude='*' \
    ~/Sync/Photos/originals/ \
-   ~/Pictures/LRC_EXPORT/
-   # TODO:  switch to this soon
-   # ~/Sync/Photos/processed/
+   ~/Sync/Photos/published/
