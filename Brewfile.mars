@@ -6,6 +6,7 @@ cask_args appdir: "~/Applications", require_sha: true
 
 brew "mas"
 brew "ollama", restart_service: true
+brew "syncthing", restart_service: true
 
 cask "android-platform-tools"
 cask "arq"
@@ -13,37 +14,29 @@ cask "bambu-studio"
 cask "betterdisplay"
 cask "chromedriver" # motive e2e tests
 cask "cursor"
-#cask "dash"
 cask "eloston-chromium"
 #cask "fmail2" # buggy
 cask "font-fira-code-nerd-font"
 cask "font-victor-mono-nerd-font"
 cask "github"
 cask "keka"
-# cask "mindmac" use zed instead.
 cask "notesnook"
-#cask "obsidian"
 cask "orbstack"
 cask "qmk-toolbox"
 cask "raycast"
 cask "reader"
-#cask "standard-notes"
+#cask "shutter-encoder" # no sha
 cask "stats"
 cask "steermouse", args: { appdir: "/Applications" }
 cask "sync"
-#cask "vivaldi"
 cask "wezterm"
 cask "windsurf"
 cask "zed"
-# cask "zen-browser"
 
-#cask "adobe-dng-converter"
 cask "brave-browser"
 #cask "tor-browser"
 #cask "docker"
-#cask "hammerspoon"
 cask "hazel"
-#cask "jordanbaird-ice" # menu bar manager.  needs too many perms
 #cask "little-snitch"
 #cask "microsoft-teams"
 #cask "orion"
@@ -69,7 +62,7 @@ mas "reMarkable", id: 1276493162
 mas "Soulver 3", id: 1508732804
 mas "SponsorBlock", id: 1573461917
 mas "StopTheMadness Pro", id: 6471380298
-#mas "WireGuard", id: 1451685025
+#mas "WireGuard", id: 1451685025 # using passpartout instead
 mas "xSearch", id: 1579902068
 
 
