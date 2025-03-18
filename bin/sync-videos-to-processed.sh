@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set DRYRUN to 1 for a dry run, 0 for actual execution
-DRYRUN=1
+DRYRUN=0
 
 # Set source and destination directories
 SRC=~/Sync/Photos/originals/
