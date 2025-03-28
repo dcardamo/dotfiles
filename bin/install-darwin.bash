@@ -42,3 +42,4 @@ if [ "$(uname -s)" == "Darwin" ] && ! test -f /opt/homebrew; then
 	echo "Installing homebrew to its default location"
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
+

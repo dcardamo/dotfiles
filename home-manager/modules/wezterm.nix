@@ -58,7 +58,7 @@ in {
     ${pkgs.ncurses}/bin/tic -x -o $HOME/.terminfo ${
       pkgs.fetchurl {
         url = "https://raw.githubusercontent.com/wez/wezterm/master/termwiz/data/wezterm.terminfo";
-        sha256 = "6kfDItoEvLt/MQpe8R6KKNhFIWHYTXDL1JJ+va6fG/0=";
+        sha256 = "sha256-d8m5q9OSnztkRvnwp5qGqLj6bRWI9t5oShXJvjKyO3A=";
       }
     }
   '';
