@@ -17,7 +17,7 @@ cask "fmail2"
 cask "font-fira-code-nerd-font"
 cask "font-victor-mono-nerd-font"
 cask "keka"
-cask "leader-key"
+#cask "leader-key"
 cask "notesnook"
 cask "orbstack"
 cask "qmk-toolbox"
@@ -50,7 +50,7 @@ mas "Daisy Disk", id: 411643860
 mas "Home Assistant", id: 1099568401
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
-mas "Kindle", id: 405399194
+#mas "Kindle", id: 405399194
 mas "Microsoft Excel", id: 462058435
 mas "Microsoft Word", id: 462054704
 mas "Numbers", id:  409203825
