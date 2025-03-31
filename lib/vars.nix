@@ -15,7 +15,7 @@
     ''
 
     # mac laptop mars
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFe+4bVpPWZTF344M5TRzaz5/90s5finWdYFXhs+mwac dan@dans-mbp.lan"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGYFwcnSQIgkYPoNGF9aeLpXfChvD1TrE/vx4H5II2YI dan@hld.ca"
 
     # dan iphone 15 pro
     "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEaCACN0Pby6uZWYBZ3umr8SCobH6OQgQ5gYs7IQUM55kiTY0A+l5HJ7FYKNUcYXq+HPbwkZ33ixjkfaZc99OTU= dan@iphone"

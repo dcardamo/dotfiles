@@ -3,8 +3,8 @@
     enable = true;
     forwardAgent = true;
     matchBlocks = {
-      "pluto" = {
-        hostname = "10.0.0.5";
+      "venus" = {
+        hostname = "10.0.0.9";
       };
       "arcee" = {
         hostname = "10.0.0.4";
