@@ -13,10 +13,10 @@ cask "font-fira-code-nerd-font"
 cask "keka"
 cask "orbstack"
 cask "stats"
+cask "sync"
 cask "font-victor-mono-nerd-font"
 cask "wezterm"
 
 mas "Daisy Disk", id: 411643860
 
 #cask "bluebubbles"
-#cask "sync"
