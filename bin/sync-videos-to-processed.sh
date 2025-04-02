@@ -4,8 +4,8 @@
 DRYRUN=0
 
 # Set source and destination directories
-SRC=~/Sync/Photos/originals/
-DEST=~/Sync/Photos/published/
+SRC=~/Pictures/originals/
+DEST=~/Pictures/published/
 
 # Create a temporary file for the file list
 FILELIST=$(mktemp)
