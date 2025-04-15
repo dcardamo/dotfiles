@@ -27,6 +27,7 @@
     shellcheck
     #prettierd
     nixpkgs-fmt
+    nixfmt-classic
 
     # Go
     golangci-lint

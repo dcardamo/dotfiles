@@ -23,6 +23,21 @@
           ]
         }
       ]
+    },
+    {
+      "host": "heatwave",
+      "projects": [
+        {
+          "paths": [
+            "~/services"
+          ]
+        },
+        {
+          "paths": [
+            "~/services/changedetection"
+          ]
+        }
+      ]
     }
   ],
   "features": {
@@ -48,8 +63,8 @@
   // "ui_font_family": "VictorMono Nerd Font Mono",
   "ui_font_family": "MonoLisa",
   "ui_font_fallbacks": ["FiraCode Nerd Font"],
-  "ui_font_size": 13,
-  "buffer_font_size": 13,
+  "ui_font_size": 14,
+  "buffer_font_size": 15,
   "cursor_blink": false,
   "cursor_shape": "bar",
   "load_direnv": "shell_hook",
