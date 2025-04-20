@@ -25,7 +25,7 @@ in {
     [tealdeer tokei] ++ lib.lists.optionals isLinux [];
 
   programs.fish = {
-    enable = true;
+    enable = false;
 
     plugins = [
       {

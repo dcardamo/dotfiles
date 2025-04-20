@@ -13,14 +13,10 @@
       "username": "dan",
       "projects": [
         {
-          "paths": [
-            "~/git/dotfiles"
-          ]
+          "paths": ["~/git/dotfiles"]
         },
         {
-          "paths": [
-            "~/services"
-          ]
+          "paths": ["~/services"]
         }
       ]
     },
@@ -28,14 +24,10 @@
       "host": "heatwave",
       "projects": [
         {
-          "paths": [
-            "~/services"
-          ]
+          "paths": ["~/services"]
         },
         {
-          "paths": [
-            "~/services/changedetection"
-          ]
+          "paths": ["~/services/changedetection"]
         }
       ]
     }
@@ -45,9 +37,10 @@
   },
   "assistant": {
     "default_model": {
-      "provider": "openai",
-      "model": "gpt-4o"
+      "provider": "anthropic",
+      "model": "claude-3-7-sonnet-thinking-latest"
     },
+    "enable_experimental_live_diffs": true,
     "version": "2"
   },
   "language_models": {
