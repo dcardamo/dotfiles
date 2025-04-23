@@ -44,6 +44,7 @@ cask "zed"
 #cask "steam" # no sha
 #cask "visual-studio-code"
 
+mas "AdGuard for Safari", id: 1440147259
 mas "1Password for Safari", id: 1569813296
 mas "Daisy Disk", id: 411643860
 mas "Home Assistant", id: 1099568401
@@ -56,10 +57,8 @@ mas "Pages", id: 409201541
 mas "Passepartout", id: 1433648537
 mas "reMarkable", id: 1276493162
 mas "Soulver 3", id: 1508732804
-mas "TickTick", id: 966085870
 mas "xSearch", id: 1579902068
 
-#mas "AdGuard for Safari", id: 1440147259
 #mas "Affinity Publisher 2", id: 1606941598
 #mas "Paprika Recipe Manager 3", id: 1303222628
 #mas "Save to Reader", id: 1640236961
@@ -69,4 +68,5 @@ mas "xSearch", id: 1579902068
 #mas "PDFgear", id: 6469021132
 #mas "SponsorBlock", id: 1573461917
 #mas "StopTheMadness Pro", id: 6471380298
+#mas "TickTick", id: 966085870
 #mas "WireGuard", id: 1451685025 # using passpartout instead

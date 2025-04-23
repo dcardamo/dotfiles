@@ -44,6 +44,7 @@ in
       GIT_EDITOR = "hx";
       COLORTERM = "truecolor";
       NIXPKGS_ALLOW_UNFREE = 1;
+      NPM_CONFIG_PREFIX = "$HOME/.npm-global";
     };
 
     shellAliases = {
@@ -70,6 +71,7 @@ in
       cfgnix = "sudo nvim /etc/nixos/configuration.nix";
       restart-gui = "sudo systemctl restart display-manager.service";
       nixsearch = "nix search nixpkgs";
+      tm = "task-master";
     };
 
     initExtra = ''
