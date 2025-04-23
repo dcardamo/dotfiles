@@ -25,3 +25,14 @@ if [ -e "$HOME/Library/Application Support/Cursor/User/keybindings.json" ]; then
   cp "$HOME/Library/Application Support/Cursor/User/keybindings.json"\
       "backups/Library/Application Support/Cursor/User/keybindings.json"
 fi
+
+
+# Windsurf files
+if [ -e "$HOME/Library/Application Support/Windsurf/User/settings.json" ]; then
+  cp "$HOME/Library/Application Support/Windsurf/User/settings.json"\
+      "backups/Library/Application Support/Windsurf/User/settings.json"
+fi
+if [ -e "$HOME/Library/Application Support/Windsurf/User/keybindings.json" ]; then
+  cp "$HOME/Library/Application Support/Windsurf/User/keybindings.json"\
+      "backups/Library/Application Support/Windsurf/User/keybindings.json"
+fi
