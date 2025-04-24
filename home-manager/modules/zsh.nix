@@ -74,7 +74,7 @@ in
       tm = "task-master";
     };
 
-    initExtra = ''
+    initContent = ''
       export PROMPT_DIRTRIM=3
 
       # Source nix files, required to set zsh as default shell, otherwise
