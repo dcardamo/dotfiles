@@ -413,7 +413,7 @@
             ]
         }
     },
-    "workbench.colorTheme": "Catppuccin Mocha",
+    "workbench.colorTheme": "Tokyo Night",
     "npm.packageManager": "pnpm",
     "window.customTitleBarVisibility": "never",
     "window.nativeTabs": true,

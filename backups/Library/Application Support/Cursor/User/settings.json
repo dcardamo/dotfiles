@@ -62,7 +62,9 @@
   "[dart]": {
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
-    "editor.rulers": [80],
+    "editor.rulers": [
+      80
+    ],
     "editor.selectionHighlight": false,
     "editor.suggest.snippetsPreventQuickSuggestions": false,
     "editor.suggestSelection": "first",
@@ -70,7 +72,11 @@
     "editor.wordBasedSuggestions": "off"
   },
   "workbench.editor.empty.hint": "hidden",
-  "cursor.cpp.disabledLanguages": ["plaintext", "markdown", "scminput"],
+  "cursor.cpp.disabledLanguages": [
+    "plaintext",
+    "markdown",
+    "scminput"
+  ],
   "vim.leader": "<space>",
   "vim.easymotion": true,
   "vim.incsearch": true,
@@ -80,15 +86,27 @@
   "vim.highlightedyank.enable": true,
   "vim.insertModeKeyBindings": [
     {
-      "before": ["j", "k"],
-      "after": ["<Esc>"]
+      "before": [
+        "j",
+        "k"
+      ],
+      "after": [
+        "<Esc>"
+      ]
     },
     {
-      "before": ["j", "j"],
-      "after": ["<Esc>"]
+      "before": [
+        "j",
+        "j"
+      ],
+      "after": [
+        "<Esc>"
+      ]
     },
     {
-      "before": ["<C-e>"],
+      "before": [
+        "<C-e>"
+      ],
       "after": [],
       "commands": [
         {
@@ -100,7 +118,9 @@
   ],
   "vim.normalModeKeyBindings": [
     {
-      "before": ["u"],
+      "before": [
+        "u"
+      ],
       "after": [],
       "commands": [
         {
@@ -110,7 +130,9 @@
       ]
     },
     {
-      "before": ["<C-r>"],
+      "before": [
+        "<C-r>"
+      ],
       "after": [],
       "commands": [
         {
@@ -120,114 +142,255 @@
       ]
     },
     {
-      "before": ["<leader>", "s", "a"],
-      "commands": ["editor.action.selectAll"]
+      "before": [
+        "<leader>",
+        "s",
+        "a"
+      ],
+      "commands": [
+        "editor.action.selectAll"
+      ]
     },
     {
-      "before": ["<leader>", "w"],
-      "commands": ["workbench.action.files.save"]
+      "before": [
+        "<leader>",
+        "w"
+      ],
+      "commands": [
+        "workbench.action.files.save"
+      ]
     },
     {
-      "before": ["<leader>", "e"],
-      "commands": ["workbench.action.toggleSidebarVisibility"]
+      "before": [
+        "<leader>",
+        "e"
+      ],
+      "commands": [
+        "workbench.action.toggleSidebarVisibility"
+      ]
     },
     {
-      "before": ["<leader>", "q"],
-      "commands": ["workbench.action.closeActiveEditor"]
+      "before": [
+        "<leader>",
+        "q"
+      ],
+      "commands": [
+        "workbench.action.closeActiveEditor"
+      ]
     },
     {
-      "before": ["<leader>", "h"],
-      "commands": [":nohl"]
+      "before": [
+        "<leader>",
+        "h"
+      ],
+      "commands": [
+        ":nohl"
+      ]
     },
     {
-      "before": ["<leader>", "s", "v"],
-      "commands": ["workbench.action.splitEditor"]
+      "before": [
+        "<leader>",
+        "s",
+        "v"
+      ],
+      "commands": [
+        "workbench.action.splitEditor"
+      ]
     },
     {
-      "before": ["ctrl-w", "s"],
-      "commands": ["workbench.action.splitEditorDown"]
+      "before": [
+        "ctrl-w",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.splitEditorDown"
+      ]
     },
     {
-      "before": ["<leader>", "s", "h"],
-      "commands": ["workbench.action.splitEditorDown"]
+      "before": [
+        "<leader>",
+        "s",
+        "h"
+      ],
+      "commands": [
+        "workbench.action.splitEditorDown"
+      ]
     },
     {
-      "before": ["<leader>", "t", "o"],
-      "commands": [":tabnew"]
+      "before": [
+        "<leader>",
+        "t",
+        "o"
+      ],
+      "commands": [
+        ":tabnew"
+      ]
     },
     {
-      "before": ["<leader>", "t", "x"],
-      "commands": [":tabclose"]
+      "before": [
+        "<leader>",
+        "t",
+        "x"
+      ],
+      "commands": [
+        ":tabclose"
+      ]
     },
     {
-      "before": ["<S-h>"],
-      "commands": [":tabp"]
+      "before": [
+        "<S-h>"
+      ],
+      "commands": [
+        ":tabp"
+      ]
     },
     {
-      "before": ["<S-l>"],
-      "commands": [":tabnext"]
+      "before": [
+        "<S-l>"
+      ],
+      "commands": [
+        ":tabnext"
+      ]
     },
     {
-      "before": ["<leader>", "f"],
-      "commands": ["workbench.action.quickOpen"]
+      "before": [
+        "<leader>",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
     },
     {
-      "before": ["<leader>", "<leader>"],
-      "commands": ["workbench.action.quickOpen"]
+      "before": [
+        "<leader>",
+        "<leader>"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
     },
     {
-      "before": ["<leader>", "f", "f"],
-      "commands": ["workbench.action.quickOpen"]
+      "before": [
+        "<leader>",
+        "f",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
     },
     {
-      "before": ["<leader>", "f", "b"],
-      "commands": ["workbench.action.showAllEditors"]
+      "before": [
+        "<leader>",
+        "f",
+        "b"
+      ],
+      "commands": [
+        "workbench.action.showAllEditors"
+      ]
     },
     {
-      "before": ["<leader>", "f", "s"],
-      "commands": ["workbench.action.findInFiles"]
+      "before": [
+        "<leader>",
+        "f",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.findInFiles"
+      ]
     },
     {
-      "before": ["<leader>", "c", "r"],
-      "commands": ["editor.action.rename"]
+      "before": [
+        "<leader>",
+        "c",
+        "r"
+      ],
+      "commands": [
+        "editor.action.rename"
+      ]
     },
     {
-      "before": ["<leader>", "a", "f"],
-      "commands": ["editor.action.autoFix"]
+      "before": [
+        "<leader>",
+        "a",
+        "f"
+      ],
+      "commands": [
+        "editor.action.autoFix"
+      ]
     },
     {
-      "before": ["<leader>", "c", "r"],
-      "commands": ["editor.action.rename"]
+      "before": [
+        "<leader>",
+        "c",
+        "r"
+      ],
+      "commands": [
+        "editor.action.rename"
+      ]
     },
     {
-      "before": ["<leader>", "f", "m"],
-      "commands": ["editor.action.format"]
+      "before": [
+        "<leader>",
+        "f",
+        "m"
+      ],
+      "commands": [
+        "editor.action.format"
+      ]
     },
     {
-      "before": ["<leader>", "c", "a"],
-      "commands": ["editor.action.quickFix"]
+      "before": [
+        "<leader>",
+        "c",
+        "a"
+      ],
+      "commands": [
+        "editor.action.quickFix"
+      ]
     },
     {
-      "before": ["<S-k>"],
-      "commands": ["editor.action.showHover"]
+      "before": [
+        "<S-k>"
+      ],
+      "commands": [
+        "editor.action.showHover"
+      ]
     }
   ],
   "vim.visualModeKeyBindings": [
     {
-      "before": [">"],
-      "commands": ["editor.action.indentLines"]
+      "before": [
+        ">"
+      ],
+      "commands": [
+        "editor.action.indentLines"
+      ]
     },
     {
-      "before": ["<"],
-      "commands": ["editor.action.outdentLines"]
+      "before": [
+        "<"
+      ],
+      "commands": [
+        "editor.action.outdentLines"
+      ]
     },
     {
-      "before": ["<S-j>"],
-      "commands": ["editor.action.moveLinesDownAction"]
+      "before": [
+        "<S-j>"
+      ],
+      "commands": [
+        "editor.action.moveLinesDownAction"
+      ]
     },
     {
-      "before": ["<S-k>"],
-      "commands": ["editor.action.moveLinesUpAction"]
+      "before": [
+        "<S-k>"
+      ],
+      "commands": [
+        "editor.action.moveLinesUpAction"
+      ]
     }
   ],
   "files.autoSave": "onFocusChange",
@@ -242,14 +405,20 @@
     //...existing profiles...
     "tmux-shell": {
       "path": "tmux",
-      "args": ["new-session", "-A", "-s", "vscode:${workspaceFolder}"]
+      "args": [
+        "new-session",
+        "-A",
+        "-s",
+        "vscode:${workspaceFolder}"
+      ]
     }
   },
-  "workbench.colorTheme": "Cursor Dark Midnight",
   "npm.packageManager": "pnpm",
   "window.customTitleBarVisibility": "never",
   "window.nativeTabs": true,
   "window.commandCenter": true,
   "git.enableSmartCommit": true,
-  "svelte.enable-ts-plugin": true
+  "svelte.enable-ts-plugin": true,
+  "git.confirmSync": false,
+  "workbench.colorTheme": "Tokyo Night"
 }
