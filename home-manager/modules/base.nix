@@ -33,6 +33,7 @@ in {
       duf
       exiftool
       rsync
+      tree
       pv
 
       # other utils and plugin dependencies
