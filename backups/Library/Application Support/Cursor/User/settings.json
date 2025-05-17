@@ -420,5 +420,5 @@
   "git.enableSmartCommit": true,
   "svelte.enable-ts-plugin": true,
   "git.confirmSync": false,
-  "workbench.colorTheme": "Tokyo Night"
+  "workbench.colorTheme": "Default Dark Modern"
 }
