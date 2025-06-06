@@ -13,10 +13,14 @@
       "username": "dan",
       "projects": [
         {
-          "paths": ["~/git/dotfiles"]
+          "paths": [
+            "~/git/dotfiles"
+          ]
         },
         {
-          "paths": ["~/services"]
+          "paths": [
+            "~/services"
+          ]
         }
       ]
     },
@@ -24,10 +28,25 @@
       "host": "heatwave",
       "projects": [
         {
-          "paths": ["~/services"]
+          "paths": [
+            "~/services"
+          ]
         },
         {
-          "paths": ["~/services/changedetection"]
+          "paths": [
+            "~/services/changedetection"
+          ]
+        }
+      ]
+    },
+    {
+      "host": "arcee",
+      "username": "dan",
+      "projects": [
+        {
+          "paths": [
+            "~/services"
+          ]
         }
       ]
     }

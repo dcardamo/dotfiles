@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
     biome
-    helix-gpt
+    #helix-gpt # has a conflict with prettier Jun 5 2025
     marksman
     nil
     taplo
