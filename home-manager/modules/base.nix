@@ -44,6 +44,7 @@ in {
       # pv # visualize pipe streams
       gnutar
       pigz
+      pwgen
     ]
     ++ lib.lists.optionals isLinux []
     ++ lib.lists.optionals isDarwin [
