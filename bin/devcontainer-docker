@@ -1,0 +1,383 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Dev Container Management using Docker (OrbStack)
+# Uses Docker API for better mount support and container management
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+CONTAINER_PREFIX="dev-"
+DOCKER_IMAGE="ubuntu:22.04"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Helper functions
+log_info() {
+    echo -e "${GREEN}[INFO]${NC} $1"
+}
+
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $1" >&2
+}
+
+log_warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
+# Check if Docker (OrbStack) is available
+check_docker() {
+    if ! command -v docker &> /dev/null; then
+        log_error "Docker not found. Please install OrbStack."
+        exit 1
+    fi
+}
+
+# List all dev containers
+list_containers() {
+    log_info "Development containers:"
+    docker ps -a --filter "name=^${CONTAINER_PREFIX}" --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"
+}
+
+# Create a new dev container
+create_container() {
+    local name="$1"
+    local container_name="${CONTAINER_PREFIX}${name}"
+    
+    if docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_error "Container '${container_name}' already exists"
+        exit 1
+    fi
+    
+    log_info "Creating container '${container_name}'..."
+    
+    # Create container with proper mounts and settings
+    docker run -d \
+        --name "${container_name}" \
+        --hostname "${container_name}" \
+        --platform linux/arm64 \
+        -v "$HOME/git:/home/dan/git" \
+        -v "$HOME/.ssh:/mnt/host-ssh:ro" \
+        -v "$DOTFILES_DIR:/mnt/dotfiles:ro" \
+        --tmpfs /tmp:exec \
+        --tmpfs /run \
+        --privileged \
+        "${DOCKER_IMAGE}" \
+        /bin/bash -c "while true; do sleep 1000; done"
+    
+    # Wait for container to be ready
+    sleep 2
+    
+    log_info "Installing base packages..."
+    docker exec "${container_name}" bash -c 'export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y curl git sudo xz-utils build-essential locales zsh rsync systemd systemd-sysv'
+    
+    log_info "Setting up locale..."
+    docker exec "${container_name}" bash -c 'locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8'
+    
+    log_info "Creating user..."
+    docker exec "${container_name}" bash -c '
+        # Check if staff group exists and get its GID
+        if getent group staff > /dev/null 2>&1; then
+            STAFF_GID=$(getent group staff | cut -d: -f3)
+            echo "Using existing staff group with GID $STAFF_GID"
+        else
+            # Create staff group with GID 20 if it doesnt exist
+            groupadd -g 20 staff
+            STAFF_GID=20
+        fi
+        
+        # Create user with UID 501 and the staff group
+        useradd -m -u 501 -g staff -G sudo -s /bin/zsh dan || true
+        echo "dan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/dan
+        chown dan:staff /home/dan
+    '
+    
+    
+    log_info "Installing Nix..."
+    # Download and run Nix installer from home directory to avoid /tmp execution issues
+    docker exec -u dan "${container_name}" bash -c '
+        cd ~
+        export TMPDIR=$HOME/tmp
+        mkdir -p $TMPDIR
+        curl -L https://nixos.org/nix/install -o install-nix.sh
+        chmod +x install-nix.sh
+        ./install-nix.sh --no-daemon
+        rm -f install-nix.sh
+        rm -rf $TMPDIR
+    '
+    
+    # Add nix to shell profiles
+    docker exec -u dan "${container_name}" bash -c '
+        echo "if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi" >> ~/.bashrc
+        echo "if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi" >> ~/.zshrc
+        echo "if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi" >> ~/.profile
+    '
+    
+    # Link dotfiles
+    log_info "Setting up dotfiles..."
+    docker exec -u dan "${container_name}" bash -c 'ln -s /mnt/dotfiles ~/dotfiles'
+    
+    # Install home-manager
+    log_info "Installing home-manager..."
+    docker exec -u dan "${container_name}" bash -c '
+        source ~/.nix-profile/etc/profile.d/nix.sh
+        nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+        nix-channel --update
+    ' || log_warn "nix-channel update had issues"
+    
+    # Wait a bit for channels
+    sleep 2
+    
+    # Install home-manager
+    docker exec -u dan "${container_name}" bash -c '
+        source ~/.nix-profile/etc/profile.d/nix.sh
+        nix-shell "<home-manager>" -A install
+    ' || log_warn "home-manager install had issues"
+    
+    # Apply home-manager configuration
+    log_info "Applying home-manager configuration..."
+    log_info "This will set up your shell and development tools"
+    docker exec -u dan "${container_name}" bash -c '
+        source ~/.nix-profile/etc/profile.d/nix.sh
+        cd ~/dotfiles
+        home-manager switch --flake .#mac
+    ' || log_warn "home-manager switch failed, container is still usable"
+    
+    
+    # Get container IP
+    local container_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${container_name}")
+    
+    log_info "Container '${container_name}' created successfully!"
+    log_info ""
+    log_info "To access the container:"
+    log_info "  dc shell ${name}"
+    log_info ""
+    log_info "Other commands:"
+    log_info "  dc exec ${name} <command>    # Run a command"
+    log_info "  dc rebuild ${name}           # Rebuild home-manager config"
+    log_info "  dc stop ${name}              # Stop container"
+    log_info "  dc start ${name}             # Start container"
+    log_info "  dc destroy ${name}           # Remove container"
+    log_info ""
+    log_info "Mounts:"
+    log_info "  ~/git -> /home/dan/git (read-write)"
+    log_info "  ~/.ssh -> /mnt/host-ssh (read-only, for git operations)"
+    log_info "  dotfiles -> /mnt/dotfiles (read-only)"
+}
+
+# Destroy a dev container
+destroy_container() {
+    local name="$1"
+    local container_name="${CONTAINER_PREFIX}${name}"
+    
+    if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_error "Container '${container_name}' does not exist"
+        exit 1
+    fi
+    
+    read -p "Are you sure you want to destroy '${container_name}'? [y/N] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        log_info "Destroying container '${container_name}'..."
+        docker rm -f "${container_name}"
+        log_info "Container destroyed"
+    else
+        log_info "Cancelled"
+    fi
+}
+
+# Force destroy without prompt
+force_destroy_container() {
+    local name="$1"
+    local container_name="${CONTAINER_PREFIX}${name}"
+    
+    if docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_info "Force destroying container '${container_name}'..."
+        docker rm -f "${container_name}"
+    fi
+}
+
+
+# Shell into a container
+shell_container() {
+    local name="$1"
+    local container_name="${CONTAINER_PREFIX}${name}"
+    
+    if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_error "Container '${container_name}' does not exist"
+        exit 1
+    fi
+    
+    # Check if container is running
+    if ! docker ps --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_warn "Container '${container_name}' is not running. Starting it..."
+        docker start "${container_name}"
+        sleep 2
+    fi
+    
+    # Use docker exec with proper environment
+    docker exec -it -u dan -w /home/dan "${container_name}" env TERM=xterm-256color zsh || \
+    docker exec -it -u dan -w /home/dan "${container_name}" env TERM=xterm-256color bash
+}
+
+# Rebuild container configuration
+rebuild_container() {
+    local name="$1"
+    local container_name="${CONTAINER_PREFIX}${name}"
+    
+    if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_error "Container '${container_name}' does not exist"
+        exit 1
+    fi
+    
+    log_info "Rebuilding configuration for '${container_name}'..."
+    
+    # Update home-manager
+    docker exec -u dan "${container_name}" bash -c '
+        source ~/.nix-profile/etc/profile.d/nix.sh
+        cd ~/dotfiles
+        git pull || echo "Using existing dotfiles"
+        home-manager switch --flake .#mac
+    '
+    
+    log_info "Configuration rebuilt successfully"
+}
+
+# Execute command in container
+exec_container() {
+    local name="$1"
+    shift
+    local container_name="${CONTAINER_PREFIX}${name}"
+    
+    if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_error "Container '${container_name}' does not exist"
+        exit 1
+    fi
+    
+    docker exec -u dan "${container_name}" bash -c "source ~/.nix-profile/etc/profile.d/nix.sh && $*"
+}
+
+# Start a stopped container
+start_container() {
+    local name="$1"
+    local container_name="${CONTAINER_PREFIX}${name}"
+    
+    if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_error "Container '${container_name}' does not exist"
+        exit 1
+    fi
+    
+    log_info "Starting container '${container_name}'..."
+    docker start "${container_name}"
+    
+    
+    log_info "Container started"
+}
+
+# Stop a running container
+stop_container() {
+    local name="$1"
+    local container_name="${CONTAINER_PREFIX}${name}"
+    
+    if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_error "Container '${container_name}' does not exist"
+        exit 1
+    fi
+    
+    log_info "Stopping container '${container_name}'..."
+    docker stop "${container_name}"
+    log_info "Container stopped"
+}
+
+# Main command handler
+main() {
+    check_docker
+    
+    case "${1:-}" in
+        list|ls)
+            list_containers
+            ;;
+        create)
+            if [ -z "${2:-}" ]; then
+                log_error "Usage: $0 create <name>"
+                exit 1
+            fi
+            create_container "$2"
+            ;;
+        destroy|rm)
+            if [ -z "${2:-}" ]; then
+                log_error "Usage: $0 destroy <name>"
+                exit 1
+            fi
+            destroy_container "$2"
+            ;;
+        force-destroy|force-rm)
+            if [ -z "${2:-}" ]; then
+                log_error "Usage: $0 force-destroy <name>"
+                exit 1
+            fi
+            force_destroy_container "$2"
+            ;;
+        shell)
+            if [ -z "${2:-}" ]; then
+                log_error "Usage: $0 shell <name>"
+                exit 1
+            fi
+            shell_container "$2"
+            ;;
+        start)
+            if [ -z "${2:-}" ]; then
+                log_error "Usage: $0 start <name>"
+                exit 1
+            fi
+            start_container "$2"
+            ;;
+        stop)
+            if [ -z "${2:-}" ]; then
+                log_error "Usage: $0 stop <name>"
+                exit 1
+            fi
+            stop_container "$2"
+            ;;
+        rebuild)
+            if [ -z "${2:-}" ]; then
+                log_error "Usage: $0 rebuild <name>"
+                exit 1
+            fi
+            rebuild_container "$2"
+            ;;
+        exec)
+            if [ -z "${2:-}" ]; then
+                log_error "Usage: $0 exec <name> <command>"
+                exit 1
+            fi
+            name="$2"
+            shift 2
+            exec_container "$name" "$@"
+            ;;
+        *)
+            echo "Usage: $0 <command> [args]"
+            echo ""
+            echo "Commands:"
+            echo "  list, ls              List all dev containers"
+            echo "  create <name>         Create a new dev container"
+            echo "  destroy, rm <name>    Destroy a dev container"
+            echo "  force-destroy <name>  Force destroy without prompt"
+            echo "  start <name>          Start a stopped container"
+            echo "  stop <name>           Stop a running container"
+            echo "  shell <name>          Open a shell in the container"
+            echo "  rebuild <name>        Rebuild container configuration"
+            echo "  exec <name> <cmd>     Execute command in container"
+            echo ""
+            echo "Example:"
+            echo "  $0 create myproject"
+            echo "  $0 shell myproject"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

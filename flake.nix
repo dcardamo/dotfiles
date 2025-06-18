@@ -117,6 +117,37 @@
           }
         ];
       };
+
+      # Development container configuration
+      devcontainer = nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux"; # For Apple Silicon Macs
+        pkgs = import nixpkgs {
+          system = "aarch64-linux";
+          config.allowUnfree = true;
+        };
+        specialArgs = {
+          inherit inputs;
+          vars = (import ./lib/vars.nix) {
+            isDarwin = false;
+            isLinux = true;
+          };
+        };
+        modules = [
+          ./nixos/devcontainer/configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useUserPackages = true;
+            home-manager.users.dan = import ./home-manager/home.nix;
+            home-manager.extraSpecialArgs = {
+              inherit inputs;
+              vars = (import ./lib/vars.nix) {
+                isDarwin = false;
+                isLinux = true;
+              };
+            };
+          }
+        ];
+      };
     };
 
     # Standalone home-manager configuration entrypoint

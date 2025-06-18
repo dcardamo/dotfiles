@@ -25,6 +25,7 @@ cask "qmk-toolbox"
 cask "reader"
 cask "stats"
 cask "steermouse", args: { appdir: "/Applications" }
+cask "utm"
 cask "wezterm"
 cask "windsurf"
 cask "zed"

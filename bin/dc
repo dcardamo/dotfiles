@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Short alias for devcontainer-docker
+exec "$HOME/git/dotfiles/bin/devcontainer-docker" "$@"

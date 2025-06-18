@@ -2,3 +2,7 @@
 LOG_*
 Brewfile.lock.json
 Brewfile
+
+# Local settings files
+*.local.json
+*.local
