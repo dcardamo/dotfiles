@@ -91,6 +91,14 @@ in
 
       # Enable direnv
       eval "$(direnv hook zsh)"
+
+      # Simple zellij session completion for zja alias
+      _zja_sessions() {
+        local -a sessions
+        sessions=($(zellij list-sessions --short 2>/dev/null))
+        compadd $sessions
+      }
+      compdef _zja_sessions zja
     ''
     + lib.strings.optionalString isDarwin ''
       # Mac-specific paths

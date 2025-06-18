@@ -1,4 +1,9 @@
 {pkgs, ...}: {
+  programs.git.enable = true;
+  # direnv integration for flakes
+  programs.direnv.enable = true;
+  programs.direnv.nix-direnv.enable = true;
+
   home.packages = with pkgs; [
     gnumake
     direnv

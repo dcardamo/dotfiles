@@ -56,6 +56,7 @@ in {
     ./modules/tmux.nix
     ./modules/wezterm.nix
     ./modules/zed
+    ./modules/zellij.nix
     ./modules/zsh.nix
   ];
 
@@ -70,11 +71,6 @@ in {
 
   # Enable home-manager and git
   programs.home-manager.enable = true;
-  programs.git.enable = true;
-  # direnv integration for flakes
-  programs.direnv.enable = true;
-  programs.direnv.nix-direnv.enable = true;
-
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
 
