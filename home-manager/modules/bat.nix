@@ -3,7 +3,7 @@
     enable = true;
     config = {
       plain = true;
-      theme = "1337";
+      theme = "TwoDark";  # Close to Tokyo Night colors
       pager = "never";
     };
   };

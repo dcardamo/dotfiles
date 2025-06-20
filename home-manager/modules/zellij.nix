@@ -80,7 +80,7 @@ in {
 
       // Basic settings
       pane_frames false
-      theme "catppuccin-mocha"
+      theme "tokyo-night-moon"
       default_layout "compact"
       mouse_mode true
       scroll_buffer_size 10000
@@ -302,21 +302,21 @@ in {
       }
     '';
 
-    # Custom theme
-    "zellij/themes/catppuccin-mocha.kdl".text = ''
+    # Custom theme - Tokyo Night Moon
+    "zellij/themes/tokyo-night-moon.kdl".text = ''
       themes {
-          catppuccin-mocha {
-              bg "#1e1e2e"
-              fg "#cdd6f4"
-              red "#f38ba8"
-              green "#a6e3a1"
-              blue "#89b4fa"
-              yellow "#f9e2af"
-              magenta "#f5c2e7"
-              orange "#fab387"
-              cyan "#94e2d5"
-              black "#181825"
-              white "#f5f5f5"
+          tokyo-night-moon {
+              bg "#222436"      // Background
+              fg "#c8d3f5"      // Foreground
+              red "#ff757f"     // Red
+              green "#c3e88d"   // Green
+              blue "#82aaff"    // Blue
+              yellow "#ffc777"  // Yellow
+              magenta "#c099ff" // Magenta/Purple
+              orange "#ff966c"  // Orange
+              cyan "#86e1fc"    // Cyan
+              black "#1e2030"   // Black/Dark
+              white "#c8d3f5"   // White/Light
           }
       }
     '';
