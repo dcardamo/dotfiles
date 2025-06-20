@@ -79,7 +79,7 @@ in {
       // Zellij Configuration
 
       // Basic settings
-      pane_frames true
+      pane_frames false
       theme "catppuccin-mocha"
       default_layout "compact"
       mouse_mode true
@@ -96,8 +96,8 @@ in {
       // UI settings
       ui {
           pane_frames {
-              rounded_corners true
-              hide_session_name false
+              rounded_corners false
+              hide_session_name true
           }
       }
 
@@ -274,10 +274,7 @@ in {
           pane size=1 borderless=true {
               plugin location="zellij:tab-bar"
           }
-          pane
-          pane size=2 borderless=true {
-              plugin location="zellij:status-bar"
-          }
+          pane borderless=true
       }
     '';
 
@@ -286,7 +283,7 @@ in {
           pane size=1 borderless=true {
               plugin location="zellij:compact-bar"
           }
-          pane
+          pane borderless=true
       }
     '';
 
@@ -295,15 +292,12 @@ in {
           pane size=1 borderless=true {
               plugin location="zellij:tab-bar"
           }
-          pane {
+          pane borderless=true {
               pane split_direction="vertical" {
-                  pane
-                  pane size="30%"
+                  pane borderless=true
+                  pane size="30%" borderless=true
               }
-              pane size="30%" split_direction="horizontal"
-          }
-          pane size=2 borderless=true {
-              plugin location="zellij:status-bar"
+              pane size="30%" split_direction="horizontal" borderless=true
           }
       }
     '';
