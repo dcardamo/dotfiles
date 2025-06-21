@@ -104,13 +104,76 @@ in
       # Enable direnv
       eval "$(direnv hook zsh)"
 
-      # Simple zellij session completion for zja alias
-      _zja_sessions() {
+      # Comprehensive zellij completion
+      _zellij_sessions() {
         local -a sessions
         sessions=($(zellij list-sessions --short 2>/dev/null))
-        compadd $sessions
+        if [[ ${#sessions} -gt 0 ]]; then
+          _describe 'sessions' sessions
+        else
+          _message 'no sessions found'
+        fi
       }
-      compdef _zja_sessions zja
+
+      _zellij_layouts() {
+        local -a layouts
+        layouts=(default compact development funfind)
+        _describe 'layouts' layouts
+      }
+
+      _zellij() {
+        local -a commands
+        commands=(
+          'attach:Attach to a session'
+          'list-sessions:List existing sessions'
+          'kill-session:Kill a specific session'
+          'kill-all-sessions:Kill all sessions'
+          'run:Run a command in a new pane'
+          'edit:Edit a file in a new pane'
+          'action:Perform an action'
+          'setup:Setup zellij configuration'
+          'convert-config:Convert configuration file'
+          'convert-layout:Convert layout file'
+          'convert-theme:Convert theme file'
+        )
+
+        if (( CURRENT == 2 )); then
+          _describe 'command' commands
+        else
+          case $words[2] in
+            attach)
+              _zellij_sessions
+              ;;
+            kill-session)
+              _zellij_sessions
+              ;;
+            --layout)
+              _zellij_layouts
+              ;;
+            *)
+              _files
+              ;;
+          esac
+        fi
+      }
+
+      # Register completions
+      compdef _zellij zellij
+      compdef _zellij zj
+      
+      # Specific completions for aliases
+      compdef _zellij_sessions 'zellij attach'
+      compdef _zellij_sessions zja
+      compdef _zellij_sessions zjk
+      
+      # Layout-specific aliases
+      _zjd() { _arguments '--layout[Layout to use]:layout:_zellij_layouts' }
+      _zjc() { _arguments '--layout[Layout to use]:layout:_zellij_layouts' }
+      _zjf() { _arguments '--layout[Layout to use]:layout:_zellij_layouts' }
+      
+      compdef _zjd zjd
+      compdef _zjc zjc
+      compdef _zjf zjf
 
       # GitHub PR creation helper
       ghpr() {

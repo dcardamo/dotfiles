@@ -50,6 +50,7 @@ in {
     zjka = "zellij kill-all-sessions";
     zjd = "zellij --layout development";
     zjc = "zellij --layout compact";
+    zjf = "zellij --layout funfind";
     # Additional convenience aliases from zellij setup
     zr = "zellij run --";
     zrf = "zellij run --floating --";
@@ -64,6 +65,7 @@ in {
     zjka = "zellij kill-all-sessions";
     zjd = "zellij --layout development";
     zjc = "zellij --layout compact";
+    zjf = "zellij --layout funfind";
     # Additional convenience aliases from zellij setup
     zr = "zellij run --";
     zrf = "zellij run --floating --";
@@ -105,10 +107,10 @@ in {
       keybinds clear-defaults=true {
           normal {
               // Termius-optimized scrolling - compatible with SSH clients
-              bind "PageUp" { ScrollUp; }
-              bind "PageDown" { ScrollDown; }
-              bind "Shift PageUp" { HalfPageScrollUp; }
-              bind "Shift PageDown" { HalfPageScrollDown; }
+              bind "Shift PageUp" { ScrollUp; }
+              bind "Shift PageDown" { ScrollDown; }
+              bind "PageUp" { HalfPageScrollUp; }
+              bind "PageDown" { HalfPageScrollDown; }
               bind "Home" { ScrollToTop; }
               bind "End" { ScrollToBottom; }
 
@@ -316,6 +318,30 @@ in {
                   pane size="30%" borderless=true
               }
               pane size="30%" split_direction="horizontal" borderless=true
+          }
+      }
+    '';
+
+    # Mobile-friendly layout with 4 predefined tabs for funfind development
+    "zellij/layouts/funfind.kdl".text = ''
+      layout {
+          default_tab_template {
+              pane size=1 borderless=true {
+                  plugin location="zellij:compact-bar"
+              }
+              children
+          }
+          tab name="sh" cwd="~" {
+              pane borderless=true
+          }
+          tab name="funfind" cwd="~/git/mtv/funfind" {
+              pane borderless=true
+          }
+          tab name="funfind2" cwd="~/git/mtv/funfind" {
+              pane borderless=true
+          }
+          tab name="dotfiles" cwd="~/git/dotfiles" {
+              pane borderless=true
           }
       }
     '';
