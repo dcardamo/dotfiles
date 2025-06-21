@@ -111,6 +111,31 @@ in
         compadd $sessions
       }
       compdef _zja_sessions zja
+
+      # GitHub PR creation helper
+      ghpr() {
+        local title="$1"
+        local body="$2"
+        
+        # Get current branch name
+        local branch=$(git rev-parse --abbrev-ref HEAD)
+        
+        # Get the base branch (usually main or master)
+        local base=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "main")
+        
+        if [ -z "$title" ]; then
+          # Generate title from branch name or last commit
+          title=$(git log -1 --pretty=format:"%s")
+        fi
+        
+        if [ -z "$body" ]; then
+          # Generate body from commit messages since base branch
+          body=$(git log $base..$branch --pretty=format:"- %s" --reverse)
+        fi
+        
+        # Create PR
+        gh pr create --base "$base" --head "$branch" --title "$title" --body "$body"
+      }
     '';
   };
 }
