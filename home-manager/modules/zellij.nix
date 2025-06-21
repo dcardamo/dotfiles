@@ -44,9 +44,10 @@ in {
   # Shell aliases for convenient zellij usage
   programs.zsh.shellAliases = {
     zj = "zellij";
-    zja = "zellij attach";
+    #zja = "zellij attach";
     zjl = "zellij list-sessions";
     zjk = "zellij kill-session";
+    zjda = "zellij delete-all-sessions"; # prunes old sessions
     zjka = "zellij kill-all-sessions";
     zjd = "zellij --layout development";
     zjc = "zellij --layout compact";
@@ -59,9 +60,10 @@ in {
 
   programs.fish.shellAliases = {
     zj = "zellij";
-    zja = "zellij attach";
+    #zja = "zellij attach";
     zjl = "zellij list-sessions";
     zjk = "zellij kill-session";
+    zjda = "zellij delete-all-sessions"; # prunes old sessions
     zjka = "zellij kill-all-sessions";
     zjd = "zellij --layout development";
     zjc = "zellij --layout compact";

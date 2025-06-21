@@ -46,6 +46,7 @@ in {
       gnutar
       pigz
       pwgen
+      skim
     ]
     ++ lib.lists.optionals isLinux []
     ++ lib.lists.optionals isDarwin [
