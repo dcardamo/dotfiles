@@ -131,6 +131,10 @@ in
         if [ -z "$body" ]; then
           # Generate body from commit messages since base branch
           body=$(git log $base..$branch --pretty=format:"- %s" --reverse)
+          # If no commits found, use the last commit message body
+          if [ -z "$body" ]; then
+            body=$(git log -1 --pretty=format:"%b")
+          fi
         fi
         
         # Create PR
