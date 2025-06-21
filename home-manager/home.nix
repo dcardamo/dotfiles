@@ -51,6 +51,7 @@ in {
     ./modules/git.nix
     ./modules/helix
     ./modules/nodejs.nix
+    ./modules/python.nix
     ./modules/ssh.nix
     # ./modules/starship
     ./modules/tmux.nix

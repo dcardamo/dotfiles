@@ -1,13 +1,9 @@
 {pkgs, ...}: {
     home.packages = with pkgs; [
         nixd # nix language server
-        ruff # python linter
         solargraph #ruby language server
         bash-language-server
         shellcheck
-
-        (python3.withPackages
-          (p: (with p; [black isort python-lsp-black python-lsp-server])))
     ];
 
     # These are commented out for now since the config is changing quickly

@@ -40,10 +40,6 @@
     gopls
     gotools
 
-    # Python
-    pgformatter
-    (python3.withPackages
-      (p: (with p; [black isort python-lsp-black python-lsp-server])))
 
     # Language servers
     bash-language-server
