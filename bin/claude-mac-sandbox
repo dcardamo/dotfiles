@@ -296,9 +296,29 @@ __DETECTED_EXEC_PATHS__
 )
 
 ;; ---------- temp dirs ---------------------------------------------
-(allow file-read* file-write*
+(allow file-read* file-write* file-map-executable
   (subpath "/tmp")
   (regex "^/private/var/folders/.*/T/")
+  (subpath "/var/tmp")
+  (literal "/dev/shm")
+)
+
+;; ---------- git temporary files -----------------------------------
+(allow file-read* file-write*
+  (regex "^/tmp/git-.*")
+  (regex "^__PROJECT_DIR__/.git/.*")
+  (literal "__PROJECT_DIR__/.git/COMMIT_EDITMSG")
+  (literal "__PROJECT_DIR__/.git/index.lock")
+  (literal "__PROJECT_DIR__/.git/refs/heads")
+  (subpath "__PROJECT_DIR__/.git/refs")
+  (subpath "__PROJECT_DIR__/.git/objects")
+)
+
+;; ---------- shell temporary files ---------------------------------
+(allow file-read* file-write*
+  (regex "^/tmp/sh-.*")
+  (regex "^/tmp/zsh.*")
+  (regex "^/tmp/bash.*")
 )
 
 ;; ---------- Claude config & token files ---------------------------
