@@ -76,8 +76,8 @@ in
       nixsearch = "nix search nixpkgs";
     };
 
-    # initExtra runs for all shell types (interactive and non-interactive)
-    initExtra = ''
+    # initContent runs for interactive shells
+    initContent = ''
       # Source nix files early to ensure PATH is set for all sessions
       if [ -e "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]; then
         . "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
@@ -95,10 +95,8 @@ in
     + lib.strings.optionalString isDarwin ''
       # Mac-specific paths - nix paths take precedence
       export PATH="$HOME/.local/bin:$HOME/.orbstack/bin:/opt/homebrew/bin:$PATH"
-    '';
-
-    # initContent runs only for interactive shells
-    initContent = ''
+    ''
+    + ''
       export PROMPT_DIRTRIM=3
 
       # Enable direnv

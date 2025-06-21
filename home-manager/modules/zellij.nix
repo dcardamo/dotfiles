@@ -26,10 +26,7 @@
 #   zr <cmd>     - Run command in new pane
 #   zrf <cmd>    - Run command in new floating pane
 #   ze <file>    - Edit file in new pane
-{
-  pkgs,
-  ...
-}: let
+{pkgs, ...}: let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
   inherit (stdenv) isDarwin;
@@ -74,8 +71,6 @@ in {
     ze = "zellij edit";
   };
 
-
-
   # Zellij configuration files
   xdg.configFile = {
     # Main configuration file
@@ -89,7 +84,13 @@ in {
       mouse_mode false
       scroll_buffer_size 10000
       copy_on_select true
-      copy_command "${if isDarwin then "pbcopy" else if isLinux then "wl-copy" else "xclip -selection clipboard"}"
+      copy_command "${
+        if isDarwin
+        then "pbcopy"
+        else if isLinux
+        then "wl-copy"
+        else "xclip -selection clipboard"
+      }"
       scrollback_editor "hx"
       session_serialization true
       pane_viewport_serialization true
