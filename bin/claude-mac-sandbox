@@ -327,6 +327,15 @@ __DETECTED_EXEC_PATHS__
   (literal "__HOME__/.claude.json")       ;; single file
 )
 
+;; ---------- GitHub CLI config files -------------------------------
+(allow file-read*
+  (subpath "__HOME__/.config/gh")         ;; gh config directory
+  (literal "__HOME__/.gitconfig")         ;; global git config
+  (literal "__HOME__/.gitignore_global")  ;; global gitignore
+  (subpath "__HOME__/.config/git")        ;; additional git config
+  (literal "__HOME__/.netrc")             ;; network credentials
+)
+
 ;; ---------- time-zone & prefs (RO) --------------------------------
 (allow file-read*
   (subpath "/private/var/db/timezone")    ;; tzdata

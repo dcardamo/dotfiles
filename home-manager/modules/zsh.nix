@@ -45,6 +45,8 @@ in
       COLORTERM = "truecolor";
       NIXPKGS_ALLOW_UNFREE = 1;
       NPM_CONFIG_PREFIX = "$HOME/.npm-global";
+      # Add Nix profile to PATH for non-interactive sessions
+      PATH = "$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH";
     };
 
     shellAliases = {
@@ -74,20 +76,30 @@ in
       nixsearch = "nix search nixpkgs";
     };
 
-    initContent = ''
-      export PROMPT_DIRTRIM=3
-
-      # Source nix files, required to set zsh as default shell, otherwise
-      # it doesn\'t have the nix env vars
+    # initExtra runs for all shell types (interactive and non-interactive)
+    initExtra = ''
+      # Source nix files early to ensure PATH is set for all sessions
       if [ -e "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]; then
         . "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
       fi
-
+      
+      # Ensure nix profile bins are in PATH
+      export PATH="$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"
+      
       # Add npm global bin to path
       export PATH="$HOME/.npm-global/bin:$PATH"
-
+      
       # Add git/dotfiles/bin to path
       export PATH="$HOME/git/dotfiles/bin:$PATH"
+    ''
+    + lib.strings.optionalString isDarwin ''
+      # Mac-specific paths - nix paths take precedence
+      export PATH="$HOME/.local/bin:$HOME/.orbstack/bin:/opt/homebrew/bin:$PATH"
+    '';
+    
+    # initContent runs only for interactive shells
+    initContent = ''
+      export PROMPT_DIRTRIM=3
 
       # Enable direnv
       eval "$(direnv hook zsh)"
@@ -99,10 +111,6 @@ in
         compadd $sessions
       }
       compdef _zja_sessions zja
-    ''
-    + lib.strings.optionalString isDarwin ''
-      # Mac-specific paths - nix paths take precedence
-      export PATH="$HOME/.local/bin:$HOME/.orbstack/bin:/opt/homebrew/bin:$PATH"
     '';
   };
 }
