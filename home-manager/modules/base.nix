@@ -26,6 +26,7 @@ in {
 
   home.packages = with pkgs;
     [
+      bash
       mosh
       htop
       neofetch

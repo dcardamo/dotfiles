@@ -1,0 +1,441 @@
+#!/usr/bin/env bash
+# From: https://github.com/paulsmith/claude-sandbox
+
+# claude-sandbox  — run Claude Code inside a tighter macOS sandbox
+#
+# Copyright (c) 2025 Paul Smith <paulsmith@pobox.com>
+# SPDX-License-Identifier: MIT
+#
+#   claude-sandbox                # generate profile + run claude (default)
+#   claude-sandbox run [...args]  # same, pass args through
+#   claude-sandbox generate       # build the profile only
+#   claude-sandbox profile        # print last-generated profile path
+#   claude-sandbox help           # this text
+#
+# Note: sandbox-exec(1) is deprecated but works on macOS 14 + 15 (June 2025).
+#-------------------------------------------------------------------------------
+
+cat <<'HEREDOC_README' >/dev/null
+    # Claude Code sandbox for macOS
+
+    A security wrapper for [Claude Code](https://github.com/anthropic-ai/claude-code) that runs the CLI inside macOS's `sandbox-exec`. The sandbox grants read/write acess only to your current project directory (plus the system temp dir) while allowing just enough extra permissions for Claude Code to work smoothly.
+
+    > [!WARNING]
+    > **Heads-up**: `sandbox-exec` is deprecated in macOS 14 (Sonoma), but still functional as of June 2025 in macOS 15 (Sequoia). Apple may remove it in a future release.
+
+    ## Demo
+
+    [![asciicast](https://asciinema.org/a/cmbhNcAOiNjrfWcLiqdUa36q0.svg)](https://asciinema.org/a/cmbhNcAOiNjrfWcLiqdUa36q0)
+
+    ## Overview
+
+    This tool provides additional security when running Claude Code with permission skipping enabled (`--dangerously-skip-permissions`). It creates a sandbox that:
+
+    - ✅ Allows full file access to your current project directory
+    - ✅ Allows reading system files needed for execution
+    - ✅ Allows network access (for the Claude API, but also for anything else!)
+    - ❌ Blocks access to your Documents, Desktop, Downloads, and other personal folders
+    - ❌ Blocks access to sensitive config files like `.ssh`, `.aws`, etc.
+
+    ## Why Use This?
+
+    Claude Code is an AI coding assistant that can read and write files and access the internet, etc. When you skip permission prompts for convenience, you're trusting it with full file system access. This sandbox adds a safety layer by restricting access to only the files you're actually working on or need to read/exec from the system. (Or at least attempts to! It's default deny, but I may have written the sandbox profile wrong.)
+
+    The goal here is to prevent some damaging footguns, while acknowledging there are [other risks](https://simonwillison.net/series/prompt-injection/) associated with using LLMs as agents that are out of scope for this approach.
+
+    ## Installation
+
+    1. Download the `claude-sandbox` script to a directory in your PATH (e.g., `~/.local/bin/`):
+    ```bash
+    curl -o ~/.local/bin/claude-sandbox https://raw.githubusercontent.com/paulsmith/claude-sandbox/main/claude-sandbox
+    ```
+
+    2. Make it executable:
+    ```bash
+    chmod +x ~/.local/bin/claude-sandbox
+    ```
+
+    The script is self-contained; no separate sandbox profile file is needed.
+
+    ## Usage
+
+    The script has several modes:
+
+    ### Run Claude Code (default)
+    ```bash
+    cd /path/to/your/project
+    claude-sandbox # or: claude-sandbox run
+    ```
+
+    ### Generate sandbox profile only
+    ```bash
+    claude-sandbox generate
+    cat $(claude-sandbox profile) # inspect if you're curious
+    ```
+
+    ### View the profile path
+    ```bash
+    claude-sandbox profile
+    ```
+
+    ### Show help
+    ```bash
+    claude-sandbox help
+    ```
+
+    All additional arguments after `run` are passed to `claude`:
+    ```bash
+    claude-sandbox run --dangerously-skip-permissions
+    ```
+
+    ## How It Works
+
+    1. The script generates a temporary sandbox profile from its embedded template
+    2. It replaces `__PROJECT_DIR__` and `__HOME__` with your current working directory and home directory paths
+    3. It runs Claude Code inside the sandbox using `sandbox-exec`
+    4. The sandbox restricts file operations (default deny) according to the profile
+    5. Profile files are created in `/tmp` with unique names including directory basename and checksum hash
+
+    ## Limitations
+
+    - **macOS only**: Uses Apple's `sandbox-exec` which is macOS-specific. This relies on Security Framework's legacy security profiles.
+    - **Current directory only**: Claude can only access files in and below the directory where you start it
+    - **System dependencies**: The profile is configured for a specific system setup (paths may need adjustment)
+    - **Agent safety**: limits filesystem damage but can't protect against bad network calls or prompt-injection.
+
+    ## Customization
+
+    Open the `generate_profile()` heredoc in `claude-sandbox` and tweak:
+    - More global tools – add extra (subpath "/path") lines or modify the `detect_package_paths()` function.
+    - Different secrets – extend the deny list regex patterns if you keep credentials elsewhere.
+    - Stricter network policy – comment out (allow network*) and use a proxy if you want outbound control.
+
+    ## Possible Future Improvements
+
+    - Parse `~/.claude.json` to get the list of projects as "pre-approved" list of trusted files and directories
+
+    ## Security Notes
+
+    This sandbox provides defense-in-depth but is not a complete security solution for running Claude Code with permission skipping:
+    - It helps prevent accidental file access outside your project
+    - It cannot prevent malicious network requests or API abuse or prompt-injection
+    - Review Claude's outputs before running generated code
+    - Use version control to track changes
+
+    ## Troubleshooting
+
+    If Claude Code fails to start:
+    1. Check that all required paths in the embedded template exist on your system
+    2. Run `claude-sandbox generate` to create a profile, then debug with `sandbox-exec -f $(claude-sandbox profile) -D trace claude`
+    3. Check the generated profile with `cat $(claude-sandbox profile)` to verify paths and detected package manager paths
+    4. The sandbox part of the macOS kernel logs to the system console, you can inspect it with `log stream --style compact --predicate 'sender=="Sandbox"'`
+
+    ## More Background
+
+    - "[sandbox-exec: macOS's Little-Known Command-Line Sandboxing Tool](https://igorstechnoclub.com/sandbox-exec/)"
+
+    ## License
+
+    [MIT](./LICENSE)
+
+    This tool is provided AS IS with no warranties; use at your own risk.
+HEREDOC_README
+
+cat <<'HEREDOC_CLAUDE_MD' >/dev/null
+    # CLAUDE.md
+
+    This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+    ## Project Overview
+
+    This is a macOS security wrapper for Claude Code that uses Apple's deprecated but functional `sandbox-exec` to restrict file system access. The main deliverable is a single bash script (`claude-sandbox`) that generates sandbox profiles and runs Claude Code with restricted permissions.
+
+    ## Architecture
+
+    - **Single executable**: `claude-sandbox` - a self-contained bash script
+    - **Profile generation**: Creates temporary macOS sandbox profiles in `/tmp/` with project-specific names
+    - **Template-based**: Uses embedded heredoc template with variable substitution for project directory and home directory paths
+    - **Security model**: Default deny with explicit allow rules for system files, project directory, and necessary Claude config files
+
+    ## Key Components
+
+    ### Script Modes
+    - `run` (default): Generate profile and run Claude Code
+    - `generate`: Create sandbox profile only
+    - `profile`: Show path to generated profile
+    - `help`: Display usage information
+
+    ### Sandbox Profile Structure
+    The embedded profile template includes:
+    - System file access (read-only): `/System`, `/usr`, `/bin`, `/sbin`, plus dynamically detected package manager paths (homebrew, nix, user local binaries)
+    - Project workspace (full access): Current working directory and subdirectories
+    - Claude config access: `~/.claude` directory and `~/.claude.json`
+    - Temp directory access: `/tmp` and macOS system temp directories
+    - User preferences: `~/Library/Preferences` (read-only)
+    - Process controls: fork, exec permissions, mach-lookup services for system integration
+    - Explicit denials: Documents, Desktop, Downloads, SSH keys, AWS credentials, etc.
+    - Network access: Unrestricted (required for Claude API)
+
+    ## Installation and Usage
+
+    The script is designed to be installed to a directory in PATH (e.g., `~/.local/bin/`) and run from project directories:
+
+    ```bash
+    # Install
+    curl -o ~/.local/bin/claude-sandbox https://raw.githubusercontent.com/paulsmith/claude-sandbox/main/claude-sandbox
+    chmod +x ~/.local/bin/claude-sandbox
+
+    # Use
+    cd /path/to/project
+    claude-sandbox
+    ```
+
+    ## Development Notes
+
+    - Script uses `set -euo pipefail` for strict error handling
+    - Profile names include directory basename + checksum hash for uniqueness: `claude-sandbox-{basename}-{hash}.sb`
+    - Dynamic package manager detection for homebrew (ARM/Intel Mac), nix, and user local binaries
+    - Variable replacement uses `sed` to substitute `__PROJECT_DIR__`, `__HOME__`, and detected path placeholders
+    - Ulimit process count restriction (1024) applied before sandbox execution
+    - Requires macOS with `sandbox-exec` (deprecated in macOS 14 but still functional as of macOS 15)
+HEREDOC_CLAUDE_MD
+
+set -euo pipefail
+
+# Check for sandbox-exec availability early
+if ! command -v sandbox-exec >/dev/null 2>&1; then
+  echo "Error: sandbox-exec not found. This tool requires macOS with sandbox-exec." >&2
+  exit 1
+fi
+
+TMPDIR="${TMPDIR:-/tmp}"
+PROFILE_NAME="claude-sandbox-$(basename "$(pwd -P)")-$(printf "%x" "$(pwd -P | cksum | cut -d' ' -f1)")"
+PROFILE_FILE="$TMPDIR/$PROFILE_NAME.sb"
+
+usage() { grep -E '^# ' "${BASH_SOURCE[0]}" | /usr/bin/sed 's/^# \{0,1\}//'; }
+
+detect_package_paths() {
+  local paths=()
+
+  # Homebrew detection (ARM vs Intel Mac)
+  if [[ -d "/opt/homebrew" ]]; then
+    paths+=("/opt/homebrew")
+  elif [[ -d "/usr/local/Homebrew" ]]; then
+    paths+=("/usr/local/Homebrew")
+  fi
+
+  # User binaries (npm global, pipx, cargo, etc.)
+  if [[ -d "$HOME/.local" ]]; then
+    paths+=("$HOME/.local")
+  fi
+
+  # NPM global directory
+  if command -v npm >/dev/null 2>&1; then
+    local npm_prefix
+    npm_prefix="$(npm config get prefix 2>/dev/null || true)"
+    if [[ -n "$npm_prefix" && -d "$npm_prefix" && "$npm_prefix" != "/usr" && "$npm_prefix" != "/usr/local" ]]; then
+      paths+=("$npm_prefix")
+    fi
+  fi
+
+  # Nix package manager
+  if [[ -d "/nix/store" ]]; then
+    paths+=("/nix/store")
+  fi
+
+  printf '%s\n' "${paths[@]}"
+}
+
+generate_profile() {
+  local project_dir home_dir
+  project_dir="$(pwd -P)"
+  home_dir="$HOME"
+
+  # Detect available package manager paths
+  local detected_paths=()
+  readarray -t detected_paths < <(detect_package_paths)
+
+  cat >"$PROFILE_FILE" <<'EOF'
+;; ------------------------------------------------------------------
+;;  Claude Code macOS sandbox profile (autogenerated)
+;; ------------------------------------------------------------------
+(version 1)
+(deny default)
+
+;; ---------- introspection & sysctl --------------------------------
+(allow file-read-metadata)
+(allow sysctl-read)
+
+;; ---------- basic dir traversal -----------------------------------
+(allow file-read* (literal "/"))
+(allow file-read* (literal "/private"))
+
+;; ---------- system runtime (read-only) ----------------------------
+(allow file-read* file-map-executable
+  (subpath "/System")
+  (subpath "/usr")
+  (subpath "/bin")
+  (subpath "/sbin")
+  (subpath "/Library/Frameworks")
+  (subpath "/private/etc")
+  (subpath "/var/db/dyld")
+__DETECTED_READ_PATHS__
+)
+
+;; ---------- global npm/pipx/cargo bins ----------------------------
+__DETECTED_USER_PATHS__
+
+;; ---------- executable paths --------------------------------------
+(allow process-exec
+  (subpath "/usr")
+  (subpath "/System")
+  (subpath "/bin")
+  (subpath "/sbin")
+  (literal "/usr/bin/env")
+__DETECTED_EXEC_PATHS__
+)
+
+;; ---------- temp dirs ---------------------------------------------
+(allow file-read* file-write*
+  (subpath "/tmp")
+  (regex "^/private/var/folders/.*/T/")
+)
+
+;; ---------- Claude config & token files ---------------------------
+(allow file-read* file-write*
+  (subpath "__HOME__/.claude")            ;; dir
+  (literal "__HOME__/.claude.json")       ;; single file
+)
+
+;; ---------- time-zone & prefs (RO) --------------------------------
+(allow file-read*
+  (subpath "/private/var/db/timezone")    ;; tzdata
+  (subpath "/Library/Preferences")        ;; plists
+)
+
+;; ---------- /dev access (RO) + ioctl ------------------------------
+(allow file-read* (literal "/dev"))                           ;;
+(allow file-read* file-write*
+  (regex "^/dev/(tty.*|null|zero|dtracehelper)")
+)
+(allow file-ioctl
+  (literal "/dev/dtracehelper")                               ;;
+  (regex "^/dev/tty.*")                                       ;;
+)
+
+;; ---------- mach-lookup services ---------------------------------
+(allow mach-lookup                                              ;;
+  (global-name "com.apple.system.opendirectoryd.libinfo")
+  (global-name "com.apple.SystemConfiguration.DNSConfiguration")
+  (global-name "com.apple.coreservices.launchservicesd")
+  (global-name "com.apple.CoreServices.coreservicesd")
+  (global-name "com.apple.system.notification_center")
+  (global-name "com.apple.logd")
+  (global-name "com.apple.diagnosticd")
+  (global-name "com.apple.lsd.mapdb")
+  (global-name "com.apple.lsd.modifydb")
+  (global-name "com.apple.coreservices.quarantine-resolver")
+)
+
+;; ---------- Launch Services needed by /usr/bin/open --------------
+(allow mach-lookup
+  (regex "^com\\.apple\\.lsd(\\..*)?$")                   ;; lsd + its mapdb / modifydb helpers
+)
+
+;; ---------- Notification Center shared-memory (RO) ---------------
+(allow ipc-posix-shm-read-data
+  (ipc-posix-name "apple.shm.notification_center")
+)
+
+;; ---------- User-level preference reads (RO) ---------------------
+(allow file-read*
+  (subpath "__HOME__/Library/Preferences")
+  (subpath "__HOME__/Library/Application Support")
+)
+
+;; ---------- explicit sensitive DENY list --------------------------
+(deny file-read* file-write*
+  (subpath "__HOME__/Documents")
+  (subpath "__HOME__/Desktop")
+  (subpath "__HOME__/Downloads")
+  (subpath "__HOME__/Pictures")
+  (subpath "__HOME__/Movies")
+  (subpath "__HOME__/Music")
+  (regex "^__HOME__/\\.(ssh|aws|gnupg|kube|docker|config)($|/)")
+)
+
+;; ---------- project workspace (RW) --------------------------------
+(allow file-read* file-write* file-map-executable
+  (subpath "__PROJECT_DIR__")
+)
+(allow process-exec
+  (subpath "__PROJECT_DIR__")
+)
+
+;; ---------- networking --------------------------------------------
+(allow network*)
+
+(allow process-fork)
+(allow lsopen)
+EOF
+
+  # First, replace basic placeholders
+  /usr/bin/sed -i '' \
+    -e "s|__PROJECT_DIR__|$project_dir|g" \
+    -e "s|__HOME__|$home_dir|g" \
+    "$PROFILE_FILE"
+
+  # Then replace detected path placeholders with actual paths
+  for path in "${detected_paths[@]}"; do
+    # Add to read paths section
+    /usr/bin/sed -i '' "/__DETECTED_READ_PATHS__/i\\
+  (subpath \"$path\")
+" "$PROFILE_FILE"
+
+    # Add to exec paths section
+    /usr/bin/sed -i '' "/__DETECTED_EXEC_PATHS__/i\\
+  (subpath \"$path\")
+" "$PROFILE_FILE"
+
+    # Add .local paths to user paths section
+    if [[ "$path" == *"/.local" ]]; then
+      /usr/bin/sed -i '' "/__DETECTED_USER_PATHS__/i\\
+(allow file-read*\\
+  (subpath \"$path\")\\
+)
+" "$PROFILE_FILE"
+    fi
+  done
+
+  # Remove placeholder markers
+  /usr/bin/sed -i '' \
+    -e "/__DETECTED_READ_PATHS__/d" \
+    -e "/__DETECTED_USER_PATHS__/d" \
+    -e "/__DETECTED_EXEC_PATHS__/d" \
+    "$PROFILE_FILE"
+
+  # Add comment if no user paths were added
+  if ! grep -q "/.local" "$PROFILE_FILE"; then
+    /usr/bin/sed -i '' '/^;; ---------- global npm\/pipx\/cargo bins/a\
+;; No user package paths detected
+' "$PROFILE_FILE"
+  fi
+}
+
+run_claude() {
+  [ $# -gt 0 ] && shift # drop “run”
+  generate_profile
+  echo "→ Running Claude Code sandboxed in:  $PWD"
+  echo "→ Profile: $PROFILE_FILE"
+  ulimit -u 1024
+  exec sandbox-exec -f "$PROFILE_FILE" claude "$@"
+}
+
+cmd="${1:-run}"
+case "$cmd" in
+  run)         run_claude        "$@" ;;
+  generate)    generate_profile  && echo "$PROFILE_FILE" ;;
+  profile)     echo "$PROFILE_FILE" ;;
+  help|-h|--help) usage ;;
+  *)           echo "Unknown command: $cmd"; echo; usage; exit 1 ;;
+esac
