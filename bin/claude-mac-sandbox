@@ -35,7 +35,7 @@ cat <<'HEREDOC_README' >/dev/null
     - ✅ Allows reading system files needed for execution
     - ✅ Allows network access (for the Claude API, but also for anything else!)
     - ❌ Blocks access to your Documents, Desktop, Downloads, and other personal folders
-    - ❌ Blocks access to sensitive config files like `.ssh`, `.aws`, etc.
+    - ❌ Blocks access to sensitive config files like `.aws`, `.gnupg`, etc. (SSH access allowed for git operations)
 
     ## Why Use This?
 
@@ -173,7 +173,7 @@ cat <<'HEREDOC_CLAUDE_MD' >/dev/null
     - Temp directory access: `/tmp` and macOS system temp directories
     - User preferences: `~/Library/Preferences` (read-only)
     - Process controls: fork, exec permissions, mach-lookup services for system integration
-    - Explicit denials: Documents, Desktop, Downloads, SSH keys, AWS credentials, etc.
+    - Explicit denials: Documents, Desktop, Downloads, AWS credentials, etc. (SSH keys allowed for git operations)
     - Network access: Unrestricted (required for Claude API)
 
     ## Installation and Usage
@@ -351,6 +351,7 @@ __DETECTED_EXEC_PATHS__
 (allow file-read*
   (subpath "__HOME__/Library/Preferences")
   (subpath "__HOME__/Library/Application Support")
+  (subpath "__HOME__/.ssh")
 )
 
 ;; ---------- explicit sensitive DENY list --------------------------
@@ -361,7 +362,7 @@ __DETECTED_EXEC_PATHS__
   (subpath "__HOME__/Pictures")
   (subpath "__HOME__/Movies")
   (subpath "__HOME__/Music")
-  (regex "^__HOME__/\\.(ssh|aws|gnupg|kube|docker|config)($|/)")
+  (regex "^__HOME__/\\.(aws|gnupg|kube|docker|config)($|/)")
 )
 
 ;; ---------- project workspace (RW) --------------------------------
