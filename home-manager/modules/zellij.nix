@@ -82,7 +82,7 @@ in {
       pane_frames false
       theme "tokyo-night-moon"
       default_layout "compact"
-      mouse_mode true
+      mouse_mode false
       scroll_buffer_size 10000
       copy_on_select true
       copy_command "${if isDarwin then "pbcopy" else if isLinux then "wl-copy" else "xclip -selection clipboard"}"
@@ -104,6 +104,19 @@ in {
       // Simplified keybindings
       keybinds clear-defaults=true {
           normal {
+              // Termius-optimized scrolling - compatible with SSH clients
+              bind "PageUp" { ScrollUp; }
+              bind "PageDown" { ScrollDown; }
+              bind "Shift PageUp" { HalfPageScrollUp; }
+              bind "Shift PageDown" { HalfPageScrollDown; }
+              bind "Home" { ScrollToTop; }
+              bind "End" { ScrollToBottom; }
+
+              // Alternative scroll bindings for mobile keyboards
+              // Ctrl-u and Ctrl-d removed to preserve shell behavior
+              bind "Ctrl b" { PageScrollUp; }
+              bind "Ctrl f" { PageScrollDown; }
+
               // Pane management
               bind "Alt n" { NewPane; }
               bind "Alt h" { NewPane "Down"; }
@@ -134,6 +147,9 @@ in {
               bind "Alt Enter" { ToggleFocusFullscreen; }
               bind "Alt r" { SwitchToMode "RenameTab"; }
               bind "Alt w" { ToggleFloatingPanes; }
+
+              // Quick search
+              bind "Ctrl /" { SwitchToMode "EnterSearch"; }
 
               // Switch to modes
               bind "Ctrl p" { SwitchToMode "Pane"; }
@@ -202,6 +218,7 @@ in {
 
           scroll {
               bind "Ctrl s" { SwitchToMode "Normal"; }
+              bind "Esc" { SwitchToMode "Normal"; }
               bind "e" { EditScrollback; }
               bind "s" { SwitchToMode "EnterSearch"; }
               bind "Ctrl c" { ScrollToBottom; }
@@ -215,7 +232,8 @@ in {
           }
 
           search {
-              bind "Ctrl s" { SwitchToMode "Normal"; }
+              bind "Ctrl /" { SwitchToMode "Normal"; }
+              bind "Esc" { SwitchToMode "Normal"; }
               bind "Ctrl c" { ScrollToBottom; SwitchToMode "Normal"; }
               bind "j" "Down" { ScrollDown; }
               bind "k" "Up" { ScrollUp; }

@@ -196,7 +196,7 @@ cat <<'HEREDOC_CLAUDE_MD' >/dev/null
     - Profile names include directory basename + checksum hash for uniqueness: `claude-sandbox-{basename}-{hash}.sb`
     - Dynamic package manager detection for homebrew (ARM/Intel Mac), nix, and user local binaries
     - Variable replacement uses `sed` to substitute `__PROJECT_DIR__`, `__HOME__`, and detected path placeholders
-    - Ulimit process count restriction (1024) applied before sandbox execution
+    - No artificial process limits applied
     - Requires macOS with `sandbox-exec` (deprecated in macOS 14 but still functional as of macOS 15)
 HEREDOC_CLAUDE_MD
 
@@ -377,6 +377,12 @@ __DETECTED_EXEC_PATHS__
 (allow network*)
 
 (allow process-fork)
+(allow process-exec*)
+(allow signal (target self))
+(allow signal (target children))
+(allow process-info*)
+(allow process-info-pidinfo)
+(allow process-info-setcontrol)
 (allow lsopen)
 EOF
 
@@ -424,11 +430,10 @@ EOF
 }
 
 run_claude() {
-  [ $# -gt 0 ] && shift # drop “run”
+  [ $# -gt 0 ] && shift # drop "run"
   generate_profile
   echo "→ Running Claude Code sandboxed in:  $PWD"
   echo "→ Profile: $PROFILE_FILE"
-  ulimit -u 1024
   exec sandbox-exec -f "$PROFILE_FILE" claude "$@"
 }
 
