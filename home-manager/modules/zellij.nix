@@ -158,7 +158,8 @@ in {
 
               // Switch to modes
               bind "Ctrl p" { SwitchToMode "Pane"; }
-              bind "Ctrl r" { SwitchToMode "Resize"; }
+              // Ctrl-r removed to preserve shell reverse search
+              bind "Alt z" { SwitchToMode "Resize"; }
               bind "Ctrl s" { SwitchToMode "Scroll"; }
               bind "Ctrl t" { SwitchToMode "Tab"; }
               bind "Ctrl g" { SwitchToMode "Locked"; }
@@ -170,7 +171,7 @@ in {
           }
 
           resize {
-              bind "Ctrl r" { SwitchToMode "Normal"; }
+              bind "Alt z" { SwitchToMode "Normal"; }
               bind "h" "Left" { Resize "Increase Left"; }
               bind "j" "Down" { Resize "Increase Down"; }
               bind "k" "Up" { Resize "Increase Up"; }
