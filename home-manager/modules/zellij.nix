@@ -26,11 +26,13 @@
 #   zr <cmd>     - Run command in new pane
 #   zrf <cmd>    - Run command in new floating pane
 #   ze <file>    - Edit file in new pane
-{pkgs, ...}: let
+{ pkgs, ... }:
+let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
   inherit (stdenv) isDarwin;
-in {
+in
+{
   programs.zellij = {
     enable = true;
     enableFishIntegration = true;
@@ -48,7 +50,7 @@ in {
     zjka = "zellij kill-all-sessions";
     zjd = "zellij --layout development";
     zjc = "zellij --layout compact";
-    zjf = "zellij --layout funfind";
+    zjm = "zellij --layout motive";
     # Additional convenience aliases from zellij setup
     zr = "zellij run --";
     zrf = "zellij run --floating --";
@@ -64,7 +66,7 @@ in {
     zjka = "zellij kill-all-sessions";
     zjd = "zellij --layout development";
     zjc = "zellij --layout compact";
-    zjf = "zellij --layout funfind";
+    zjm = "zellij --layout motive";
     # Additional convenience aliases from zellij setup
     zr = "zellij run --";
     zrf = "zellij run --floating --";
@@ -85,11 +87,12 @@ in {
       scroll_buffer_size 10000
       copy_on_select true
       copy_command "${
-        if isDarwin
-        then "pbcopy"
-        else if isLinux
-        then "wl-copy"
-        else "xclip -selection clipboard"
+        if isDarwin then
+          "pbcopy"
+        else if isLinux then
+          "wl-copy"
+        else
+          "xclip -selection clipboard"
       }"
       scrollback_editor "hx"
       session_serialization true
@@ -326,8 +329,8 @@ in {
       }
     '';
 
-    # Mobile-friendly layout with 4 predefined tabs for funfind development
-    "zellij/layouts/funfind.kdl".text = ''
+    # Mobile-friendly layout with 4 predefined tabs for motive development
+    "zellij/layouts/motive.kdl".text = ''
       layout {
           default_tab_template {
               pane size=1 borderless=true {
@@ -338,10 +341,13 @@ in {
           tab name="sh" cwd="~" {
               pane borderless=true
           }
-          tab name="funfind" cwd="~/git/mtv/funfind" {
+          tab name="mtv" cwd="~/git/mtv/index" {
               pane borderless=true
           }
-          tab name="funfind2" cwd="~/git/mtv/funfind" {
+          tab name="mtv2" cwd="~/git/mtv/index" {
+              pane borderless=true
+          }
+          tab name="mtv3" cwd="~/git/mtv/index" {
               pane borderless=true
           }
           tab name="dotfiles" cwd="~/git/dotfiles" {
