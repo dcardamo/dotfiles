@@ -52,7 +52,7 @@ in
     ./modules/python.nix
     ./modules/ssh.nix
     # ./modules/starship
-    ./modules/tmux.nix
+    # ./modules/tmux.nix
     ./modules/wezterm.nix
     ./modules/zed
     ./modules/zellij.nix

@@ -33,7 +33,6 @@ in
         "direnv"
         "fzf"
         "npm"
-        "tmux"
         "sudo"
       ];
       theme = "af-magic";

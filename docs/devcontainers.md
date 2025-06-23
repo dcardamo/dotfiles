@@ -101,7 +101,7 @@ dc force-destroy myproject  # No confirmation prompt
 
 1. **Base**: Ubuntu 22.04 running via Docker (OrbStack)
 2. **User**: `dan` user with UID 501 (matching macOS)
-3. **Shell**: Full zsh + tmux + helix setup from home-manager
+3. **Shell**: Full zsh + helix setup from home-manager
 4. **Mounts**: 
    - `~/git` → `/home/dan/git` (read-write)
    - `~/.ssh` → `/mnt/host-ssh` (read-only, for git keys)
