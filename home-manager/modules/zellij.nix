@@ -265,11 +265,13 @@ in
           renametab {
               bind "Ctrl c" { SwitchToMode "Normal"; }
               bind "Esc" { UndoRenameTab; SwitchToMode "Tab"; }
+              bind "Enter" { SwitchToMode "Normal"; }
           }
 
           renamepane {
               bind "Ctrl c" { SwitchToMode "Normal"; }
               bind "Esc" { UndoRenamePane; SwitchToMode "Pane"; }
+              bind "Enter" { SwitchToMode "Normal"; }
           }
 
           session {
