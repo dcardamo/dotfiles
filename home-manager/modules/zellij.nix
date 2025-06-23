@@ -158,6 +158,7 @@ in
 
           resize {
               bind "Alt z" { SwitchToMode "Normal"; }
+              bind "Enter" { SwitchToMode "Normal"; }
               bind "h" "Left" { Resize "Increase Left"; }
               bind "j" "Down" { Resize "Increase Down"; }
               bind "k" "Up" { Resize "Increase Up"; }
@@ -172,6 +173,7 @@ in
 
           pane {
               bind "Ctrl p" { SwitchToMode "Normal"; }
+              bind "Enter" { SwitchToMode "Normal"; }
               bind "h" "Left" { MoveFocus "Left"; }
               bind "l" "Right" { MoveFocus "Right"; }
               bind "j" "Down" { MoveFocus "Down"; }
@@ -190,6 +192,7 @@ in
 
           tab {
               bind "Ctrl t" { SwitchToMode "Normal"; }
+              bind "Enter" { SwitchToMode "Normal"; }
               bind "r" { SwitchToMode "RenameTab"; }
               bind "h" "Left" "Up" "k" { MoveFocus "Left"; }
               bind "l" "Right" "Down" "j" { MoveFocus "Right"; }
@@ -211,6 +214,7 @@ in
           scroll {
               bind "Ctrl s" { SwitchToMode "Normal"; }
               bind "Esc" { SwitchToMode "Normal"; }
+              bind "Enter" { SwitchToMode "Normal"; }
               bind "e" { EditScrollback; }
               bind "s" { SwitchToMode "EnterSearch"; }
               bind "Ctrl c" { ScrollToBottom; }
@@ -226,6 +230,7 @@ in
           search {
               bind "Ctrl /" { SwitchToMode "Normal"; }
               bind "Esc" { SwitchToMode "Normal"; }
+              bind "Enter" { SwitchToMode "Normal"; }
               bind "Ctrl c" { ScrollToBottom; SwitchToMode "Normal"; }
               bind "j" "Down" { ScrollDown; }
               bind "k" "Up" { ScrollUp; }
@@ -259,6 +264,7 @@ in
 
           session {
               bind "Ctrl o" { SwitchToMode "Normal"; }
+              bind "Enter" { SwitchToMode "Normal"; }
               bind "d" { Detach; }
               bind "w" {
                   LaunchOrFocusPlugin "zellij:session-manager" {
