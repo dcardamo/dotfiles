@@ -2,7 +2,7 @@
 #
 # This module provides a comprehensive Zellij setup with:
 # - Cross-platform clipboard integration (macOS/Linux)
-# - Fish and Zsh shell integration with tab completion
+# - Zsh shell integration with tab completion
 # - Custom keybindings optimized for productivity
 # - Multiple layout templates (default, compact, development)
 # - Catppuccin Mocha theme
@@ -35,29 +35,12 @@ in
 {
   programs.zellij = {
     enable = true;
-    enableFishIntegration = true;
-    enableZshIntegration = false;
+    enableZshIntegration = true;
     enableBashIntegration = true;
   };
 
   # Shell aliases for convenient zellij usage
   programs.zsh.shellAliases = {
-    zj = "zellij";
-    #zja = "zellij attach";
-    zjl = "zellij list-sessions";
-    zjk = "zellij kill-session";
-    zjda = "zellij delete-all-sessions"; # prunes old sessions
-    zjka = "zellij kill-all-sessions";
-    zjd = "zellij --layout development";
-    zjc = "zellij --layout compact";
-    zjm = "zellij --layout motive";
-    # Additional convenience aliases from zellij setup
-    zr = "zellij run --";
-    zrf = "zellij run --floating --";
-    ze = "zellij edit";
-  };
-
-  programs.fish.shellAliases = {
     zj = "zellij";
     #zja = "zellij attach";
     zjl = "zellij list-sessions";

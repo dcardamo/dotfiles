@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.tmux = {
     enable = true;
     shortcut = "t";
@@ -16,7 +17,7 @@
       set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
       set-environment -g COLORTERM "truecolor"
 
-      set -g default-command "fish"
+      set -g default-command "zsh"
 
       # Mouse works as expected
       set-option -g mouse on

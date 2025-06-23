@@ -4,11 +4,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
   inherit (stdenv) isDarwin;
-in {
+in
+{
   nixpkgs = {
     config = {
       allowUnfree = true;
@@ -24,10 +26,7 @@ in {
   manual.json.enable = false;
 
   home.username = "dan";
-  home.homeDirectory =
-    if isLinux
-    then "/home/dan"
-    else "/Users/dan";
+  home.homeDirectory = if isLinux then "/home/dan" else "/Users/dan";
 
   home.packages =
     lib.lists.optionals isDarwin [
@@ -46,7 +45,6 @@ in {
     ./modules/dev.nix
     ./modules/devenv.nix
     #./modules/elixir.nix
-    ./modules/fish.nix
     ./modules/fzf.nix
     ./modules/git.nix
     ./modules/helix
