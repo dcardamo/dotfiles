@@ -383,6 +383,11 @@ __DETECTED_EXEC_PATHS__
   (subpath "__HOME__/.ssh")
 )
 
+;; ---------- pip cache directory (RW) ------------------------------
+(allow file-read* file-write*
+  (subpath "__HOME__/Library/Caches/pip")
+)
+
 ;; ---------- explicit sensitive DENY list --------------------------
 (deny file-read* file-write*
   (subpath "__HOME__/Documents")
