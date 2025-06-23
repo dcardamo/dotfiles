@@ -13,10 +13,6 @@
     git
     gitui
 
-    # Rust
-    cargo
-    clang-tools
-    rust-analyzer
 
     # for compiling Treesitter parsers
     gcc
@@ -39,7 +35,6 @@
     golangci-lint-langserver
     gopls
     gotools
-
 
     # Language servers
     bash-language-server

@@ -50,6 +50,7 @@ in
     ./modules/helix
     ./modules/nodejs.nix
     ./modules/python.nix
+    ./modules/rust.nix
     ./modules/ssh.nix
     # ./modules/starship
     # ./modules/tmux.nix
