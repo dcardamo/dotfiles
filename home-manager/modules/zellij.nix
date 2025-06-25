@@ -35,8 +35,10 @@ in
 {
   programs.zellij = {
     enable = true;
-    enableZshIntegration = true;
-    enableBashIntegration = true;
+    # Disabled to prevent auto-starting Zellij on every new shell/SSH session
+    # Use aliases (zj, zja, etc.) to manually start Zellij when needed
+    enableZshIntegration = false;
+    enableBashIntegration = false;
   };
 
   # Shell aliases for convenient zellij usage
