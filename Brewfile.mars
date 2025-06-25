@@ -3,6 +3,7 @@ tap "buo/cask-upgrade"
 # set arguments for all 'brew install --cask' commands
 cask_args appdir: "~/Applications", require_sha: true
 
+brew "code-server", restart_server: true
 brew "gh"
 brew "mas"
 brew "ollama", restart_service: true
