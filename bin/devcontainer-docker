@@ -52,13 +52,41 @@ create_container() {
         exit 1
     fi
     
+    # Validate required directories exist
+    if [ ! -d "$HOME/git" ]; then
+        log_warn "Creating ~/git directory..."
+        mkdir -p "$HOME/git"
+    fi
+    
+    if [ ! -d "$HOME/.ssh" ]; then
+        log_error "SSH directory ~/.ssh does not exist"
+        exit 1
+    fi
+    
     log_info "Creating container '${container_name}'..."
+    
+    # Detect platform
+    local platform
+    case "$(uname -m)" in
+        x86_64)
+            platform="linux/amd64"
+            ;;
+        arm64|aarch64)
+            platform="linux/arm64"
+            ;;
+        *)
+            log_error "Unsupported architecture: $(uname -m)"
+            exit 1
+            ;;
+    esac
+    
+    log_info "Using platform: ${platform}"
     
     # Create container with proper mounts and settings
     docker run -d \
         --name "${container_name}" \
         --hostname "${container_name}" \
-        --platform linux/arm64 \
+        --platform "${platform}" \
         -v "$HOME/git:/home/dan/git" \
         -v "$HOME/.ssh:/mnt/host-ssh:ro" \
         -v "$DOTFILES_DIR:/mnt/dotfiles:ro" \
@@ -107,44 +135,92 @@ create_container() {
         ./install-nix.sh --no-daemon
         rm -f install-nix.sh
         rm -rf $TMPDIR
+        
+        # Debug: Check what files were created
+        echo "=== Checking Nix installation files ==="
+        ls -la ~/.local/state/nix/profiles/profile/etc/profile.d/ 2>/dev/null || echo "No profile.d in .local/state"
+        ls -la ~/.nix-profile 2>/dev/null || echo "No ~/.nix-profile symlink"
+        ls -la ~/.profile 2>/dev/null || echo "No ~/.profile"
+        ls -la ~/.bashrc 2>/dev/null || echo "No ~/.bashrc"
+        echo "=== Checking .profile contents for nix ==="
+        grep -n "nix" ~/.profile 2>/dev/null || echo "No nix in .profile"
+        echo "=== End debug ==="
     '
     
-    # Add nix to shell profiles
+    # Add nix to shell profiles (for bash/profile only, zshrc will be created separately)
     docker exec -u dan "${container_name}" bash -c '
-        echo "if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi" >> ~/.bashrc
-        echo "if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi" >> ~/.zshrc
-        echo "if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi" >> ~/.profile
+        # The actual nix profile location after install
+        echo "if [ -e ~/.local/state/nix/profiles/profile/etc/profile.d/nix.sh ]; then . ~/.local/state/nix/profiles/profile/etc/profile.d/nix.sh; fi" >> ~/.bashrc
+        echo "if [ -e ~/.local/state/nix/profiles/profile/etc/profile.d/nix.sh ]; then . ~/.local/state/nix/profiles/profile/etc/profile.d/nix.sh; fi" >> ~/.profile
     '
     
-    # Link dotfiles
+    # Link dotfiles and set up shell configuration
     log_info "Setting up dotfiles..."
-    docker exec -u dan "${container_name}" bash -c 'ln -s /mnt/dotfiles ~/dotfiles'
+    docker exec -u dan "${container_name}" bash -c '
+        # Link dotfiles directory
+        ln -s /mnt/dotfiles ~/dotfiles
+        
+        # Create .config directory if it doesnt exist
+        mkdir -p ~/.config
+        mkdir -p ~/.config/nix
+        
+        # Create nix.conf to enable flakes before home-manager runs
+        cat > ~/.config/nix/nix.conf << '\''EOF'\''
+experimental-features = nix-command flakes
+keep-derivations = true
+keep-outputs = true
+EOF
+        
+        # Create a temporary .zshrc that will be replaced by home-manager
+        # This ensures nix is available for the home-manager switch command
+        if [ ! -f ~/.zshrc ]; then
+            cat > ~/.zshrc << '\''EOF'\''
+# Temporary .zshrc - will be replaced by home-manager
+if [ -e ~/.local/state/nix/profiles/profile/etc/profile.d/nix.sh ]; then
+    . ~/.local/state/nix/profiles/profile/etc/profile.d/nix.sh
+fi
+EOF
+        fi
+    '
     
     # Install home-manager
     log_info "Installing home-manager..."
-    docker exec -u dan "${container_name}" bash -c '
-        source ~/.nix-profile/etc/profile.d/nix.sh
+    if docker exec -u dan "${container_name}" env USER=dan bash -l -c '
+        # The -l flag ensures we get a login shell which sources .profile
         nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
         nix-channel --update
-    ' || log_warn "nix-channel update had issues"
+    ' 2>&1; then
+        log_info "Nix channels updated successfully"
+    else
+        log_warn "nix-channel update had issues, continuing anyway"
+    fi
     
     # Wait a bit for channels
     sleep 2
     
     # Install home-manager
-    docker exec -u dan "${container_name}" bash -c '
-        source ~/.nix-profile/etc/profile.d/nix.sh
+    if docker exec -u dan "${container_name}" env USER=dan bash -l -c '
         nix-shell "<home-manager>" -A install
-    ' || log_warn "home-manager install had issues"
+    ' 2>&1; then
+        log_info "Home-manager installed successfully"
+    else
+        log_warn "home-manager install had issues, continuing anyway"
+    fi
     
     # Apply home-manager configuration
     log_info "Applying home-manager configuration..."
     log_info "This will set up your shell and development tools"
-    docker exec -u dan "${container_name}" bash -c '
-        source ~/.nix-profile/etc/profile.d/nix.sh
+    if docker exec -u dan "${container_name}" env USER=dan bash -l -c '
         cd ~/dotfiles
-        home-manager switch --flake .#mac
-    ' || log_warn "home-manager switch failed, container is still usable"
+        # Set HOME_MANAGER_BACKUP_EXT to avoid conflicts with our custom .zshrc
+        export HOME_MANAGER_BACKUP_EXT=.bak
+        home-manager switch --flake .#linux-aarch64
+    ' 2>&1; then
+        log_info "Home-manager configuration applied successfully"
+    else
+        log_warn "home-manager switch failed, but container is still usable"
+        log_warn "You can manually run: home-manager switch --flake ~/dotfiles#linux-aarch64"
+    fi
     
     
     # Get container IP
@@ -171,7 +247,12 @@ create_container() {
 # Destroy a dev container
 destroy_container() {
     local name="$1"
-    local container_name="${CONTAINER_PREFIX}${name}"
+    # Check if name already has the prefix
+    if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
+        local container_name="$name"
+    else
+        local container_name="${CONTAINER_PREFIX}${name}"
+    fi
     
     if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
         log_error "Container '${container_name}' does not exist"
@@ -192,7 +273,12 @@ destroy_container() {
 # Force destroy without prompt
 force_destroy_container() {
     local name="$1"
-    local container_name="${CONTAINER_PREFIX}${name}"
+    # Check if name already has the prefix
+    if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
+        local container_name="$name"
+    else
+        local container_name="${CONTAINER_PREFIX}${name}"
+    fi
     
     if docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
         log_info "Force destroying container '${container_name}'..."
@@ -204,7 +290,12 @@ force_destroy_container() {
 # Shell into a container
 shell_container() {
     local name="$1"
-    local container_name="${CONTAINER_PREFIX}${name}"
+    # Check if name already has the prefix
+    if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
+        local container_name="$name"
+    else
+        local container_name="${CONTAINER_PREFIX}${name}"
+    fi
     
     if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
         log_error "Container '${container_name}' does not exist"
@@ -219,14 +310,19 @@ shell_container() {
     fi
     
     # Use docker exec with proper environment
-    docker exec -it -u dan -w /home/dan "${container_name}" env TERM=xterm-256color zsh || \
-    docker exec -it -u dan -w /home/dan "${container_name}" env TERM=xterm-256color bash
+    # We need to use a login shell to ensure all initialization files are sourced
+    docker exec -it -u dan -w /home/dan "${container_name}" env TERM=xterm-256color USER=dan HOME=/home/dan zsh -l
 }
 
 # Rebuild container configuration
 rebuild_container() {
     local name="$1"
-    local container_name="${CONTAINER_PREFIX}${name}"
+    # Check if name already has the prefix
+    if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
+        local container_name="$name"
+    else
+        local container_name="${CONTAINER_PREFIX}${name}"
+    fi
     
     if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
         log_error "Container '${container_name}' does not exist"
@@ -236,12 +332,15 @@ rebuild_container() {
     log_info "Rebuilding configuration for '${container_name}'..."
     
     # Update home-manager
-    docker exec -u dan "${container_name}" bash -c '
-        source ~/.nix-profile/etc/profile.d/nix.sh
+    docker exec -u dan "${container_name}" env USER=dan bash -l -c '
         cd ~/dotfiles
-        git pull || echo "Using existing dotfiles"
-        home-manager switch --flake .#mac
-    '
+        # Skip git pull since dotfiles is mounted read-only
+        echo "Using mounted dotfiles (read-only)"
+        home-manager switch --flake .#linux-aarch64
+    ' || {
+        log_warn "home-manager switch failed"
+        return 1
+    }
     
     log_info "Configuration rebuilt successfully"
 }
@@ -250,24 +349,55 @@ rebuild_container() {
 exec_container() {
     local name="$1"
     shift
-    local container_name="${CONTAINER_PREFIX}${name}"
+    # Check if name already has the prefix
+    if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
+        local container_name="$name"
+    else
+        local container_name="${CONTAINER_PREFIX}${name}"
+    fi
     
     if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
         log_error "Container '${container_name}' does not exist"
         exit 1
     fi
     
-    docker exec -u dan "${container_name}" bash -c "source ~/.nix-profile/etc/profile.d/nix.sh && $*"
+    # Check if container is running
+    if ! docker ps --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_warn "Container '${container_name}' is not running. Starting it..."
+        docker start "${container_name}"
+        sleep 2
+    fi
+    
+    docker exec -u dan -w /home/dan "${container_name}" env USER=dan bash -l -c "$*"
 }
 
 # Start a stopped container
 start_container() {
     local name="$1"
-    local container_name="${CONTAINER_PREFIX}${name}"
+    # Check if name already has the prefix
+    if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
+        local container_name="$name"
+    else
+        local container_name="${CONTAINER_PREFIX}${name}"
+    fi
     
     if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
-        log_error "Container '${container_name}' does not exist"
-        exit 1
+        log_warn "Container '${container_name}' does not exist"
+        read -p "Would you like to create it? [y/N] " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            create_container "${name}"
+            return
+        else
+            log_error "Container '${container_name}' does not exist"
+            exit 1
+        fi
+    fi
+    
+    # Check if already running
+    if docker ps --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_info "Container '${container_name}' is already running"
+        return
     fi
     
     log_info "Starting container '${container_name}'..."
@@ -280,7 +410,12 @@ start_container() {
 # Stop a running container
 stop_container() {
     local name="$1"
-    local container_name="${CONTAINER_PREFIX}${name}"
+    # Check if name already has the prefix
+    if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
+        local container_name="$name"
+    else
+        local container_name="${CONTAINER_PREFIX}${name}"
+    fi
     
     if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
         log_error "Container '${container_name}' does not exist"

@@ -161,6 +161,17 @@
         };
         modules = [./home-manager/home.nix];
       };
+      "linux-aarch64" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.aarch64-linux;
+        extraSpecialArgs = {
+          inherit inputs;
+          vars = (import ./lib/vars.nix) {
+            isDarwin = false;
+            isLinux = true;
+          };
+        };
+        modules = [./home-manager/home.nix];
+      };
     };
   };
 }

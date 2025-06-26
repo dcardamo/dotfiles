@@ -16,9 +16,14 @@
     components = ["rustc" "cargo" "clippy" "rustfmt" "rust-analyzer"];
   };
 
-  pre-commit.hooks = {
+  git-hooks.hooks = {
+    shellcheck.enable = true;
     rustfmt.enable = true;
     clippy.enable = true;
+    clippy.packageOverrides.cargo = pkgs.cargo;
+    clippy.packageOverrides.clippy = pkgs.clippy;
+    # some hooks provide settings
+    clippy.settings.allFeatures = true;
   };
 
   packages =
@@ -37,32 +42,8 @@
       pkgs.libiconv # for ollama-rs
     ]);
 
-  services.postgres = {
-    enable = true;
-    package = pkgs.postgresql_16;
-    listen_addresses = "127.0.0.1";
-    port = 9433;
-
-    extensions = extensions: [
-      extensions.pgvector
-    ];
-
-    initialScript = ''
-      CREATE USER diwdev WITH PASSWORD 'diwdev' SUPERUSER;
-    '';
-
-    initialDatabases = [
-      {
-        name = "indexer_dev";
-        # user = "diwdev";
-        # pass = "diwdev";
-      }
-    ];
-  };
-
   env = {
-    DATABASE_URL = "postgresql://diwdev:diwdev@localhost:9433/indexer_dev";
-    # RUST_BACKTRACE="full";
+    #RUST_BACKTRACE="full";
   };
 
   enterShell = ''
