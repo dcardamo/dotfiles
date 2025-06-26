@@ -154,6 +154,45 @@ create_container() {
         echo "if [ -e ~/.local/state/nix/profiles/profile/etc/profile.d/nix.sh ]; then . ~/.local/state/nix/profiles/profile/etc/profile.d/nix.sh; fi" >> ~/.profile
     '
     
+    # Set up SSH keys for git access
+    log_info "Setting up SSH keys..."
+    docker exec -u dan "${container_name}" bash -c '
+        # Create .ssh directory with proper permissions
+        mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
+        
+        # Copy SSH keys from mounted volume (read-only) to home directory
+        if [ -d /mnt/host-ssh ]; then
+            # Copy private keys (all files without .pub extension)
+            for key in /mnt/host-ssh/*; do
+                if [ -f "$key" ] && [[ ! "$key" =~ \.pub$ ]] && [[ ! "$key" =~ known_hosts$ ]] && [[ ! "$key" =~ config$ ]] && [[ ! "$key" =~ authorized_keys$ ]]; then
+                    cp "$key" ~/.ssh/
+                    chmod 600 ~/.ssh/$(basename "$key")
+                fi
+            done
+            
+            # Copy public keys
+            for key in /mnt/host-ssh/*.pub; do
+                if [ -f "$key" ]; then
+                    cp "$key" ~/.ssh/
+                    chmod 644 ~/.ssh/$(basename "$key")
+                fi
+            done
+            
+            # Copy SSH config if it exists
+            if [ -f /mnt/host-ssh/config ]; then
+                cp /mnt/host-ssh/config ~/.ssh/
+                chmod 644 ~/.ssh/config
+            fi
+            
+            # Copy known_hosts if it exists
+            if [ -f /mnt/host-ssh/known_hosts ]; then
+                cp /mnt/host-ssh/known_hosts ~/.ssh/
+                chmod 644 ~/.ssh/known_hosts
+            fi
+        fi
+    '
+    
     # Link dotfiles and set up shell configuration
     log_info "Setting up dotfiles..."
     docker exec -u dan "${container_name}" bash -c '
@@ -240,8 +279,10 @@ EOF
     log_info ""
     log_info "Mounts:"
     log_info "  ~/git -> /home/dan/git (read-write)"
-    log_info "  ~/.ssh -> /mnt/host-ssh (read-only, for git operations)"
+    log_info "  ~/.ssh -> /mnt/host-ssh (read-only, copied to ~/.ssh)"
     log_info "  dotfiles -> /mnt/dotfiles (read-only)"
+    log_info ""
+    log_info "SSH keys have been copied to the container for git operations."
 }
 
 # Destroy a dev container
@@ -407,6 +448,68 @@ start_container() {
     log_info "Container started"
 }
 
+# Update SSH keys in container
+update_ssh_keys() {
+    local name="$1"
+    # Check if name already has the prefix
+    if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
+        local container_name="$name"
+    else
+        local container_name="${CONTAINER_PREFIX}${name}"
+    fi
+    
+    if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_error "Container '${container_name}' does not exist"
+        exit 1
+    fi
+    
+    log_info "Updating SSH keys in '${container_name}'..."
+    
+    docker exec -u dan "${container_name}" bash -c '
+        # Create .ssh directory with proper permissions
+        mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
+        
+        # Copy SSH keys from mounted volume (read-only) to home directory
+        if [ -d /mnt/host-ssh ]; then
+            # Copy private keys (all files without .pub extension)
+            for key in /mnt/host-ssh/*; do
+                if [ -f "$key" ] && [[ ! "$key" =~ \.pub$ ]] && [[ ! "$key" =~ known_hosts$ ]] && [[ ! "$key" =~ config$ ]] && [[ ! "$key" =~ authorized_keys$ ]]; then
+                    cp "$key" ~/.ssh/
+                    chmod 600 ~/.ssh/$(basename "$key")
+                fi
+            done
+            
+            # Copy public keys
+            for key in /mnt/host-ssh/*.pub; do
+                if [ -f "$key" ]; then
+                    cp "$key" ~/.ssh/
+                    chmod 644 ~/.ssh/$(basename "$key")
+                fi
+            done
+            
+            # Copy SSH config if it exists
+            if [ -f /mnt/host-ssh/config ]; then
+                cp /mnt/host-ssh/config ~/.ssh/
+                chmod 644 ~/.ssh/config
+            fi
+            
+            # Copy known_hosts if it exists
+            if [ -f /mnt/host-ssh/known_hosts ]; then
+                cp /mnt/host-ssh/known_hosts ~/.ssh/
+                chmod 644 ~/.ssh/known_hosts
+            fi
+            
+            echo "SSH keys updated successfully"
+        else
+            echo "No /mnt/host-ssh directory found"
+            exit 1
+        fi
+    '
+    
+    log_info "SSH keys updated successfully"
+}
+
 # Stop a running container
 stop_container() {
     local name="$1"
@@ -493,6 +596,13 @@ main() {
             shift 2
             exec_container "$name" "$@"
             ;;
+        update-ssh)
+            if [ -z "${2:-}" ]; then
+                log_error "Usage: $0 update-ssh <name>"
+                exit 1
+            fi
+            update_ssh_keys "$2"
+            ;;
         *)
             echo "Usage: $0 <command> [args]"
             echo ""
@@ -506,6 +616,7 @@ main() {
             echo "  shell <name>          Open a shell in the container"
             echo "  rebuild <name>        Rebuild container configuration"
             echo "  exec <name> <cmd>     Execute command in container"
+            echo "  update-ssh <name>     Update SSH keys in container"
             echo ""
             echo "Example:"
             echo "  $0 create myproject"
