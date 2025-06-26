@@ -115,13 +115,17 @@ in
               bind "Alt q" { CloseFocus; }
 
               // Focus movement
-              bind "Alt Left" { MoveFocus "Left"; }
-              bind "Alt Right" { MoveFocus "Right"; }
               bind "Alt Up" { MoveFocus "Up"; }
               bind "Alt Down" { MoveFocus "Down"; }
+              bind "Alt h" { MoveFocus "Left"; }
+              bind "Alt l" { MoveFocus "Right"; }
+              bind "Alt j" { MoveFocus "Down"; }
+              bind "Alt k" { MoveFocus "Up"; }
 
               // Tab management
               bind "Alt t" { NewTab; }
+              bind "Alt Left" { GoToPreviousTab; }
+              bind "Alt Right" { GoToNextTab; }
               bind "Alt 1" { GoToTab 1; }
               bind "Alt 2" { GoToTab 2; }
               bind "Alt 3" { GoToTab 3; }
@@ -138,6 +142,12 @@ in
               bind "Alt Enter" { ToggleFocusFullscreen; }
               bind "Alt r" { SwitchToMode "RenameTab"; }
               bind "Alt w" { ToggleFloatingPanes; }
+
+              // Pane resizing with Shift+Alt+arrows
+              bind "Shift Alt Left" { Resize "Decrease Left"; }
+              bind "Shift Alt Right" { Resize "Increase Right"; }
+              bind "Shift Alt Up" { Resize "Decrease Up"; }
+              bind "Shift Alt Down" { Resize "Increase Down"; }
 
               // Quick search
               bind "Alt /" { SwitchToMode "EnterSearch"; }
