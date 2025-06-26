@@ -49,8 +49,6 @@ in
     zjk = "zellij kill-session";
     zjda = "zellij delete-all-sessions"; # prunes old sessions
     zjka = "zellij kill-all-sessions";
-    zjd = "zellij --layout development";
-    zjc = "zellij --layout compact";
     zjm = "zellij --layout motive";
     # Additional convenience aliases from zellij setup
     zr = "zellij run --";
@@ -142,20 +140,15 @@ in
               bind "Alt w" { ToggleFloatingPanes; }
 
               // Quick search
-              bind "Ctrl /" { SwitchToMode "EnterSearch"; }
+              bind "Alt /" { SwitchToMode "EnterSearch"; }
 
               // Switch to modes
-              bind "Ctrl p" { SwitchToMode "Pane"; }
+              bind "Alt p" { SwitchToMode "Pane"; }
               // Ctrl-r removed to preserve shell reverse search
               bind "Alt z" { SwitchToMode "Resize"; }
-              bind "Ctrl s" { SwitchToMode "Scroll"; }
-              bind "Ctrl t" { SwitchToMode "Tab"; }
-              bind "Ctrl g" { SwitchToMode "Locked"; }
-              bind "Ctrl o" { SwitchToMode "Session"; }
-          }
-
-          locked {
-              bind "Ctrl g" { SwitchToMode "Normal"; }
+              bind "Alt s" { SwitchToMode "Scroll"; }
+              bind "Alt t" { SwitchToMode "Tab"; }
+              bind "Alt o" { SwitchToMode "Session"; }
           }
 
           resize {
@@ -174,14 +167,14 @@ in
           }
 
           pane {
-              bind "Ctrl p" { SwitchToMode "Normal"; }
+              bind "Alt p" { SwitchToMode "Normal"; }
               bind "Enter" { SwitchToMode "Normal"; }
               bind "h" "Left" { MoveFocus "Left"; }
               bind "l" "Right" { MoveFocus "Right"; }
               bind "j" "Down" { MoveFocus "Down"; }
               bind "k" "Up" { MoveFocus "Up"; }
               bind "p" { SwitchFocus; }
-              bind "n" { NewPane; }
+              bind "c" { NewPane; }
               bind "d" { NewPane "Down"; }
               bind "r" { NewPane "Right"; }
               bind "x" { CloseFocus; }
@@ -193,12 +186,12 @@ in
           }
 
           tab {
-              bind "Ctrl t" { SwitchToMode "Normal"; }
+              bind "Alt t" { SwitchToMode "Normal"; }
               bind "Enter" { SwitchToMode "Normal"; }
               bind "r" { SwitchToMode "RenameTab"; }
               bind "h" "Left" "Up" "k" { MoveFocus "Left"; }
               bind "l" "Right" "Down" "j" { MoveFocus "Right"; }
-              bind "n" { NewTab; }
+              bind "c" { NewTab; }
               bind "x" { CloseTab; }
               bind "s" { ToggleActiveSyncTab; }
               bind "1" { GoToTab 1; }
@@ -214,7 +207,7 @@ in
           }
 
           scroll {
-              bind "Ctrl s" { SwitchToMode "Normal"; }
+              bind "Alt s" { SwitchToMode "Normal"; }
               bind "Esc" { SwitchToMode "Normal"; }
               bind "Enter" { SwitchToMode "Normal"; }
               bind "e" { EditScrollback; }
@@ -230,7 +223,7 @@ in
           }
 
           search {
-              bind "Ctrl /" { SwitchToMode "Normal"; }
+              bind "Alt /" { SwitchToMode "Normal"; }
               bind "Esc" { SwitchToMode "Normal"; }
               bind "Enter" { SwitchToMode "Normal"; }
               bind "Ctrl c" { ScrollToBottom; SwitchToMode "Normal"; }
@@ -265,7 +258,7 @@ in
           }
 
           session {
-              bind "Ctrl o" { SwitchToMode "Normal"; }
+              bind "Alt o" { SwitchToMode "Normal"; }
               bind "Enter" { SwitchToMode "Normal"; }
               bind "d" { Detach; }
               bind "w" {
@@ -304,21 +297,6 @@ in
               plugin location="zellij:compact-bar"
           }
           pane borderless=true
-      }
-    '';
-
-    "zellij/layouts/development.kdl".text = ''
-      layout {
-          pane size=1 borderless=true {
-              plugin location="zellij:tab-bar"
-          }
-          pane borderless=true {
-              pane split_direction="vertical" {
-                  pane borderless=true
-                  pane size="30%" borderless=true
-              }
-              pane size="30%" split_direction="horizontal" borderless=true
-          }
       }
     '';
 
