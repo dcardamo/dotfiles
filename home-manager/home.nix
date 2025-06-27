@@ -42,6 +42,7 @@ in
     ./modules/base.nix
     ./modules/ripgrep.nix
     ./modules/bat.nix
+    ./modules/claude.nix
     ./modules/dev.nix
     ./modules/devenv.nix
     #./modules/elixir.nix

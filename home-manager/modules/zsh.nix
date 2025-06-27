@@ -75,7 +75,6 @@ in
         cargotestnc = "cargo nextest run --nocapture";
         wcargotest = "watchexec -r -e rs,toml cargo nextest run";
         wcargotestnc = "watchexec -r -e rs,toml cargo nextest run --nocapture";
-        ai = "claude-mac-sandbox run --dangerously-skip-permissions";
         # Zellij tab naming shortcuts
         zt = "update_zellij_tab_name";
         ztn = "zellij action rename-tab";
@@ -219,6 +218,17 @@ in
 
           # Create PR
           gh pr create --base "$base" --head "$branch" --title "$title" --body "$body"
+        }
+
+        # AI assistant function
+        ai() {
+          if [[ -f /.dockerenv ]] || [[ -n "$CONTAINER_ID" ]]; then
+            # In Docker container, use claude directly
+            claude --dangerously-skip-permissions "$@"
+          else
+            # On Mac, use claude-mac-sandbox
+            claude-mac-sandbox run --dangerously-skip-permissions "$@"
+          fi
         }
 
         # Custom prompt setup

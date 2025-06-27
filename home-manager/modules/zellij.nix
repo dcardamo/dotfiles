@@ -139,6 +139,13 @@ in
 
               // Session management
               bind "Alt d" { Detach; }
+              bind "Alt Shift D" { 
+                  // Open session manager to disconnect other clients
+                  LaunchOrFocusPlugin "zellij:session-manager" {
+                      floating true
+                      move_to_focused_tab true
+                  }
+              }
               bind "Alt Enter" { ToggleFocusFullscreen; }
               bind "Alt r" { SwitchToMode "RenameTab"; }
               bind "Alt w" { ToggleFloatingPanes; }

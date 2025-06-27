@@ -90,6 +90,8 @@ create_container() {
         -v "$HOME/git:/home/dan/git" \
         -v "$HOME/.ssh:/mnt/host-ssh:ro" \
         -v "$DOTFILES_DIR:/mnt/dotfiles:ro" \
+        -v "$HOME/.claude:/home/dan/.claude" \
+        -v "$HOME/.claude.json:/home/dan/.claude.json" \
         --tmpfs /tmp:exec \
         --tmpfs /run \
         --privileged \
