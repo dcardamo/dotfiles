@@ -191,15 +191,15 @@ in
               bind "j" "Down" { MoveFocus "Down"; }
               bind "k" "Up" { MoveFocus "Up"; }
               bind "p" { SwitchFocus; }
-              bind "c" { NewPane; }
-              bind "d" { NewPane "Down"; }
-              bind "r" { NewPane "Right"; }
-              bind "x" { CloseFocus; }
-              bind "f" { ToggleFocusFullscreen; }
+              bind "c" { NewPane; SwitchToMode "Normal"; }
+              bind "d" { NewPane "Down"; SwitchToMode "Normal"; }
+              bind "r" { NewPane "Right"; SwitchToMode "Normal"; }
+              bind "x" { CloseFocus; SwitchToMode "Normal"; }
+              bind "f" { ToggleFocusFullscreen; SwitchToMode "Normal"; }
               bind "z" { TogglePaneFrames; }
-              bind "w" { ToggleFloatingPanes; }
-              bind "e" { TogglePaneEmbedOrFloating; }
-              bind "c" { SwitchToMode "RenamePane"; }
+              bind "w" { ToggleFloatingPanes; SwitchToMode "Normal"; }
+              bind "e" { TogglePaneEmbedOrFloating; SwitchToMode "Normal"; }
+              bind "n" { SwitchToMode "RenamePane"; }
           }
 
           tab {
@@ -208,18 +208,18 @@ in
               bind "r" { SwitchToMode "RenameTab"; }
               bind "h" "Left" "Up" "k" { MoveFocus "Left"; }
               bind "l" "Right" "Down" "j" { MoveFocus "Right"; }
-              bind "c" { NewTab; }
-              bind "x" { CloseTab; }
-              bind "s" { ToggleActiveSyncTab; }
-              bind "1" { GoToTab 1; }
-              bind "2" { GoToTab 2; }
-              bind "3" { GoToTab 3; }
-              bind "4" { GoToTab 4; }
-              bind "5" { GoToTab 5; }
-              bind "6" { GoToTab 6; }
-              bind "7" { GoToTab 7; }
-              bind "8" { GoToTab 8; }
-              bind "9" { GoToTab 9; }
+              bind "c" { NewTab; SwitchToMode "Normal"; }
+              bind "x" { CloseTab; SwitchToMode "Normal"; }
+              bind "s" { ToggleActiveSyncTab; SwitchToMode "Normal"; }
+              bind "1" { GoToTab 1; SwitchToMode "Normal"; }
+              bind "2" { GoToTab 2; SwitchToMode "Normal"; }
+              bind "3" { GoToTab 3; SwitchToMode "Normal"; }
+              bind "4" { GoToTab 4; SwitchToMode "Normal"; }
+              bind "5" { GoToTab 5; SwitchToMode "Normal"; }
+              bind "6" { GoToTab 6; SwitchToMode "Normal"; }
+              bind "7" { GoToTab 7; SwitchToMode "Normal"; }
+              bind "8" { GoToTab 8; SwitchToMode "Normal"; }
+              bind "9" { GoToTab 9; SwitchToMode "Normal"; }
               bind "Tab" { ToggleTab; }
           }
 
