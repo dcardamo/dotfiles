@@ -102,7 +102,7 @@ create_container() {
     sleep 2
     
     log_info "Installing base packages..."
-    docker exec "${container_name}" bash -c 'export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y curl git sudo xz-utils build-essential locales zsh rsync systemd systemd-sysv'
+    docker exec "${container_name}" bash -c 'export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y curl git sudo xz-utils build-essential locales zsh rsync systemd systemd-sysv libssl-dev pkg-config cmake libclang-dev lld'
     
     log_info "Setting up locale..."
     docker exec "${container_name}" bash -c 'locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8'

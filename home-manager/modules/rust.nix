@@ -20,6 +20,13 @@
       # For C dependencies when building Rust projects
       pkg-config
       openssl
+      cmake
+      lld
+      
+      # Additional build dependencies commonly needed
+      openssl.dev
+      zlib
+      libiconv
 
       # Debugging tools
       lldb
