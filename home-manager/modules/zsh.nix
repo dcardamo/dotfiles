@@ -52,6 +52,13 @@ in
       NPM_CONFIG_PREFIX = "$HOME/.npm-global";
       # Add Nix profile to PATH for non-interactive sessions
       PATH = "$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH";
+      # Locale settings for proper Unicode/Nerd Font support
+      LANG = "en_US.UTF-8";
+      LC_ALL = "en_US.UTF-8";
+      LC_CTYPE = "en_US.UTF-8";
+      # Puppeteer configuration
+      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = "true";
+      PUPPETEER_EXECUTABLE_PATH = "/usr/bin/chromium-browser";
     };
 
     shellAliases =

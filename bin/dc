@@ -102,7 +102,33 @@ create_container() {
     sleep 2
 
     log_info "Installing base packages..."
-    docker exec "${container_name}" bash -c 'export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y curl git sudo xz-utils build-essential locales zsh rsync systemd systemd-sysv libssl-dev pkg-config cmake libclang-dev lld'
+    docker exec "${container_name}" bash -c 'export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y curl git sudo xz-utils build-essential locales zsh rsync systemd systemd-sysv libssl-dev pkg-config cmake libclang-dev lld openssl ca-certificates wget gnupg'
+    
+    log_info "Installing Chrome/Chromium and dependencies for Puppeteer..."
+    docker exec "${container_name}" bash -c 'export DEBIAN_FRONTEND=noninteractive && apt-get install -y \
+        chromium-browser \
+        chromium-chromedriver \
+        fonts-liberation \
+        libasound2 \
+        libatk-bridge2.0-0 \
+        libatk1.0-0 \
+        libatspi2.0-0 \
+        libcups2 \
+        libdbus-1-3 \
+        libdrm2 \
+        libgbm1 \
+        libgtk-3-0 \
+        libnspr4 \
+        libnss3 \
+        libwayland-client0 \
+        libxcomposite1 \
+        libxdamage1 \
+        libxfixes3 \
+        libxkbcommon0 \
+        libxrandr2 \
+        xdg-utils \
+        libu2f-udev \
+        libvulkan1'
 
     log_info "Setting up locale..."
     docker exec "${container_name}" bash -c 'locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8'
@@ -206,21 +232,17 @@ create_container() {
         mkdir -p ~/.config/nix
 
         # Create nix.conf to enable flakes before home-manager runs
-        cat > ~/.config/nix/nix.conf << '\''EOF'\''
-experimental-features = nix-command flakes
-keep-derivations = true
-keep-outputs = true
-EOF
+        echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
+        echo "keep-derivations = true" >> ~/.config/nix/nix.conf
+        echo "keep-outputs = true" >> ~/.config/nix/nix.conf
 
         # Create a temporary .zshrc that will be replaced by home-manager
         # This ensures nix is available for the home-manager switch command
         if [ ! -f ~/.zshrc ]; then
-            cat > ~/.zshrc << '\''EOF'\''
-# Temporary .zshrc - will be replaced by home-manager
-if [ -e ~/.local/state/nix/profiles/profile/etc/profile.d/nix.sh ]; then
-    . ~/.local/state/nix/profiles/profile/etc/profile.d/nix.sh
-fi
-EOF
+            echo "# Temporary .zshrc - will be replaced by home-manager" > ~/.zshrc
+            echo "if [ -e ~/.local/state/nix/profiles/profile/etc/profile.d/nix.sh ]; then" >> ~/.zshrc
+            echo "    . ~/.local/state/nix/profiles/profile/etc/profile.d/nix.sh" >> ~/.zshrc
+            echo "fi" >> ~/.zshrc
         fi
     '
 
@@ -264,8 +286,8 @@ EOF
     fi
 
 
-    # Get container IP
-    local container_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${container_name}")
+    # Get container IP (kept for potential future use)
+    # local container_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${container_name}")
 
     log_info "Container '${container_name}' created successfully!"
     log_info ""
@@ -354,7 +376,13 @@ shell_container() {
 
     # Use docker exec with proper environment
     # We need to use a login shell to ensure all initialization files are sourced
-    docker exec -it -u dan -w /home/dan "${container_name}" env TERM=xterm-256color USER=dan HOME=/home/dan zsh -l
+    docker exec -it -u dan -w /home/dan "${container_name}" env \
+        TERM=xterm-256color \
+        LANG=en_US.UTF-8 \
+        LC_ALL=en_US.UTF-8 \
+        USER=dan \
+        HOME=/home/dan \
+        zsh -l
 }
 
 # Rebuild container configuration

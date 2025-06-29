@@ -1,11 +1,12 @@
-{pkgs, ...}: let
+{ pkgs, ... }:
+let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
-in {
+in
+{
   home.packages = [
-    (
-      pkgs.nerd-fonts.fira-code
-    )
+    (pkgs.nerd-fonts.fira-code)
+    (pkgs.nerd-fonts.iosevka)
   ];
 
   programs.wezterm = {
@@ -13,11 +14,7 @@ in {
     extraConfig = ''
       local w = require('wezterm')
       local config = w.config_builder()
-      local os_name = '${
-        if isLinux
-        then "linux"
-        else "macos"
-      }'
+      local os_name = '${if isLinux then "linux" else "macos"}'
 
       local w = require('wezterm')
 
@@ -30,9 +27,9 @@ in {
 
       config.color_scheme = 'Tokyo Night Moon'
       config.cursor_blink_rate = 0
-      config.font = w.font_with_fallback({"FiraCode Nerd Font", "MonoLisa"})
+      config.font = w.font("Iosevka Nerd Font")
       -- config.font = w.font_with_fallback({"VictorMono Nerd Font Mono", "FiraCode Nerd Font"})
-      config.font_size = 13
+      config.font_size = 14
       config.use_fancy_tab_bar = true
       config.tab_bar_at_bottom = true
       config.hide_tab_bar_if_only_one_tab = true
@@ -53,7 +50,9 @@ in {
       return config
     '';
   };
-  home.sessionVariables = {TERM = "wezterm";};
+  home.sessionVariables = {
+    TERM = "wezterm";
+  };
   home.activation.installWeztermTerminfo = ''
     ${pkgs.ncurses}/bin/tic -x -o $HOME/.terminfo ${
       pkgs.fetchurl {
