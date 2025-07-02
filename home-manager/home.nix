@@ -49,6 +49,7 @@ in
     ./modules/fzf.nix
     ./modules/git.nix
     ./modules/helix
+    ./modules/neovim.nix
     ./modules/nodejs.nix
     ./modules/python.nix
     ./modules/rust.nix

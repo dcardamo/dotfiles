@@ -87,11 +87,11 @@ create_container() {
         --name "${container_name}" \
         --hostname "${container_name}" \
         --platform "${platform}" \
-        -v "$HOME/git:/home/dan/git" \
+        -v "$HOME/git:/Users/dan/git" \
         -v "$HOME/.ssh:/mnt/host-ssh:ro" \
         -v "$DOTFILES_DIR:/mnt/dotfiles:ro" \
-        -v "$HOME/.claude:/home/dan/.claude" \
-        -v "$HOME/.claude.json:/home/dan/.claude.json" \
+        -v "$HOME/.claude:/Users/dan/.claude" \
+        -v "$HOME/.claude.json:/Users/dan/.claude.json" \
         -v "$HOME/.config/gh:/mnt/host-gh:ro" \
         --tmpfs /tmp:exec \
         --tmpfs /run \
@@ -198,10 +198,13 @@ create_container() {
             STAFF_GID=20
         fi
 
-        # Create user with UID 501 and the staff group
-        useradd -m -u 501 -g staff -G sudo -s /bin/zsh dan || true
+        # Create /Users directory structure
+        mkdir -p /Users
+        
+        # Create user with UID 501 and the staff group with home directory at /Users/dan
+        useradd -m -u 501 -g staff -G sudo -s /bin/zsh -d /Users/dan dan || true
         echo "dan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/dan
-        chown dan:staff /home/dan
+        chown dan:staff /Users/dan
     '
 
 
@@ -372,7 +375,7 @@ create_container() {
     log_info "  dc destroy ${name}           # Remove container"
     log_info ""
     log_info "Mounts:"
-    log_info "  ~/git -> /home/dan/git (read-write)"
+    log_info "  ~/git -> /Users/dan/git (read-write)"
     log_info "  ~/.ssh -> /mnt/host-ssh (read-only, copied to ~/.ssh)"
     log_info "  ~/.config/gh -> /mnt/host-gh (read-only, copied to ~/.config/gh)"
     log_info "  dotfiles -> /mnt/dotfiles (read-only)"
@@ -447,12 +450,12 @@ shell_container() {
 
     # Use docker exec with proper environment
     # We need to use a login shell to ensure all initialization files are sourced
-    docker exec -it -u dan -w /home/dan "${container_name}" env \
+    docker exec -it -u dan -w /Users/dan "${container_name}" env \
         TERM=xterm-256color \
         LANG=en_US.UTF-8 \
         LC_ALL=en_US.UTF-8 \
         USER=dan \
-        HOME=/home/dan \
+        HOME=/Users/dan \
         zsh -l
 }
 
@@ -510,7 +513,7 @@ exec_container() {
         sleep 2
     fi
 
-    docker exec -u dan -w /home/dan "${container_name}" env USER=dan bash -l -c "$*"
+    docker exec -u dan -w /Users/dan "${container_name}" env USER=dan bash -l -c "$*"
 }
 
 # Start a stopped container
