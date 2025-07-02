@@ -49,11 +49,20 @@ return {
       providers = {
         claude = {
           endpoint = "https://api.anthropic.com",
-          model = "claude-3-5-sonnet-20241022",
+          model = "claude-sonnet-4-20250514", -- Default to Sonnet 4
+          -- Option 1: Use environment variable
+          api_key_name = "ANTHROPIC_API_KEY",
+          -- Option 2: Use a password manager (example with 1Password)
+          -- api_key_name = "cmd:op read op://Personal/Claude/api_key",
+          -- Option 3: Use a secure file
+          -- api_key_name = "cmd:cat ~/.config/claude/api_key",
           extra_request_body = {
+            max_tokens = 8192,
             temperature = 0,
-            max_tokens = 4096,
           },
+          -- Claude 4 models:
+          -- "claude-opus-4-20250514" - Opus 4 (best for complex tasks, $15/$75 per M tokens)
+          -- "claude-sonnet-4-20250514" - Sonnet 4 (great balance, $3/$15 per M tokens)
         },
       },
       behaviour = {
@@ -99,6 +108,17 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      require("avante").setup(opts)
+      
+      -- Helper function to switch models
+      _G.switch_claude_model = function(model)
+        local avante = require("avante")
+        local config = require("avante.config")
+        config.providers.claude.model = model
+        vim.notify("Switched to " .. model, vim.log.levels.INFO)
+      end
+    end,
     keys = {
       { "<leader>aa", function() require("avante.api").ask() end, desc = "Avante: Ask", mode = { "n", "v" } },
       { "<leader>ar", function() require("avante.api").refresh() end, desc = "Avante: Refresh" },
@@ -106,6 +126,9 @@ return {
       { "<leader>at", function() require("avante.api").toggle() end, desc = "Avante: Toggle" },
       { "<leader>af", function() require("avante.api").focus() end, desc = "Avante: Focus" },
       { "<leader>ac", function() require("avante").clear() end, desc = "Avante: Clear" },
+      -- Model switching keybindings
+      { "<leader>ams", function() _G.switch_claude_model("claude-sonnet-4-20250514") end, desc = "Use Sonnet 4" },
+      { "<leader>amo", function() _G.switch_claude_model("claude-opus-4-20250514") end, desc = "Use Opus 4" },
     },
   },
 

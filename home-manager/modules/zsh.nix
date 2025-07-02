@@ -117,6 +117,22 @@ in
 
                 # Enable direnv
                 eval "$(direnv hook zsh)"
+                
+                # Load ~/.env file if it exists (for secrets)
+                if [[ -f "$HOME/.env" ]]; then
+                  # Check file permissions for security
+                  local env_perms=$(stat -f "%Lp" "$HOME/.env" 2>/dev/null || stat -c "%a" "$HOME/.env" 2>/dev/null)
+                  if [[ "$env_perms" != "600" ]]; then
+                    echo "⚠️  Warning: ~/.env has insecure permissions ($env_perms). Run: chmod 600 ~/.env" >&2
+                  fi
+                  # Source the file
+                  set -a  # Mark all new variables for export
+                  source "$HOME/.env"
+                  set +a  # Turn off auto-export
+                else
+                  echo "⚠️  Warning: ~/.env file not found. Copy ~/.env.template to ~/.env and add your secrets." >&2
+                  echo "   Run: cp ~/.env.template ~/.env && chmod 600 ~/.env" >&2
+                fi
 
                 # Fix terminal colors for SSH and mosh sessions (especially Termius)
                 if [[ -n "$SSH_CONNECTION" ]] || [[ -n "$MOSH_CONNECTION" ]] || [[ -n "$MOSH" ]]; then

@@ -46,6 +46,7 @@ in
     ./modules/dev.nix
     ./modules/devenv.nix
     #./modules/elixir.nix
+    ./modules/env-template.nix
     ./modules/fzf.nix
     ./modules/git.nix
     ./modules/helix
