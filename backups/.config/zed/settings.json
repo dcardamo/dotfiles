@@ -13,14 +13,10 @@
       "username": "dan",
       "projects": [
         {
-          "paths": [
-            "~/git/dotfiles"
-          ]
+          "paths": ["~/git/dotfiles"]
         },
         {
-          "paths": [
-            "~/services"
-          ]
+          "paths": ["~/services"]
         }
       ]
     },
@@ -28,14 +24,10 @@
       "host": "heatwave",
       "projects": [
         {
-          "paths": [
-            "~/services"
-          ]
+          "paths": ["~/services"]
         },
         {
-          "paths": [
-            "~/services/changedetection"
-          ]
+          "paths": ["~/services/changedetection"]
         }
       ]
     },
@@ -44,9 +36,7 @@
       "username": "dan",
       "projects": [
         {
-          "paths": [
-            "~/services"
-          ]
+          "paths": ["~/services"]
         }
       ]
     }
@@ -54,12 +44,12 @@
   "features": {
     "edit_prediction_provider": "zed"
   },
-  "assistant": {
+  "agent": {
+    "always_allow_tool_actions": true,
     "default_model": {
-      "provider": "anthropic",
-      "model": "claude-3-7-sonnet-thinking-latest"
+      "provider": "zed.dev",
+      "model": "claude-sonnet-4"
     },
-    "enable_experimental_live_diffs": true,
     "version": "2"
   },
   "language_models": {
@@ -73,10 +63,11 @@
   },
   "vim_mode": true,
   // "ui_font_family": "VictorMono Nerd Font Mono",
-  "ui_font_family": "MonoLisa",
-  "ui_font_fallbacks": ["FiraCode Nerd Font"],
+  "ui_fon_family": "Iosevka Nerd Font",
+  // "ui_font_family": "MonoLisa",
+  // "ui_font_fallbacks": ["FiraCode Nerd Font"],
   "ui_font_size": 14,
-  "buffer_font_size": 15,
+  "buffer_font_size": 14,
   "cursor_blink": false,
   "cursor_shape": "bar",
   "load_direnv": "shell_hook",
@@ -97,7 +88,7 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "Catppuccin Mocha"
+    "dark": "One Dark"
   },
   "project_panel": {
     "button": true,
@@ -107,6 +98,7 @@
     "show": true,
     "show_nav_history_buttons": false
   },
+  // "show_whitespaces": "all",
   "tabs": {
     "file_icons": false,
     "git_status": true
@@ -118,8 +110,9 @@
   // Use zed commit editor
   "terminal": {
     "dock": "right",
-    "font_family": "MonoLisa",
-    "font_fallbacks": ["FiraCode Nerd Font"],
+    "ui_fon_family": "Iosevka Nerd Font",
+    // "font_family": "MonoLisa",
+    // "font_fallbacks": ["FiraCode Nerd Font"],
     "env": {
       "EDITOR": "zed --wait"
     }

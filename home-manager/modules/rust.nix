@@ -17,6 +17,10 @@
       cargo-audit
       cargo-nextest
 
+      # Code coverage tools
+      cargo-tarpaulin
+      cargo-llvm-cov
+
       # For C dependencies when building Rust projects
       pkg-config
       openssl

@@ -119,6 +119,20 @@ in
         # Enable direnv
         eval "$(direnv hook zsh)"
 
+        # Fix terminal colors for SSH and mosh sessions (especially Termius)
+        if [[ -n "$SSH_CONNECTION" ]] || [[ -n "$MOSH_CONNECTION" ]] || [[ -n "$MOSH" ]]; then
+          # Termius often reports as plain "xterm" but supports 256 colors
+          case "$TERM" in
+            xterm|vt100|linux)
+              export TERM=xterm-256color
+              ;;
+          esac
+          
+          # Ensure COLORTERM is set for true color support
+          # This is already set in sessionVariables but may not propagate to SSH/mosh
+          export COLORTERM=truecolor
+        fi
+
         # Zellij tab naming with git branch support
         update_zellij_tab_name() {
           if [ -n "$ZELLIJ" ]; then

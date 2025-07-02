@@ -92,6 +92,7 @@ create_container() {
         -v "$DOTFILES_DIR:/mnt/dotfiles:ro" \
         -v "$HOME/.claude:/home/dan/.claude" \
         -v "$HOME/.claude.json:/home/dan/.claude.json" \
+        -v "$HOME/.config/gh:/mnt/host-gh:ro" \
         --tmpfs /tmp:exec \
         --tmpfs /run \
         --privileged \
@@ -104,10 +105,19 @@ create_container() {
     log_info "Installing base packages..."
     docker exec "${container_name}" bash -c 'export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y curl git sudo xz-utils build-essential locales zsh rsync systemd systemd-sysv libssl-dev pkg-config cmake libclang-dev lld openssl ca-certificates wget gnupg'
     
+    log_info "Installing GitHub CLI (gh)..."
+    docker exec "${container_name}" bash -c '
+        export DEBIAN_FRONTEND=noninteractive
+        # Add GitHub CLI repository
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+        apt-get update
+        apt-get install -y gh
+    '
+    
     log_info "Installing Chrome/Chromium and dependencies for Puppeteer..."
+    # First install all Chrome dependencies
     docker exec "${container_name}" bash -c 'export DEBIAN_FRONTEND=noninteractive && apt-get install -y \
-        chromium-browser \
-        chromium-chromedriver \
         fonts-liberation \
         libasound2 \
         libatk-bridge2.0-0 \
@@ -128,7 +138,50 @@ create_container() {
         libxrandr2 \
         xdg-utils \
         libu2f-udev \
-        libvulkan1'
+        libvulkan1 \
+        libgconf-2-4 \
+        libxss1 \
+        libxtst6'
+    
+    # For ARM64 (Apple Silicon), we need to install Chromium differently
+    # The snap packages don't work in Docker
+    log_info "Installing Chromium from Debian repositories (works in Docker)..."
+    docker exec "${container_name}" bash -c '
+        export DEBIAN_FRONTEND=noninteractive
+        
+        # Install Debian GPG keys first
+        apt-get install -y debian-keyring debian-archive-keyring
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9 6ED0E7B82643E131 F8D2585B8783D481
+        
+        # Add Debian stable repository for Chromium
+        echo "deb http://deb.debian.org/debian/ stable main" > /etc/apt/sources.list.d/debian.list
+        
+        # Add preferences to avoid conflicts (expanded package list for dependencies)
+        echo "Package: *" > /etc/apt/preferences.d/debian
+        echo "Pin: release o=Debian,a=stable" >> /etc/apt/preferences.d/debian
+        echo "Pin-Priority: 100" >> /etc/apt/preferences.d/debian
+        echo "" >> /etc/apt/preferences.d/debian
+        echo "Package: chromium chromium-driver chromium-common chromium-sandbox libharfbuzz* libopenjp2* libzstd*" >> /etc/apt/preferences.d/debian
+        echo "Pin: release o=Debian,a=stable" >> /etc/apt/preferences.d/debian
+        echo "Pin-Priority: 900" >> /etc/apt/preferences.d/debian
+        
+        # Update and install Chromium
+        apt-get update
+        apt-get install -y --no-install-recommends chromium chromium-driver
+        
+        # Create symlinks for compatibility
+        ln -sf /usr/bin/chromium /usr/bin/chromium-browser || true
+        ln -sf /usr/bin/chromium /usr/bin/google-chrome || true
+        
+        # Clean up
+        rm /etc/apt/sources.list.d/debian.list
+        rm /etc/apt/preferences.d/debian
+        apt-get update
+        
+        # Verify installation
+        echo "Chromium version:"
+        chromium --version || echo "Chromium installation failed"
+    '
 
     log_info "Setting up locale..."
     docker exec "${container_name}" bash -c 'locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8'
@@ -221,6 +274,23 @@ create_container() {
         fi
     '
 
+    # Set up GitHub CLI configuration
+    log_info "Setting up GitHub CLI configuration..."
+    docker exec -u dan "${container_name}" bash -c '
+        # Create .config directory if it doesnt exist
+        mkdir -p ~/.config
+        
+        # Copy GitHub CLI config from mounted volume (read-only) to home directory
+        if [ -d /mnt/host-gh ]; then
+            cp -r /mnt/host-gh ~/.config/gh
+            # Ensure proper permissions
+            chmod -R 700 ~/.config/gh
+            echo "GitHub CLI configuration copied successfully"
+        else
+            echo "Warning: No GitHub CLI configuration found on host"
+        fi
+    '
+
     # Link dotfiles and set up shell configuration
     log_info "Setting up dotfiles..."
     docker exec -u dan "${container_name}" bash -c '
@@ -304,9 +374,10 @@ create_container() {
     log_info "Mounts:"
     log_info "  ~/git -> /home/dan/git (read-write)"
     log_info "  ~/.ssh -> /mnt/host-ssh (read-only, copied to ~/.ssh)"
+    log_info "  ~/.config/gh -> /mnt/host-gh (read-only, copied to ~/.config/gh)"
     log_info "  dotfiles -> /mnt/dotfiles (read-only)"
     log_info ""
-    log_info "SSH keys have been copied to the container for git operations."
+    log_info "SSH keys and GitHub CLI config have been copied to the container."
 }
 
 # Destroy a dev container
@@ -540,6 +611,45 @@ update_ssh_keys() {
     log_info "SSH keys updated successfully"
 }
 
+# Update GitHub CLI configuration in container
+update_gh_config() {
+    local name="$1"
+    # Check if name already has the prefix
+    if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
+        local container_name="$name"
+    else
+        local container_name="${CONTAINER_PREFIX}${name}"
+    fi
+
+    if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_error "Container '${container_name}' does not exist"
+        exit 1
+    fi
+
+    log_info "Updating GitHub CLI configuration in '${container_name}'..."
+
+    docker exec -u dan "${container_name}" bash -c '
+        # Create .config directory if it doesnt exist
+        mkdir -p ~/.config
+
+        # Remove existing gh config
+        rm -rf ~/.config/gh
+
+        # Copy GitHub CLI config from mounted volume (read-only) to home directory
+        if [ -d /mnt/host-gh ]; then
+            cp -r /mnt/host-gh ~/.config/gh
+            # Ensure proper permissions
+            chmod -R 700 ~/.config/gh
+            echo "GitHub CLI configuration updated successfully"
+        else
+            echo "No /mnt/host-gh directory found"
+            exit 1
+        fi
+    '
+
+    log_info "GitHub CLI configuration updated successfully"
+}
+
 # Stop a running container
 stop_container() {
     local name="$1"
@@ -633,6 +743,13 @@ main() {
             fi
             update_ssh_keys "$2"
             ;;
+        update-gh)
+            if [ -z "${2:-}" ]; then
+                log_error "Usage: $0 update-gh <name>"
+                exit 1
+            fi
+            update_gh_config "$2"
+            ;;
         *)
             echo "Usage: $0 <command> [args]"
             echo ""
@@ -647,6 +764,7 @@ main() {
             echo "  rebuild <name>        Rebuild container configuration"
             echo "  exec <name> <cmd>     Execute command in container"
             echo "  update-ssh <name>     Update SSH keys in container"
+            echo "  update-gh <name>      Update GitHub CLI config in container"
             echo ""
             echo "Example:"
             echo "  $0 create myproject"

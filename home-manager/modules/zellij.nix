@@ -66,6 +66,7 @@ in
       pane_frames false
       theme "tokyo-night-moon"
       default_layout "compact"
+      default_shell "zsh"
       mouse_mode false
       scroll_buffer_size 10000
       copy_on_select true
