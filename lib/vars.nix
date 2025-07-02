@@ -1,4 +1,5 @@
-{isDarwin, ...}: {
+{isDarwin, isLinux ? false, ...}: {
+  inherit isDarwin isLinux;
   copyCmd =
     if isDarwin
     then "pbcopy"

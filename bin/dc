@@ -87,7 +87,7 @@ create_container() {
         --name "${container_name}" \
         --hostname "${container_name}" \
         --platform "${platform}" \
-        -v "$HOME/git:/Users/dan/git" \
+        -v "$HOME/git:/home/dan/git" \
         -v "$HOME/.ssh:/mnt/host-ssh:ro" \
         -v "$DOTFILES_DIR:/mnt/dotfiles:ro" \
         -v "$HOME:/mnt/host-claude:ro" \
@@ -197,13 +197,17 @@ create_container() {
             STAFF_GID=20
         fi
 
-        # Create /Users directory structure
-        mkdir -p /Users
-        
-        # Create user with UID 501 and the staff group with home directory at /Users/dan
-        useradd -m -u 501 -g staff -G sudo -s /bin/zsh -d /Users/dan dan || true
+        # Create user with UID 501 and the staff group with home directory at /home/dan
+        useradd -m -u 501 -g staff -G sudo -s /bin/zsh -d /home/dan dan || true
         echo "dan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/dan
-        chown dan:staff /Users/dan
+        
+        # Ensure proper ownership of home directory
+        chown -R dan:staff /home/dan
+        chmod 755 /home/dan
+        
+        # Create symlink /Users/dan -> /home/dan for compatibility
+        mkdir -p /Users
+        ln -s /home/dan /Users/dan
     '
 
 
@@ -327,6 +331,19 @@ create_container() {
         fi
     '
 
+    # Set up .env file
+    log_info "Setting up .env file..."
+    docker exec -u dan "${container_name}" bash -c '
+        # Copy .env file from mounted volume (read-only) to home directory
+        if [ -f /mnt/host-claude/.env ]; then
+            cp /mnt/host-claude/.env ~/.env
+            chmod 600 ~/.env
+            echo ".env file copied successfully"
+        else
+            echo "Warning: No .env file found on host"
+        fi
+    '
+
     # Link dotfiles and set up shell configuration
     log_info "Setting up dotfiles..."
     docker exec -u dan "${container_name}" bash -c '
@@ -379,16 +396,28 @@ create_container() {
     # Apply home-manager configuration
     log_info "Applying home-manager configuration..."
     log_info "This will set up your shell and development tools"
-    if docker exec -u dan "${container_name}" env USER=dan bash -l -c '
+    
+    # Determine which configuration to use based on platform
+    local hm_config
+    case "${platform}" in
+        linux/amd64)
+            hm_config="container-x86_64"
+            ;;
+        linux/arm64)
+            hm_config="container-aarch64"
+            ;;
+    esac
+    
+    if docker exec -u dan "${container_name}" env USER=dan bash -l -c "
         cd ~/dotfiles
         # Set HOME_MANAGER_BACKUP_EXT to avoid conflicts with our custom .zshrc
         export HOME_MANAGER_BACKUP_EXT=.bak
-        home-manager switch --flake .#linux-aarch64
-    ' 2>&1; then
+        home-manager switch --flake .#${hm_config}
+    " 2>&1; then
         log_info "Home-manager configuration applied successfully"
     else
         log_warn "home-manager switch failed, but container is still usable"
-        log_warn "You can manually run: home-manager switch --flake ~/dotfiles#linux-aarch64"
+        log_warn "You can manually run: home-manager switch --flake ~/dotfiles#${hm_config}"
     fi
 
     # Install Claude CLI if not present
@@ -396,7 +425,7 @@ create_container() {
     if ! docker exec -u dan "${container_name}" env USER=dan bash -l -c 'command -v claude &>/dev/null'; then
         log_info "Installing Claude CLI..."
         docker exec -u dan "${container_name}" env USER=dan bash -l -c '
-            nix-env -iA nixpkgs.claude-code
+            NIXPKGS_ALLOW_UNFREE=1 nix-env -iA nixpkgs.claude-code
         '
     fi
 
@@ -431,7 +460,7 @@ create_container() {
     log_info "  dc destroy ${name}           # Remove container"
     log_info ""
     log_info "Mounts:"
-    log_info "  ~/git -> /Users/dan/git (read-write)"
+    log_info "  ~/git -> /home/dan/git (read-write)"
     log_info "  ~/.ssh -> /mnt/host-ssh (read-only, copied to ~/.ssh)"
     log_info "  ~/.config/gh -> /mnt/host-gh (read-only, copied to ~/.config/gh)"
     log_info "  dotfiles -> /mnt/dotfiles (read-only)"
@@ -506,12 +535,12 @@ shell_container() {
 
     # Use docker exec with proper environment
     # We need to use a login shell to ensure all initialization files are sourced
-    docker exec -it -u dan -w /Users/dan "${container_name}" env \
+    docker exec -it -u dan -w /home/dan "${container_name}" env \
         TERM=xterm-256color \
         LANG=en_US.UTF-8 \
         LC_ALL=en_US.UTF-8 \
         USER=dan \
-        HOME=/Users/dan \
+        HOME=/home/dan \
         zsh -l
 }
 
@@ -537,7 +566,7 @@ rebuild_container() {
         cd ~/dotfiles
         # Skip git pull since dotfiles is mounted read-only
         echo "Using mounted dotfiles (read-only)"
-        home-manager switch --flake .#linux-aarch64
+        home-manager switch --flake .#${hm_config}
     ' || {
         log_warn "home-manager switch failed"
         return 1
@@ -577,7 +606,7 @@ exec_container() {
         sleep 2
     fi
 
-    docker exec -u dan -w /Users/dan "${container_name}" env USER=dan bash -l -c "$*"
+    docker exec -u dan -w /home/dan "${container_name}" env USER=dan bash -l -c "$*"
 }
 
 # Start a stopped container
@@ -780,6 +809,38 @@ update_claude_config() {
     log_info "Claude configuration updated successfully"
 }
 
+# Update .env file in container
+update_env_file() {
+    local name="$1"
+    # Check if name already has the prefix
+    if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
+        local container_name="$name"
+    else
+        local container_name="${CONTAINER_PREFIX}${name}"
+    fi
+
+    if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_error "Container '${container_name}' does not exist"
+        exit 1
+    fi
+
+    log_info "Updating .env file in '${container_name}'..."
+
+    docker exec -u dan "${container_name}" bash -c '
+        # Copy .env file from mounted volume (read-only) to home directory
+        if [ -f /mnt/host-claude/.env ]; then
+            cp /mnt/host-claude/.env ~/.env
+            chmod 600 ~/.env
+            echo ".env file updated successfully"
+        else
+            echo "No .env file found on host"
+            exit 1
+        fi
+    '
+
+    log_info ".env file updated successfully"
+}
+
 # Stop a running container
 stop_container() {
     local name="$1"
@@ -887,6 +948,13 @@ main() {
             fi
             update_claude_config "$2"
             ;;
+        update-env)
+            if [ -z "${2:-}" ]; then
+                log_error "Usage: $0 update-env <name>"
+                exit 1
+            fi
+            update_env_file "$2"
+            ;;
         *)
             echo "Usage: $0 <command> [args]"
             echo ""
@@ -903,6 +971,7 @@ main() {
             echo "  update-ssh <name>     Update SSH keys in container"
             echo "  update-gh <name>      Update GitHub CLI config in container"
             echo "  update-claude <name>  Update Claude config in container"
+            echo "  update-env <name>     Update .env file in container"
             echo ""
             echo "Example:"
             echo "  $0 create myproject"

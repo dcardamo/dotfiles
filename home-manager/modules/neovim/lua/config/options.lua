@@ -1,6 +1,6 @@
 -- Basic options
 vim.opt.number = true          -- Show line numbers
-vim.opt.relativenumber = true  -- Relative line numbers
+vim.opt.relativenumber = false -- Use absolute line numbers
 vim.opt.mouse = "a"           -- Enable mouse
 vim.opt.showmode = false      -- Don't show mode (lualine handles this)
 vim.opt.clipboard = "unnamedplus" -- Use system clipboard
