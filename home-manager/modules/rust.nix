@@ -19,7 +19,7 @@
 
       # Code coverage tools
       cargo-tarpaulin
-      cargo-llvm-cov
+      # cargo-llvm-cov # Temporarily disabled - broken package
 
       # For C dependencies when building Rust projects
       pkg-config
