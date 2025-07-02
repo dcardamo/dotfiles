@@ -84,6 +84,12 @@ in
         # Zellij tab naming shortcuts
         zt = "update_zellij_tab_name";
         ztn = "zellij action rename-tab";
+        # Claude commands
+        cmcp = "claude-mcp";
+        cproj = "claude-project";
+        csandbox = "claude-mac-sandbox";
+        csqlite = "claude-mcp sqlite";
+        cdocs = "echo 'Just add \"use context7\" to any Claude prompt for up-to-date docs!'";
       }
       // pkgs.lib.optionalAttrs isLinux {
         cfgnix = "sudo nvim /etc/nixos/configuration.nix";

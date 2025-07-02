@@ -16,3 +16,9 @@ else
     echo "Unknown platform"
     exit 1
 fi
+
+# Set up Claude MCP servers if Claude is configured
+if [ -f ~/.config/claude/setup-mcp-servers.sh ]; then
+    echo "Setting up Claude MCP servers..."
+    ~/.config/claude/setup-mcp-servers.sh
+fi

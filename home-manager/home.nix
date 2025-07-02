@@ -74,6 +74,17 @@ in
 
   # Enable home-manager and git
   programs.home-manager.enable = true;
+  
+  # Enable Claude configuration
+  programs.claude = {
+    enable = true;
+    defaultModel = "opus";
+    context7.enable = true;
+    # Example SQLite databases (uncomment and modify as needed)
+    # sqlite.databases = {
+    #   "myapp" = "${home.homeDirectory}/databases/myapp.db";
+    # };
+  };
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
 

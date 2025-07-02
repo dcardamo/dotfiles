@@ -43,11 +43,11 @@ return {
               return true
             end,
             initial_mode = "normal",
-            layout_strategy = "vertical",
+            layout_strategy = "horizontal",
             layout_config = {
-              width = 0.5,
-              height = 0.9,
-              preview_cutoff = 20,
+              width = 0.95,
+              height = 0.95,
+              preview_width = 0.65,
               prompt_position = "top",
             },
             sorting_strategy = "ascending",
