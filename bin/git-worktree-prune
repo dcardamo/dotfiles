@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+# git-worktree-prune - Remove all worktrees that have been merged/committed
+# This script removes worktrees whose branches have been merged into the main branch
+
+set -euo pipefail
+
+# Get the main branch (usually main or master)
+main_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "main")
+
+# Get list of worktrees
+worktrees=$(git worktree list --porcelain | grep "^worktree " | cut -d' ' -f2-)
+
+# Count for tracking
+removed_count=0
+skipped_count=0
+
+echo "Checking worktrees for pruning..."
+echo "Main branch: $main_branch"
+echo
+
+for worktree in $worktrees; do
+    # Skip the main worktree
+    if [[ "$worktree" == "$(git rev-parse --show-toplevel)" ]]; then
+        continue
+    fi
+    
+    # Get the branch name for this worktree
+    branch=$(git -C "$worktree" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+    
+    if [[ -z "$branch" ]] || [[ "$branch" == "HEAD" ]]; then
+        echo "⚠️  Skipping $worktree - detached HEAD or no branch"
+        ((skipped_count++))
+        continue
+    fi
+    
+    # Check if the branch has been merged
+    if git branch -r --merged "origin/$main_branch" | grep -q "origin/$branch"; then
+        echo "✅ Removing worktree: $worktree (branch: $branch - merged)"
+        git worktree remove "$worktree" --force
+        ((removed_count++))
+    else
+        # Check if there are uncommitted changes
+        if [[ -n $(git -C "$worktree" status --porcelain 2>/dev/null) ]]; then
+            echo "⚠️  Skipping $worktree (branch: $branch - has uncommitted changes)"
+            ((skipped_count++))
+        else
+            echo "ℹ️  Keeping $worktree (branch: $branch - not merged)"
+            ((skipped_count++))
+        fi
+    fi
+done
+
+echo
+echo "Summary:"
+echo "  Removed: $removed_count worktree(s)"
+echo "  Skipped: $skipped_count worktree(s)"
+
+# Clean up any stale worktree references
+echo
+echo "Cleaning up stale worktree references..."
+git worktree prune
