@@ -229,18 +229,35 @@ in
     ];
 
     # Claude configuration directory
-    home.file.".claude/settings.json".source = claudeSettings;
+    # Don't use home.file to create a read-only symlink
+    # Instead, we'll copy the file in the setup script
 
     # MCP configuration for user scope
     # Note: Claude Code currently requires adding MCP servers via CLI
     # This file serves as a reference for what should be configured
     home.file.".config/claude/mcp-reference.json".source = mcpConfig;
 
-    # Create setup script for MCP servers
+    # Store the settings template for copying during update
+    home.file.".config/claude/settings-template.json".source = claudeSettings;
+
+    # Create setup script for MCP servers and settings
     home.file.".config/claude/setup-mcp-servers.sh" = {
       text = ''
         #!/usr/bin/env bash
         set -euo pipefail
+
+        echo "Setting up Claude configuration..."
+
+        # Create ~/.claude directory if it doesn't exist
+        mkdir -p ~/.claude
+
+        # Copy settings template to writable location if it doesn't exist or during update
+        if [ ! -f ~/.claude/settings.json ] || [ "$1" = "update" ]; then
+          echo "Updating Claude settings.json..."
+          cp ~/.config/claude/settings-template.json ~/.claude/settings.json
+          chmod 644 ~/.claude/settings.json
+          echo "Claude settings.json updated (writable)"
+        fi
 
         echo "Setting up Claude MCP servers..."
 
