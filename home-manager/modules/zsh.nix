@@ -118,11 +118,20 @@ in
         # Mac-specific paths - nix paths take precedence
         export PATH="$HOME/.local/bin:$HOME/.orbstack/bin:/opt/homebrew/bin:$PATH"
       ''
+      + lib.strings.optionalString isLinux ''
+        # Linux-specific paths - ensure .local/bin is available
+        export PATH="$HOME/.local/bin:$PATH"
+      ''
       + ''
                 export PROMPT_DIRTRIM=3
 
                 # Enable direnv
                 eval "$(direnv hook zsh)"
+                
+                # uv shell completions (if uv is installed)
+                if command -v uv &> /dev/null; then
+                  eval "$(uv generate-shell-completion zsh)"
+                fi
                 
                 # Ghostty shell integration for tab naming and directory tracking
                 if [ -n "$GHOSTTY_RESOURCES_DIR" ]; then

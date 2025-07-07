@@ -1578,7 +1578,7 @@ proxy_command() {
                         proxy_https=""
                         shift
                         ;;
-                    --remove-pass)
+                    --remove-proxy-pass)
                         proxy_pass=""
                         shift
                         ;;
@@ -1809,7 +1809,7 @@ main() {
             echo "        --proxy-pass password  Set basic auth password"
             echo "        --remove-http       Remove HTTP proxy"
             echo "        --remove-https      Remove HTTPS proxy"
-            echo "        --remove-pass       Remove basic auth"
+            echo "        --remove-proxy-pass  Remove basic auth"
             echo "  update-ssh <name>     Update SSH keys in container"
             echo "  update-gh <name>      Update GitHub CLI config in container"
             echo "  update-claude <name>  Update Claude config in container"
