@@ -2,8 +2,7 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   key-bindings = [
     # you can use the command `fish_key_reader` to get the key codes to use
     # {
@@ -27,8 +26,7 @@ let
       rhs = "fzf-history-widget-wrapped";
     }
   ];
-in
-{
+in {
   programs.fzf = {
     enable = true;
     defaultCommand = "${pkgs.ripgrep}/bin/rg --files";
@@ -46,5 +44,4 @@ in
       "--layout default"
     ];
   };
-
 }

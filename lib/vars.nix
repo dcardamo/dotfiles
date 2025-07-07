@@ -1,4 +1,8 @@
-{isDarwin, isLinux ? false, ...}: {
+{
+  isDarwin,
+  isLinux ? false,
+  ...
+}: {
   inherit isDarwin isLinux;
   copyCmd =
     if isDarwin

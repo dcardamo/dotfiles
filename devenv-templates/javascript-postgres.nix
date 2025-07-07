@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   dotenv.enable = true;
   dotenv.filename = ".env";
 

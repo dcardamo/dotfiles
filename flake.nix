@@ -19,11 +19,9 @@
     ...
   } @ inputs: {
     nixosConfigurations = {
-      # watercooled nvidia 3090
-      pluto = nixpkgs.lib.nixosSystem {
+      # GMKtec EVO-X2 with AMD Ryzen AI Max 395
+      neptune = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        # old way
-        # pkgs = nixpkgs.legacyPackages.x86_64-linux;
         pkgs = import nixpkgs {
           system = "x86_64-linux";
           config.allowUnfree = true;
@@ -36,7 +34,7 @@
           };
         };
         modules = [
-          ./nixos/pluto/configuration.nix
+          ./nixos/neptune/configuration.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useUserPackages = true;

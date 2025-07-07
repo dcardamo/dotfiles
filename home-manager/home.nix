@@ -4,13 +4,11 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
   inherit (stdenv) isDarwin;
-in
-{
+in {
   nixpkgs = {
     config = {
       allowUnfree = true;
@@ -26,7 +24,10 @@ in
   manual.json.enable = false;
 
   home.username = "dan";
-  home.homeDirectory = if isLinux then "/home/dan" else "/Users/dan";
+  home.homeDirectory =
+    if isLinux
+    then "/home/dan"
+    else "/Users/dan";
 
   home.packages =
     lib.lists.optionals isDarwin [
@@ -75,7 +76,7 @@ in
 
   # Enable home-manager and git
   programs.home-manager.enable = true;
-  
+
   # Enable Claude configuration
   programs.claude = {
     enable = true;

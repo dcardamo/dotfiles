@@ -4,10 +4,7 @@
   pkgs,
   ...
 }:
-
-with lib;
-
-let
+with lib; let
   cfg = config.programs.claude;
 
   # MCP server configurations
@@ -40,10 +37,12 @@ let
     filesystem = paths: {
       "filesystem" = {
         command = "npx";
-        args = [
-          "-y"
-          "@modelcontextprotocol/server-filesystem"
-        ] ++ map (p: "--allowed-path=${p}") paths;
+        args =
+          [
+            "-y"
+            "@modelcontextprotocol/server-filesystem"
+          ]
+          ++ map (p: "--allowed-path=${p}") paths;
       };
     };
   };
@@ -51,21 +50,20 @@ let
   # Generate MCP configuration file
   mcpConfig = pkgs.writeTextFile {
     name = "claude-mcp-config.json";
-    text =
-      let
-        servers = mkMerge (
-          [
-            # Always include Context7 for documentation
-            mcpServers.context7
-          ]
-          ++ optionals (cfg.sqlite.databases != { }) (
-            mapAttrsToList (name: dbPath: mcpServers.sqlite name dbPath) cfg.sqlite.databases
-          )
-          ++ optionals (cfg.filesystem.paths != [ ]) [
-            (mcpServers.filesystem cfg.filesystem.paths)
-          ]
-        );
-      in
+    text = let
+      servers = mkMerge (
+        [
+          # Always include Context7 for documentation
+          mcpServers.context7
+        ]
+        ++ optionals (cfg.sqlite.databases != {}) (
+          mapAttrsToList (name: dbPath: mcpServers.sqlite name dbPath) cfg.sqlite.databases
+        )
+        ++ optionals (cfg.filesystem.paths != []) [
+          (mcpServers.filesystem cfg.filesystem.paths)
+        ]
+      );
+    in
       builtins.toJSON {
         mcpServers = servers;
       };
@@ -110,20 +108,18 @@ let
     ## Available MCP Servers
 
     ${optionalString (
-      cfg.sqlite.databases != { }
+      cfg.sqlite.databases != {}
     ) "- SQLite databases: ${concatStringsSep ", " (attrNames cfg.sqlite.databases)}"}
     ${optionalString cfg.context7.enable "- Context7: Use 'use context7' in prompts for up-to-date documentation"}
     ${optionalString (
-      cfg.filesystem.paths != [ ]
+      cfg.filesystem.paths != []
     ) "- Filesystem access: ${concatStringsSep ", " cfg.filesystem.paths}"}
 
     ## Notes
 
     [Any additional notes]
   '';
-
-in
-{
+in {
   options.programs.claude = {
     enable = mkEnableOption "Claude Code configuration";
 
@@ -139,14 +135,14 @@ in
 
     extraSettings = mkOption {
       type = types.attrsOf types.anything;
-      default = { };
+      default = {};
       description = "Extra settings to add to Claude configuration";
     };
 
     sqlite = {
       databases = mkOption {
         type = types.attrsOf types.str;
-        default = { };
+        default = {};
         example = literalExpression ''
           {
             "myapp" = "/path/to/myapp.db";
@@ -168,7 +164,7 @@ in
     filesystem = {
       paths = mkOption {
         type = types.listOf types.str;
-        default = [ ];
+        default = [];
         example = [
           "$HOME/projects"
           "/tmp"
@@ -276,16 +272,17 @@ in
               echo "Adding SQLite server '${name}' for database: ${dbPath}"
               claude mcp add --transport stdio --scope user "sqlite-${name}" npx @modelcontextprotocol/server-sqlite --db-path "${dbPath}"
             fi
-          '') cfg.sqlite.databases
+          '')
+          cfg.sqlite.databases
         )}
 
         # Add filesystem paths
-        ${optionalString (cfg.filesystem.paths != [ ]) ''
+        ${optionalString (cfg.filesystem.paths != []) ''
           if ! claude mcp list 2>/dev/null | grep -q "filesystem"; then
             echo "Adding filesystem server with paths: ${concatStringsSep ", " cfg.filesystem.paths}"
             claude mcp add --transport stdio --scope user filesystem npx @modelcontextprotocol/server-filesystem ${
-              concatMapStringsSep " " (p: "--allowed-path=\"${p}\"") cfg.filesystem.paths
-            }
+            concatMapStringsSep " " (p: "--allowed-path=\"${p}\"") cfg.filesystem.paths
+          }
           fi
         ''}
 

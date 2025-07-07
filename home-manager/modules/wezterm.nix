@@ -1,9 +1,7 @@
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
-in
-{
+in {
   home.packages = [
     (pkgs.nerd-fonts.fira-code)
     (pkgs.nerd-fonts.iosevka)
@@ -14,7 +12,11 @@ in
     extraConfig = ''
       local w = require('wezterm')
       local config = w.config_builder()
-      local os_name = '${if isLinux then "linux" else "macos"}'
+      local os_name = '${
+        if isLinux
+        then "linux"
+        else "macos"
+      }'
 
       local w = require('wezterm')
 

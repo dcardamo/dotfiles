@@ -14,10 +14,9 @@
     gitui
     just
 
-
     # for compiling Treesitter parsers
     gcc
-    
+
     # for Rust bindgen and other FFI tools
     libclang
 

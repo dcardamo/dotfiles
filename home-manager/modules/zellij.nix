@@ -26,13 +26,11 @@
 #   zr <cmd>     - Run command in new pane
 #   zrf <cmd>    - Run command in new floating pane
 #   ze <file>    - Edit file in new pane
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
   inherit (stdenv) isDarwin;
-in
-{
+in {
   programs.zellij = {
     enable = true;
     # Disabled to prevent auto-starting Zellij on every new shell/SSH session
@@ -71,12 +69,11 @@ in
       scroll_buffer_size 10000
       copy_on_select true
       copy_command "${
-        if isDarwin then
-          "pbcopy"
-        else if isLinux then
-          "wl-copy"
-        else
-          "xclip -selection clipboard"
+        if isDarwin
+        then "pbcopy"
+        else if isLinux
+        then "wl-copy"
+        else "xclip -selection clipboard"
       }"
       scrollback_editor "hx"
       session_serialization true
@@ -140,7 +137,7 @@ in
 
               // Session management
               bind "Alt d" { Detach; }
-              bind "Alt Shift D" { 
+              bind "Alt Shift D" {
                   // Open session manager to disconnect other clients
                   LaunchOrFocusPlugin "zellij:session-manager" {
                       floating true

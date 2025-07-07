@@ -1,7 +1,5 @@
-{ pkgs, ... }:
-{
-  home.packages =
-    with pkgs;
+{pkgs, ...}: {
+  home.packages = with pkgs;
     [
       rustc
       cargo
@@ -26,7 +24,7 @@
       openssl
       cmake
       lld
-      
+
       # Additional build dependencies commonly needed
       openssl.dev
       zlib
@@ -37,8 +35,7 @@
       gdb
     ]
     ++ lib.optionals pkgs.stdenv.isDarwin (
-      with pkgs.darwin.apple_sdk;
-      [
+      with pkgs.darwin.apple_sdk; [
         frameworks.Security
         frameworks.SystemConfiguration
         frameworks.CoreServices

@@ -15,16 +15,38 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # AMD GPU support for Radeon 8060S
+  boot.initrd.kernelModules = ["amdgpu"];
+  services.xserver.videoDrivers = ["amdgpu"];
+
+  # Graphics support
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+    extraPackages = with pkgs; [
+      # OpenCL/ROCm support for AI workloads
+      rocm-opencl-icd
+      rocm-opencl-runtime
+      amdvlk
+    ];
+    extraPackages32 = with pkgs; [
+      driversi686Linux.amdvlk
+    ];
+  };
+
+  # Performance tuning for Ryzen AI Max 395
+  powerManagement.cpuFreqGovernor = "performance";
+
+  # Enable microcode updates
+  hardware.cpu.amd.updateMicrocode = true;
+
   nix = {
     settings = {
       # Enable flakes and new 'nix' command
       experimental-features = "nix-command flakes";
       # Deduplicate and optimize nix store
       auto-optimise-store = true;
-      substituters = ["https://cuda-maintainers.cachix.org"];
-      trusted-public-keys = [
-        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
-      ];
     };
 
     gc = {
@@ -39,7 +61,7 @@
     '';
   };
 
-  networking.hostName = "pluto";
+  networking.hostName = "neptune";
 
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -51,17 +73,29 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.dan = {
     isNormalUser = true;
     description = "Dan Cardamore";
-    shell = pkgs.fish;
-    extraGroups = ["wheel"]; # Enable ‘sudo’ for the user.
-
+    shell = pkgs.zsh;
+    extraGroups = ["wheel" "video" "audio" "networkmanager"]; # Enable 'sudo' and hardware access
     openssh.authorizedKeys.keys = vars.authorizedSshKeys;
   };
 
-  environment.systemPackages = with pkgs; [helix gitMinimal];
+  environment.systemPackages = with pkgs; [
+    helix
+    gitMinimal
+    wget
+    curl
+    htop
+    btop
+    neofetch
+    pciutils
+    usbutils
+  ];
+
+  # Enable firmware updates
+  services.fwupd.enable = true;
 
   services.openssh = {
     enable = true;
@@ -70,8 +104,23 @@
       PasswordAuthentication = true;
     };
   };
+
   programs.fish.enable = true;
   programs.mosh.enable = true;
+  programs.zsh.enable = true;
 
-  system.stateVersion = "24.05"; # Did you read the comment?
+  # Audio support
+  sound.enable = true;
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+  };
+
+  system.stateVersion = "24.11"; # Did you read the comment?
 }
+

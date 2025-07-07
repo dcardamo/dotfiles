@@ -28,21 +28,22 @@
     # Python formatters and linters
     pgformatter
     ruff
-    
+
     # Python package manager
     uv
-    
+
     # Python with packages
     (python3.withPackages
-      (p: with p; [
-        black
-        flake8
-        isort
-        python-lsp-black
-        python-lsp-server
-      ]))
+      (p:
+        with p; [
+          black
+          flake8
+          isort
+          python-lsp-black
+          python-lsp-server
+        ]))
   ];
-  
+
   # Environment variables for uv
   home.sessionVariables = {
     # Prevent uv from downloading Python binaries (use Nix-managed ones)

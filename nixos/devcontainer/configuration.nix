@@ -1,13 +1,16 @@
 # NixOS configuration for development containers
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   # Basic system configuration
   system.stateVersion = "24.05";
-  
+
   # Boot configuration for containers
   boot.isContainer = true;
-  
+
   # Networking
   networking = {
     hostName = "devcontainer"; # Will be overridden by container name
@@ -24,11 +27,11 @@
     isNormalUser = true;
     uid = 501; # macOS default UID
     group = "staff";
-    extraGroups = [ "wheel" ];
+    extraGroups = ["wheel"];
     shell = pkgs.zsh;
     # Password disabled - access via docker exec only
     hashedPassword = "!";
-    
+
     # Create necessary directories
     createHome = true;
     home = "/home/dan";
@@ -37,7 +40,6 @@
   users.groups.staff = {
     gid = 20; # macOS staff group GID
   };
-
 
   # Basic packages needed for container operation
   environment.systemPackages = with pkgs; [
@@ -53,8 +55,8 @@
   # Nix configuration
   nix = {
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "dan" ];
+      experimental-features = ["nix-command" "flakes"];
+      trusted-users = ["dan"];
       # Optimize storage
       auto-optimise-store = true;
     };
@@ -71,21 +73,20 @@
   documentation.man.enable = false;
   documentation.info.enable = false;
   documentation.doc.enable = false;
-  
+
   # Minimal services for containers
   services.journald.extraConfig = ''
     Storage=volatile
     RuntimeMaxUse=8M
   '';
-  
+
   # Systemd configuration for containers
   systemd.services."systemd-networkd-wait-online".enable = lib.mkForce false;
-  
+
   # Mount points for OrbStack
   fileSystems."/home/dan/git" = {
     device = "/home/dan/git";
     fsType = "none";
-    options = [ "bind" "defaults" "nofail" ];
+    options = ["bind" "defaults" "nofail"];
   };
-  
 }
