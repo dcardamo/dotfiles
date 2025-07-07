@@ -208,7 +208,7 @@ create_container() {
     sleep 2
 
     log_info "Installing base packages..."
-    docker exec "${container_name}" bash -c 'export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y curl git sudo xz-utils build-essential locales zsh rsync systemd systemd-sysv libssl-dev pkg-config cmake libclang-dev lld openssl ca-certificates wget gnupg nodejs npm'
+    docker exec "${container_name}" bash -c 'export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y curl git sudo xz-utils build-essential locales zsh rsync systemd systemd-sysv libssl-dev pkg-config cmake libclang-dev lld openssl ca-certificates wget gnupg nodejs npm libnss3-tools'
     
     log_info "Installing GitHub CLI (gh)..."
     docker exec "${container_name}" bash -c '
@@ -878,6 +878,7 @@ generate_caddy_config() {
         local container_port="${proxy_http#*:}"
         
         caddyfile+=":${host_port} {
+    bind 0.0.0.0
     reverse_proxy ${container_host}:${container_port}
 "
         
@@ -901,9 +902,9 @@ generate_caddy_config() {
         local host_port="${proxy_https%:*}"
         local container_port="${proxy_https#*:}"
         
-        # Use Caddy's automatic HTTPS with HTTP->HTTPS redirect
-        # Caddy will automatically handle HTTP on port 80 and redirect to HTTPS
-        caddyfile+="localhost:${host_port} {
+        # HTTPS proxy configuration with self-signed certificate
+        caddyfile+=":${host_port} {
+    bind 0.0.0.0
     tls internal
     reverse_proxy ${container_host}:${container_port}
 "
@@ -1453,9 +1454,9 @@ proxy_command() {
                         proxy_https="$2"
                         shift 2
                         ;;
-                    --pass)
+                    --proxy-pass)
                         if [[ -z "${2:-}" ]]; then
-                            log_error "Password expected after --pass"
+                            log_error "Password expected after --proxy-pass"
                             exit 1
                         fi
                         proxy_pass="$2"
@@ -1518,8 +1519,8 @@ proxy_command() {
             # Show configuration
             if [ -n "$proxy_http" ] || [ -n "$proxy_https" ]; then
                 log_info "  Configuration:"
-                [ -n "$proxy_http" ] && log_info "    HTTP: http://localhost:${proxy_http%:*} -> container:${proxy_http#*:}"
-                [ -n "$proxy_https" ] && log_info "    HTTPS: https://localhost:${proxy_https%:*} -> container:${proxy_https#*:}"
+                [ -n "$proxy_http" ] && log_info "    HTTP: http://0.0.0.0:${proxy_http%:*} -> container:${proxy_http#*:}"
+                [ -n "$proxy_https" ] && log_info "    HTTPS: https://0.0.0.0:${proxy_https%:*} -> container:${proxy_https#*:}"
                 [ -n "$proxy_auth" ] && log_info "    Auth: Basic authentication enabled"
             else
                 log_info "  Configuration: None"
@@ -1561,9 +1562,9 @@ proxy_command() {
                         proxy_https="$2"
                         shift 2
                         ;;
-                    --pass)
+                    --proxy-pass)
                         if [[ -z "${2:-}" ]]; then
-                            log_error "Password expected after --pass"
+                            log_error "Password expected after --proxy-pass"
                             exit 1
                         fi
                         proxy_pass="$2"
@@ -1805,7 +1806,7 @@ main() {
             echo "      config              Show Caddyfile configuration"
             echo "        --http host:cont    Set HTTP proxy"
             echo "        --https host:cont   Set HTTPS proxy"
-            echo "        --pass password     Set basic auth password"
+            echo "        --proxy-pass password  Set basic auth password"
             echo "        --remove-http       Remove HTTP proxy"
             echo "        --remove-https      Remove HTTPS proxy"
             echo "        --remove-pass       Remove basic auth"
@@ -1820,6 +1821,7 @@ main() {
             echo "  $0 create myproject -p 3009:3009 -p 8080:80  # Multiple ports"
             echo "  $0 create myproject --proxy-http 8080:3000   # With HTTP proxy"
             echo "  $0 create myproject --proxy-https 8443:3000 --proxy-pass secret  # HTTPS + auth"
+            echo "  $0 create myproject --proxy-http 8080:3000 --proxy-https 8443:3000  # Both HTTP & HTTPS"
             echo "  $0 shell myproject                       # Open shell in container"
             echo "  $0 start myproject --recreate-with-ports -p 3009:3009  # Add ports later"
             echo "  $0 proxy myproject status                # Check proxy status"
