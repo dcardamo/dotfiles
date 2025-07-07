@@ -25,8 +25,7 @@
     driSupport32Bit = true;
     extraPackages = with pkgs; [
       # OpenCL/ROCm support for AI workloads
-      rocm-opencl-icd
-      rocm-opencl-runtime
+      rocmPackages.clr.icd
       amdvlk
     ];
     extraPackages32 = with pkgs; [
