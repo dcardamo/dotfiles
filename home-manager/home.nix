@@ -48,6 +48,7 @@ in
     #./modules/elixir.nix
     ./modules/env-template.nix
     ./modules/fzf.nix
+    ./modules/ghostty.nix
     ./modules/git.nix
     ./modules/helix
     ./modules/neovim.nix

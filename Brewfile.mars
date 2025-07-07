@@ -33,7 +33,7 @@ cask "windsurf"
 cask "zed"
 
 #cask "github"
-#cask "ghostty"
+cask "ghostty"
 #cask "shutter-encoder" # no sha
 #cask "chromedriver" # motive e2e tests
 #cask "cursor"

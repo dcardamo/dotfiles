@@ -124,6 +124,21 @@ in
                 # Enable direnv
                 eval "$(direnv hook zsh)"
                 
+                # Ghostty shell integration for tab naming and directory tracking
+                if [ -n "$GHOSTTY_RESOURCES_DIR" ]; then
+                  source "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration"
+                  
+                  # Function to set Ghostty tab title
+                  ghostty_tab_title() {
+                    if [ -n "$1" ]; then
+                      printf "\033]0;%s\007" "$1"
+                    fi
+                  }
+                  
+                  # Alias for easier tab naming
+                  alias gt="ghostty_tab_title"
+                fi
+                
                 # Load ~/.env file if it exists (for secrets)
                 if [[ -f "$HOME/.env" ]]; then
                   # Check file permissions for security
