@@ -22,7 +22,6 @@
   # Graphics support
   hardware.opengl = {
     enable = true;
-    driSupport = true;
     driSupport32Bit = true;
     extraPackages = with pkgs; [
       # OpenCL/ROCm support for AI workloads
@@ -110,7 +109,6 @@
   programs.zsh.enable = true;
 
   # Audio support
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
