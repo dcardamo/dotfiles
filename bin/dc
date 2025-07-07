@@ -8,6 +8,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 CONTAINER_PREFIX="dev-"
 DOCKER_IMAGE="ubuntu:22.04"
+PROXY_SUFFIX="-proxy"
+CADDY_IMAGE="caddy:alpine"
+DC_NETWORK="dc-network"
 
 # Colors for output
 RED='\033[0;31m'
@@ -36,6 +39,14 @@ check_docker() {
     fi
 }
 
+# Ensure the DC network exists
+ensure_network() {
+    if ! docker network ls --format '{{.Name}}' | grep -q "^${DC_NETWORK}$"; then
+        log_info "Creating Docker network '${DC_NETWORK}'..."
+        docker network create "${DC_NETWORK}" >/dev/null
+    fi
+}
+
 # List all dev containers
 list_containers() {
     log_info "Development containers:"
@@ -45,7 +56,69 @@ list_containers() {
 # Create a new dev container
 create_container() {
     local name="$1"
+    shift
     local container_name="${CONTAINER_PREFIX}${name}"
+    
+    # Parse port and proxy arguments
+    local port_args=()
+    local proxy_http=""
+    local proxy_https=""
+    local proxy_pass=""
+    
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -p|--port)
+                if [[ -z "${2:-}" ]]; then
+                    log_error "Port mapping expected after -p/--port"
+                    exit 1
+                fi
+                # Validate port format (simple check for host:container)
+                if [[ ! "$2" =~ ^[0-9]+:[0-9]+$ ]]; then
+                    log_error "Invalid port format. Use: -p host_port:container_port (e.g., -p 3009:3009)"
+                    exit 1
+                fi
+                port_args+=("-p" "$2")
+                shift 2
+                ;;
+            --proxy-http)
+                if [[ -z "${2:-}" ]]; then
+                    log_error "Proxy mapping expected after --proxy-http"
+                    exit 1
+                fi
+                if [[ ! "$2" =~ ^[0-9]+:[0-9]+$ ]]; then
+                    log_error "Invalid proxy format. Use: --proxy-http host_port:container_port (e.g., --proxy-http 8080:3000)"
+                    exit 1
+                fi
+                proxy_http="$2"
+                shift 2
+                ;;
+            --proxy-https)
+                if [[ -z "${2:-}" ]]; then
+                    log_error "Proxy mapping expected after --proxy-https"
+                    exit 1
+                fi
+                if [[ ! "$2" =~ ^[0-9]+:[0-9]+$ ]]; then
+                    log_error "Invalid proxy format. Use: --proxy-https host_port:container_port (e.g., --proxy-https 8443:3000)"
+                    exit 1
+                fi
+                proxy_https="$2"
+                shift 2
+                ;;
+            --proxy-pass)
+                if [[ -z "${2:-}" ]]; then
+                    log_error "Password expected after --proxy-pass"
+                    exit 1
+                fi
+                proxy_pass="$2"
+                shift 2
+                ;;
+            *)
+                log_error "Unknown argument: $1"
+                log_error "Usage: $0 create <name> [-p host:container] [--proxy-http host:container] [--proxy-https host:container] [--proxy-pass password]"
+                exit 1
+                ;;
+        esac
+    done
 
     if docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
         log_error "Container '${container_name}' already exists"
@@ -64,6 +137,9 @@ create_container() {
     fi
 
     log_info "Creating container '${container_name}'..."
+    
+    # Ensure network exists
+    ensure_network
 
     # Detect platform
     local platform
@@ -82,11 +158,41 @@ create_container() {
 
     log_info "Using platform: ${platform}"
 
+    # Build labels for port and proxy tracking
+    local label_args=()
+    if [ ${#port_args[@]} -gt 0 ]; then
+        # Store port mappings as a label for future reference
+        local ports_label=""
+        for ((i=0; i<${#port_args[@]}; i+=2)); do
+            if [ "$i" -gt 0 ]; then
+                ports_label+=","
+            fi
+            ports_label+="${port_args[$((i+1))]}"
+        done
+        label_args+=("--label" "dc.ports=${ports_label}")
+    fi
+    
+    # Add proxy labels if configured
+    if [ -n "$proxy_http" ]; then
+        label_args+=("--label" "dc.proxy.http=${proxy_http}")
+    fi
+    if [ -n "$proxy_https" ]; then
+        label_args+=("--label" "dc.proxy.https=${proxy_https}")
+    fi
+    if [ -n "$proxy_pass" ]; then
+        # Store password hash for security (using simple base64 for now)
+        local pass_hash=$(printf "%s" "$proxy_pass" | base64)
+        label_args+=("--label" "dc.proxy.auth=basic:${pass_hash}")
+    fi
+
     # Create container with proper mounts and settings
     docker run -d \
         --name "${container_name}" \
         --hostname "${container_name}" \
+        --network "${DC_NETWORK}" \
         --platform "${platform}" \
+        "${port_args[@]}" \
+        "${label_args[@]}" \
         -v "$HOME/git:/home/dan/git" \
         -v "$HOME/.ssh:/mnt/host-ssh:ro" \
         -v "$DOTFILES_DIR:/mnt/dotfiles:ro" \
@@ -465,6 +571,31 @@ create_container() {
     log_info "  ~/.config/gh -> /mnt/host-gh (read-only, copied to ~/.config/gh)"
     log_info "  dotfiles -> /mnt/dotfiles (read-only)"
     log_info ""
+    if [ ${#port_args[@]} -gt 0 ]; then
+        log_info "Exposed ports:"
+        for ((i=0; i<${#port_args[@]}; i+=2)); do
+            log_info "  ${port_args[$((i+1))]}"
+        done
+        log_info ""
+    fi
+    
+    # Show proxy info if configured
+    if [ -n "$proxy_http" ] || [ -n "$proxy_https" ]; then
+        log_info "Proxy configuration:"
+        [ -n "$proxy_http" ] && log_info "  HTTP proxy: http://localhost:${proxy_http%:*} -> container:${proxy_http#*:}"
+        [ -n "$proxy_https" ] && log_info "  HTTPS proxy: https://localhost:${proxy_https%:*} -> container:${proxy_https#*:}"
+        [ -n "$proxy_pass" ] && log_info "  Basic auth: enabled (username: admin)"
+        log_info ""
+        
+        # Start proxy container
+        if create_proxy_container "$container_name" "$proxy_http" "$proxy_https" "$proxy_pass"; then
+            log_info "Proxy is running and accessible"
+        else
+            log_warn "Proxy configuration saved but failed to start. Use 'dc proxy ${name} start' to retry."
+        fi
+        log_info ""
+    fi
+    
     log_info "SSH keys and GitHub CLI config have been copied to the container."
 }
 
@@ -488,6 +619,10 @@ destroy_container() {
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         log_info "Destroying container '${container_name}'..."
         docker rm -f "${container_name}"
+        
+        # Also destroy proxy container if exists
+        destroy_proxy_container "${container_name}"
+        
         log_info "Container destroyed"
     else
         log_info "Cancelled"
@@ -507,6 +642,9 @@ force_destroy_container() {
     if docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
         log_info "Force destroying container '${container_name}'..."
         docker rm -f "${container_name}"
+        
+        # Also destroy proxy container if exists
+        destroy_proxy_container "${container_name}"
     fi
 }
 
@@ -533,6 +671,9 @@ shell_container() {
         sleep 2
     fi
 
+    # Ensure .env has correct permissions before starting shell
+    docker exec -u dan "${container_name}" bash -c 'test -f ~/.env && chmod 600 ~/.env' 2>/dev/null || true
+    
     # Use docker exec with proper environment
     # We need to use a login shell to ensure all initialization files are sourced
     docker exec -it -u dan -w /home/dan "${container_name}" env \
@@ -612,6 +753,66 @@ exec_container() {
 # Start a stopped container
 start_container() {
     local name="$1"
+    shift
+    
+    # Parse proxy arguments for start
+    local proxy_http=""
+    local proxy_https=""
+    local proxy_pass=""
+    local recreate_ports=false
+    local port_args=()
+    
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --recreate-with-ports)
+                recreate_ports=true
+                shift
+                ;;
+            -p|--port)
+                if [[ -z "${2:-}" ]]; then
+                    log_error "Port mapping expected after -p/--port"
+                    exit 1
+                fi
+                port_args+=("-p" "$2")
+                shift 2
+                ;;
+            --proxy-http)
+                if [[ -z "${2:-}" ]]; then
+                    log_error "Proxy mapping expected after --proxy-http"
+                    exit 1
+                fi
+                proxy_http="$2"
+                shift 2
+                ;;
+            --proxy-https)
+                if [[ -z "${2:-}" ]]; then
+                    log_error "Proxy mapping expected after --proxy-https"
+                    exit 1
+                fi
+                proxy_https="$2"
+                shift 2
+                ;;
+            --proxy-pass)
+                if [[ -z "${2:-}" ]]; then
+                    log_error "Password expected after --proxy-pass"
+                    exit 1
+                fi
+                proxy_pass="$2"
+                shift 2
+                ;;
+            *)
+                log_error "Unknown argument: $1"
+                exit 1
+                ;;
+        esac
+    done
+    
+    # If recreate with ports was requested, handle it
+    if [ "$recreate_ports" = true ] && [ ${#port_args[@]} -gt 0 ]; then
+        recreate_container_with_ports "$name" "${port_args[@]}"
+        return
+    fi
+    
     # Check if name already has the prefix
     if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
         local container_name="$name"
@@ -643,6 +844,225 @@ start_container() {
 
 
     log_info "Container started"
+    
+    # Handle proxy configuration
+    if [ -n "$proxy_http" ] || [ -n "$proxy_https" ]; then
+        # Override proxy config from command line
+        create_proxy_container "$container_name" "$proxy_http" "$proxy_https" "$proxy_pass"
+    else
+        # Check for proxy config from labels and start if needed
+        start_proxy_if_configured "$container_name"
+    fi
+}
+
+# Generate Caddy configuration file
+generate_caddy_config() {
+    local container_name="$1"
+    local proxy_http="$2"
+    local proxy_https="$3"
+    local proxy_pass="$4"
+    local config_dir="$HOME/.dc/proxy/${container_name}"
+    
+    # Create config directory
+    mkdir -p "$config_dir"
+    
+    # Use container name for Docker DNS resolution
+    local container_host="$container_name"
+    
+    # Start building Caddyfile
+    local caddyfile=""
+    
+    # Add HTTP proxy if configured
+    if [ -n "$proxy_http" ]; then
+        local host_port="${proxy_http%:*}"
+        local container_port="${proxy_http#*:}"
+        
+        caddyfile+=":${host_port} {
+    reverse_proxy ${container_host}:${container_port}
+"
+        
+        # Add basic auth if configured
+        if [ -n "$proxy_pass" ]; then
+            # Generate bcrypt hash for password
+            local pass_hash=$(docker run --rm caddy:alpine caddy hash-password --plaintext "$proxy_pass" 2>/dev/null | tail -1)
+            caddyfile+="    basicauth {
+        admin ${pass_hash}
+    }
+"
+        fi
+        
+        caddyfile+="}
+
+"
+    fi
+    
+    # Add HTTPS proxy if configured
+    if [ -n "$proxy_https" ]; then
+        local host_port="${proxy_https%:*}"
+        local container_port="${proxy_https#*:}"
+        
+        # Use Caddy's automatic HTTPS with HTTP->HTTPS redirect
+        # Caddy will automatically handle HTTP on port 80 and redirect to HTTPS
+        caddyfile+="localhost:${host_port} {
+    tls internal
+    reverse_proxy ${container_host}:${container_port}
+"
+        
+        # Add basic auth if configured
+        if [ -n "$proxy_pass" ]; then
+            # Generate bcrypt hash for password if not already done
+            if [ -z "${pass_hash:-}" ]; then
+                local pass_hash=$(docker run --rm caddy:alpine caddy hash-password --plaintext "$proxy_pass" 2>/dev/null | tail -1)
+            fi
+            caddyfile+="    basic_auth {
+        admin ${pass_hash}
+    }
+"
+        fi
+        
+        caddyfile+="}
+
+"
+    fi
+    
+    # Write Caddyfile
+    echo "$caddyfile" > "$config_dir/Caddyfile"
+    chmod 600 "$config_dir/Caddyfile"
+    
+    return 0
+}
+
+# Create or update proxy container
+create_proxy_container() {
+    local container_name="$1"
+    local proxy_http="$2"
+    local proxy_https="$3"
+    local proxy_pass="$4"
+    local proxy_name="${container_name}${PROXY_SUFFIX}"
+    local config_dir="$HOME/.dc/proxy/${container_name}"
+    
+    # Generate Caddy configuration
+    if ! generate_caddy_config "$container_name" "$proxy_http" "$proxy_https" "$proxy_pass"; then
+        return 1
+    fi
+    
+    # Check if proxy container already exists
+    if docker ps -a --format '{{.Names}}' | grep -q "^${proxy_name}$"; then
+        log_info "Updating existing proxy container '${proxy_name}'..."
+        docker stop "$proxy_name" >/dev/null 2>&1
+        docker rm "$proxy_name" >/dev/null 2>&1
+    fi
+    
+    # Build port arguments for Caddy container
+    local caddy_ports=()
+    if [ -n "$proxy_http" ]; then
+        local host_port="${proxy_http%:*}"
+        caddy_ports+=("-p" "${host_port}:${host_port}")
+    fi
+    if [ -n "$proxy_https" ]; then
+        local host_port="${proxy_https%:*}"
+        caddy_ports+=("-p" "${host_port}:${host_port}")
+    fi
+    
+    # Ensure network exists
+    ensure_network
+    
+    # Create proxy container
+    log_info "Creating proxy container '${proxy_name}'..."
+    docker run -d \
+        --name "$proxy_name" \
+        --network "${DC_NETWORK}" \
+        "${caddy_ports[@]}" \
+        -v "$config_dir/Caddyfile:/etc/caddy/Caddyfile:ro" \
+        -v "$config_dir/data:/data" \
+        -v "$config_dir/config:/config" \
+        --label "dc.proxy.for=${container_name}" \
+        "$CADDY_IMAGE" \
+        caddy run --config /etc/caddy/Caddyfile --adapter caddyfile \
+        >/dev/null
+    
+    # Wait for Caddy to start
+    sleep 2
+    
+    # Check if proxy started successfully
+    if docker ps --format '{{.Names}}' | grep -q "^${proxy_name}$"; then
+        log_info "Proxy container '${proxy_name}' started successfully"
+        return 0
+    else
+        log_error "Failed to start proxy container '${proxy_name}'"
+        return 1
+    fi
+}
+
+# Get proxy configuration from container labels
+get_proxy_config() {
+    local container_name="$1"
+    
+    # Get proxy configuration from labels
+    local proxy_http=$(docker inspect "$container_name" --format '{{index .Config.Labels "dc.proxy.http"}}' 2>/dev/null)
+    local proxy_https=$(docker inspect "$container_name" --format '{{index .Config.Labels "dc.proxy.https"}}' 2>/dev/null)
+    local proxy_auth=$(docker inspect "$container_name" --format '{{index .Config.Labels "dc.proxy.auth"}}' 2>/dev/null)
+    
+    # Clean up "no value" responses
+    [ "$proxy_http" = "<no value>" ] && proxy_http=""
+    [ "$proxy_https" = "<no value>" ] && proxy_https=""
+    [ "$proxy_auth" = "<no value>" ] && proxy_auth=""
+    
+    # Return as space-separated values
+    echo "$proxy_http $proxy_https $proxy_auth"
+}
+
+# Start proxy if configured
+start_proxy_if_configured() {
+    local container_name="$1"
+    
+    # Get proxy config from labels
+    local config=$(get_proxy_config "$container_name")
+    read -r proxy_http proxy_https proxy_auth <<< "$config"
+    
+    # Check if any proxy is configured
+    if [ -z "$proxy_http" ] && [ -z "$proxy_https" ]; then
+        return 0
+    fi
+    
+    # Extract password from auth if present
+    local proxy_pass=""
+    if [ -n "$proxy_auth" ] && [[ "$proxy_auth" =~ ^basic:(.+)$ ]]; then
+        # Decode base64 password
+        proxy_pass=$(printf "%s" "${BASH_REMATCH[1]}" | base64 -d 2>/dev/null || base64 --decode <<< "${BASH_REMATCH[1]}")
+    fi
+    
+    # Create proxy container
+    create_proxy_container "$container_name" "$proxy_http" "$proxy_https" "$proxy_pass"
+}
+
+# Stop proxy container
+stop_proxy_container() {
+    local container_name="$1"
+    local proxy_name="${container_name}${PROXY_SUFFIX}"
+    
+    if docker ps --format '{{.Names}}' | grep -q "^${proxy_name}$"; then
+        log_info "Stopping proxy container '${proxy_name}'..."
+        docker stop "$proxy_name" >/dev/null
+    fi
+}
+
+# Destroy proxy container and config
+destroy_proxy_container() {
+    local container_name="$1"
+    local proxy_name="${container_name}${PROXY_SUFFIX}"
+    local config_dir="$HOME/.dc/proxy/${container_name}"
+    
+    # Remove proxy container if exists
+    if docker ps -a --format '{{.Names}}' | grep -q "^${proxy_name}$"; then
+        log_info "Destroying proxy container '${proxy_name}'..."
+        docker rm -f "$proxy_name" >/dev/null
+    fi
+    
+    # Remove config directory
+    if [ -d "$config_dir" ]; then
+        rm -rf "$config_dir"
+    fi
 }
 
 # Update SSH keys in container
@@ -841,6 +1261,376 @@ update_env_file() {
     log_info ".env file updated successfully"
 }
 
+# Recreate container with new port mappings
+recreate_container_with_ports() {
+    local name="$1"
+    shift
+    # Check if name already has the prefix
+    if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
+        local container_name="$name"
+        local base_name="${name#${CONTAINER_PREFIX}}"
+    else
+        local container_name="${CONTAINER_PREFIX}${name}"
+        local base_name="$name"
+    fi
+
+    if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_error "Container '${container_name}' does not exist"
+        exit 1
+    fi
+
+    # Parse port arguments
+    local port_args=()
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -p|--port)
+                if [[ -z "${2:-}" ]]; then
+                    log_error "Port mapping expected after -p/--port"
+                    exit 1
+                fi
+                # Validate port format (simple check for host:container)
+                if [[ ! "$2" =~ ^[0-9]+:[0-9]+$ ]]; then
+                    log_error "Invalid port format. Use: -p host_port:container_port (e.g., -p 3009:3009)"
+                    exit 1
+                fi
+                port_args+=("-p" "$2")
+                shift 2
+                ;;
+            *)
+                log_error "Unknown argument: $1"
+                exit 1
+                ;;
+        esac
+    done
+
+    if [ ${#port_args[@]} -eq 0 ]; then
+        log_error "No port mappings specified for recreation"
+        exit 1
+    fi
+
+    log_info "Recreating container '${container_name}' with new port mappings..."
+    
+    # Get current container's image and platform
+    local container_info=$(docker inspect "${container_name}" --format '{{.Config.Image}}|{{.Platform}}')
+    local current_image="${container_info%|*}"
+    local platform="${container_info#*|}"
+    
+    # Create temporary image from current container state
+    local temp_image="${container_name}-temp-$(date +%s)"
+    log_info "Creating temporary image to preserve container state..."
+    docker commit "${container_name}" "${temp_image}"
+    
+    # Stop and remove old container
+    log_info "Stopping and removing old container..."
+    docker stop "${container_name}"
+    docker rm "${container_name}"
+    
+    # Get original mount configurations
+    local mounts=$(docker inspect "${temp_image}" --format '{{range .Config.Volumes}}{{.}} {{end}}')
+    
+    # Build labels for port tracking
+    local label_args=()
+    if [ ${#port_args[@]} -gt 0 ]; then
+        # Store port mappings as a label for future reference
+        local ports_label=""
+        for ((i=0; i<${#port_args[@]}; i+=2)); do
+            if [ "$i" -gt 0 ]; then
+                ports_label+=","
+            fi
+            ports_label+="${port_args[$((i+1))]}"
+        done
+        label_args+=("--label" "dc.ports=${ports_label}")
+    fi
+    
+    # Ensure network exists
+    ensure_network
+    
+    # Create new container with port mappings
+    log_info "Creating new container with port mappings..."
+    docker run -d \
+        --name "${container_name}" \
+        --hostname "${container_name}" \
+        --network "${DC_NETWORK}" \
+        --platform "${platform}" \
+        "${port_args[@]}" \
+        "${label_args[@]}" \
+        -v "$HOME/git:/home/dan/git" \
+        -v "$HOME/.ssh:/mnt/host-ssh:ro" \
+        -v "$DOTFILES_DIR:/mnt/dotfiles:ro" \
+        -v "$HOME:/mnt/host-claude:ro" \
+        -v "$HOME/.config/gh:/mnt/host-gh:ro" \
+        --tmpfs /tmp:exec \
+        --tmpfs /run \
+        --privileged \
+        "${temp_image}" \
+        /bin/bash -c "while true; do sleep 1000; done"
+    
+    # Clean up temporary image
+    docker rmi "${temp_image}"
+    
+    log_info "Container '${container_name}' recreated successfully with new port mappings!"
+    log_info ""
+    log_info "Exposed ports:"
+    for ((i=0; i<${#port_args[@]}; i+=2)); do
+        log_info "  ${port_args[$((i+1))]}"
+    done
+}
+
+# Show exposed ports for a container
+show_container_ports() {
+    local name="$1"
+    # Check if name already has the prefix
+    if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
+        local container_name="$name"
+    else
+        local container_name="${CONTAINER_PREFIX}${name}"
+    fi
+
+    if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_error "Container '${container_name}' does not exist"
+        exit 1
+    fi
+
+    log_info "Exposed ports for '${container_name}':"
+    
+    # Get ports from container inspection
+    local ports=$(docker port "${container_name}" 2>/dev/null)
+    if [ -n "$ports" ]; then
+        echo "$ports"
+    else
+        # Check labels for configured ports
+        local label_ports=$(docker inspect "${container_name}" --format '{{index .Config.Labels "dc.ports"}}' 2>/dev/null)
+        if [ -n "$label_ports" ] && [ "$label_ports" != "<no value>" ]; then
+            log_info "Configured ports (from labels): $label_ports"
+            log_warn "Note: Container may need to be running to see actual port mappings"
+        else
+            log_info "No exposed ports"
+        fi
+    fi
+}
+
+# Handle proxy subcommand
+proxy_command() {
+    local name="$1"
+    local action="${2:-status}"
+    shift 2 || true
+    
+    # Check if name already has the prefix
+    if [[ "$name" == "${CONTAINER_PREFIX}"* ]]; then
+        local container_name="$name"
+    else
+        local container_name="${CONTAINER_PREFIX}${name}"
+    fi
+    
+    # Check if container exists
+    if ! docker ps -a --format '{{.Names}}' | grep -q "^${container_name}$"; then
+        log_error "Container '${container_name}' does not exist"
+        exit 1
+    fi
+    
+    case "$action" in
+        start)
+            # Parse proxy arguments
+            local proxy_http=""
+            local proxy_https=""
+            local proxy_pass=""
+            
+            while [[ $# -gt 0 ]]; do
+                case "$1" in
+                    --http)
+                        if [[ -z "${2:-}" ]]; then
+                            log_error "Proxy mapping expected after --http"
+                            exit 1
+                        fi
+                        proxy_http="$2"
+                        shift 2
+                        ;;
+                    --https)
+                        if [[ -z "${2:-}" ]]; then
+                            log_error "Proxy mapping expected after --https"
+                            exit 1
+                        fi
+                        proxy_https="$2"
+                        shift 2
+                        ;;
+                    --pass)
+                        if [[ -z "${2:-}" ]]; then
+                            log_error "Password expected after --pass"
+                            exit 1
+                        fi
+                        proxy_pass="$2"
+                        shift 2
+                        ;;
+                    *)
+                        log_error "Unknown argument: $1"
+                        exit 1
+                        ;;
+                esac
+            done
+            
+            # Use config from labels if not specified
+            if [ -z "$proxy_http" ] && [ -z "$proxy_https" ]; then
+                local config=$(get_proxy_config "$container_name")
+                read -r proxy_http proxy_https proxy_auth <<< "$config"
+                
+                if [ -n "$proxy_auth" ] && [[ "$proxy_auth" =~ ^basic:(.+)$ ]]; then
+                    proxy_pass=$(printf "%s" "${BASH_REMATCH[1]}" | base64 -d 2>/dev/null || base64 --decode <<< "${BASH_REMATCH[1]}")
+                fi
+            fi
+            
+            if [ -z "$proxy_http" ] && [ -z "$proxy_https" ]; then
+                log_error "No proxy configuration found. Specify --http and/or --https"
+                exit 1
+            fi
+            
+            # Start proxy
+            create_proxy_container "$container_name" "$proxy_http" "$proxy_https" "$proxy_pass"
+            ;;
+            
+        stop)
+            stop_proxy_container "$container_name"
+            ;;
+            
+        restart)
+            stop_proxy_container "$container_name"
+            sleep 1
+            start_proxy_if_configured "$container_name"
+            ;;
+            
+        status)
+            local proxy_name="${container_name}${PROXY_SUFFIX}"
+            
+            # Get proxy configuration
+            local config=$(get_proxy_config "$container_name")
+            read -r proxy_http proxy_https proxy_auth <<< "$config"
+            
+            log_info "Proxy status for '${container_name}':"
+            
+            # Check if proxy container exists and is running
+            if docker ps --format '{{.Names}}' | grep -q "^${proxy_name}$"; then
+                log_info "  Status: Running"
+            elif docker ps -a --format '{{.Names}}' | grep -q "^${proxy_name}$"; then
+                log_info "  Status: Stopped"
+            else
+                log_info "  Status: Not created"
+            fi
+            
+            # Show configuration
+            if [ -n "$proxy_http" ] || [ -n "$proxy_https" ]; then
+                log_info "  Configuration:"
+                [ -n "$proxy_http" ] && log_info "    HTTP: http://localhost:${proxy_http%:*} -> container:${proxy_http#*:}"
+                [ -n "$proxy_https" ] && log_info "    HTTPS: https://localhost:${proxy_https%:*} -> container:${proxy_https#*:}"
+                [ -n "$proxy_auth" ] && log_info "    Auth: Basic authentication enabled"
+            else
+                log_info "  Configuration: None"
+            fi
+            ;;
+            
+        update)
+            # Parse proxy arguments
+            local proxy_http=""
+            local proxy_https=""
+            local proxy_pass=""
+            
+            # Get current config
+            local config=$(get_proxy_config "$container_name")
+            read -r current_http current_https current_auth <<< "$config"
+            
+            # Use current values as defaults
+            proxy_http="$current_http"
+            proxy_https="$current_https"
+            if [ -n "$current_auth" ] && [[ "$current_auth" =~ ^basic:(.+)$ ]]; then
+                proxy_pass=$(printf "%s" "${BASH_REMATCH[1]}" | base64 -d 2>/dev/null || base64 --decode <<< "${BASH_REMATCH[1]}")
+            fi
+            
+            while [[ $# -gt 0 ]]; do
+                case "$1" in
+                    --http)
+                        if [[ -z "${2:-}" ]]; then
+                            log_error "Proxy mapping expected after --http"
+                            exit 1
+                        fi
+                        proxy_http="$2"
+                        shift 2
+                        ;;
+                    --https)
+                        if [[ -z "${2:-}" ]]; then
+                            log_error "Proxy mapping expected after --https"
+                            exit 1
+                        fi
+                        proxy_https="$2"
+                        shift 2
+                        ;;
+                    --pass)
+                        if [[ -z "${2:-}" ]]; then
+                            log_error "Password expected after --pass"
+                            exit 1
+                        fi
+                        proxy_pass="$2"
+                        shift 2
+                        ;;
+                    --remove-http)
+                        proxy_http=""
+                        shift
+                        ;;
+                    --remove-https)
+                        proxy_https=""
+                        shift
+                        ;;
+                    --remove-pass)
+                        proxy_pass=""
+                        shift
+                        ;;
+                    *)
+                        log_error "Unknown argument: $1"
+                        exit 1
+                        ;;
+                esac
+            done
+            
+            # Note: Docker doesn't support updating labels on running containers
+            # Labels can only be set during container creation
+            log_info "Note: Proxy configuration updated but not persisted to container labels"
+            log_info "To persist configuration, recreate container with: dc create ${container_name#${CONTAINER_PREFIX}} --proxy-https $proxy_https"
+            
+            # Restart proxy with new config
+            stop_proxy_container "$container_name"
+            if [ -n "$proxy_http" ] || [ -n "$proxy_https" ]; then
+                create_proxy_container "$container_name" "$proxy_http" "$proxy_https" "$proxy_pass"
+            else
+                log_info "All proxy configurations removed"
+            fi
+            ;;
+            
+        logs)
+            local proxy_name="${container_name}${PROXY_SUFFIX}"
+            if docker ps -a --format '{{.Names}}' | grep -q "^${proxy_name}$"; then
+                docker logs "$proxy_name"
+            else
+                log_error "Proxy container '${proxy_name}' does not exist"
+                exit 1
+            fi
+            ;;
+            
+        config)
+            local config_dir="$HOME/.dc/proxy/${container_name}"
+            if [ -f "$config_dir/Caddyfile" ]; then
+                log_info "Caddyfile for '${container_name}':"
+                cat "$config_dir/Caddyfile"
+            else
+                log_error "No Caddyfile found at $config_dir/Caddyfile"
+                exit 1
+            fi
+            ;;
+            
+        *)
+            log_error "Unknown proxy action: $action"
+            log_error "Valid actions: start, stop, restart, status, update, logs, config"
+            exit 1
+            ;;
+    esac
+}
+
 # Stop a running container
 stop_container() {
     local name="$1"
@@ -858,6 +1648,10 @@ stop_container() {
 
     log_info "Stopping container '${container_name}'..."
     docker stop "${container_name}"
+    
+    # Also stop proxy container if exists
+    stop_proxy_container "${container_name}"
+    
     log_info "Container stopped"
 }
 
@@ -871,10 +1665,12 @@ main() {
             ;;
         create)
             if [ -z "${2:-}" ]; then
-                log_error "Usage: $0 create <name>"
+                log_error "Usage: $0 create <name> [-p host:container]..."
                 exit 1
             fi
-            create_container "$2"
+            # Pass all arguments after 'create' to the function
+            shift
+            create_container "$@"
             ;;
         destroy|rm)
             if [ -z "${2:-}" ]; then
@@ -899,10 +1695,12 @@ main() {
             ;;
         start)
             if [ -z "${2:-}" ]; then
-                log_error "Usage: $0 start <name>"
+                log_error "Usage: $0 start <name> [--recreate-with-ports -p host:container]..."
                 exit 1
             fi
-            start_container "$2"
+            # Pass all arguments after 'start' to the function
+            shift
+            start_container "$@"
             ;;
         stop)
             if [ -z "${2:-}" ]; then
@@ -955,27 +1753,78 @@ main() {
             fi
             update_env_file "$2"
             ;;
+        ports)
+            if [ -z "${2:-}" ]; then
+                log_error "Usage: $0 ports <name>"
+                exit 1
+            fi
+            show_container_ports "$2"
+            ;;
+        proxy)
+            if [ -z "${2:-}" ]; then
+                log_error "Usage: $0 proxy <name> <action> [options]"
+                log_error "Actions: start, stop, restart, status, update"
+                exit 1
+            fi
+            # Pass all arguments after 'proxy' to the function
+            shift
+            proxy_command "$@"
+            ;;
         *)
             echo "Usage: $0 <command> [args]"
             echo ""
             echo "Commands:"
             echo "  list, ls              List all dev containers"
-            echo "  create <name>         Create a new dev container"
+            echo "  create <name> [opts]  Create a new dev container"
+            echo "    Options:"
+            echo "      -p, --port host:container           Expose container port to host"
+            echo "      --proxy-http host:container         Create HTTP proxy"
+            echo "      --proxy-https host:container        Create HTTPS proxy (self-signed cert)"
+            echo "      --proxy-pass password               Add basic auth to proxy"
             echo "  destroy, rm <name>    Destroy a dev container"
             echo "  force-destroy <name>  Force destroy without prompt"
-            echo "  start <name>          Start a stopped container"
+            echo "  start <name> [opts]   Start a stopped container"
+            echo "    Options:"
+            echo "      --recreate-with-ports -p host:container  Recreate container with new ports"
+            echo "      --proxy-http host:container               Start with HTTP proxy"
+            echo "      --proxy-https host:container              Start with HTTPS proxy"
+            echo "      --proxy-pass password                     Add basic auth to proxy"
             echo "  stop <name>           Stop a running container"
             echo "  shell <name>          Open a shell in the container"
             echo "  rebuild <name>        Rebuild container configuration"
             echo "  exec <name> <cmd>     Execute command in container"
+            echo "  ports <name>          Show exposed ports for container"
+            echo "  proxy <name> <action> Manage container proxy"
+            echo "    Actions:"
+            echo "      status              Show proxy status and configuration"
+            echo "      start [opts]        Start proxy (uses stored config or specify new)"
+            echo "      stop                Stop proxy container"
+            echo "      restart             Restart proxy container"
+            echo "      update [opts]       Update proxy configuration"
+            echo "      logs                Show proxy container logs"
+            echo "      config              Show Caddyfile configuration"
+            echo "        --http host:cont    Set HTTP proxy"
+            echo "        --https host:cont   Set HTTPS proxy"
+            echo "        --pass password     Set basic auth password"
+            echo "        --remove-http       Remove HTTP proxy"
+            echo "        --remove-https      Remove HTTPS proxy"
+            echo "        --remove-pass       Remove basic auth"
             echo "  update-ssh <name>     Update SSH keys in container"
             echo "  update-gh <name>      Update GitHub CLI config in container"
             echo "  update-claude <name>  Update Claude config in container"
             echo "  update-env <name>     Update .env file in container"
             echo ""
-            echo "Example:"
-            echo "  $0 create myproject"
-            echo "  $0 shell myproject"
+            echo "Examples:"
+            echo "  $0 create myproject                      # Create without exposed ports"
+            echo "  $0 create myproject -p 3009:3009         # Expose port 3009"
+            echo "  $0 create myproject -p 3009:3009 -p 8080:80  # Multiple ports"
+            echo "  $0 create myproject --proxy-http 8080:3000   # With HTTP proxy"
+            echo "  $0 create myproject --proxy-https 8443:3000 --proxy-pass secret  # HTTPS + auth"
+            echo "  $0 shell myproject                       # Open shell in container"
+            echo "  $0 start myproject --recreate-with-ports -p 3009:3009  # Add ports later"
+            echo "  $0 proxy myproject status                # Check proxy status"
+            echo "  $0 proxy myproject start --http 9090:3000  # Start proxy"
+            echo "  $0 proxy myproject update --remove-http --https 8443:3000  # Change proxy"
             exit 1
             ;;
     esac
