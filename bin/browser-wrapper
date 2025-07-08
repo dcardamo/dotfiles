@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Browser wrapper that uses browsh in Zellij on Linux, otherwise default behavior
+
+# Check if we're on Linux and inside Zellij
+if [[ "$OSTYPE" == "linux-gnu"* ]] && [[ -n "$ZELLIJ_SESSION_NAME" ]]; then
+    # We're on Linux and inside Zellij, use browsh in a new pane
+    if command -v browsh &> /dev/null; then
+        # Open browsh in a new pane to the right
+        zellij run -d right -- browsh "$@"
+    else
+        echo "Error: browsh is not installed" >&2
+        exit 1
+    fi
+else
+    # Not on Linux+Zellij, use system default
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS: use open command
+        open "$@"
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        # Linux but not in Zellij: use xdg-open's default
+        # First unset BROWSER to avoid recursion
+        unset BROWSER
+        xdg-open "$@"
+    else
+        echo "Error: Unsupported platform" >&2
+        exit 1
+    fi
+fi

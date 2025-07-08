@@ -72,6 +72,11 @@ in {
       source ${./zsh/aliases.zsh}
       source ${./zsh/completions.zsh}
       source ${./zsh/prompt.zsh}
+      
+      # Set BROWSER for Linux systems to use our wrapper
+      ${lib.optionalString isLinux ''
+        export BROWSER="$HOME/git/dotfiles/bin/browser-wrapper"
+      ''}
     '';
   };
 }

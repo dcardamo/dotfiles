@@ -49,7 +49,9 @@ in {
       pwgen
       skim
     ]
-    ++ lib.lists.optionals isLinux []
+    ++ lib.lists.optionals isLinux [
+      browsh # Modern terminal browser with graphics support
+    ]
     ++ lib.lists.optionals isDarwin [
       #exiftool
       #ffmpeg
