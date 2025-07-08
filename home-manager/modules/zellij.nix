@@ -164,6 +164,7 @@ in {
               bind "Alt s" { SwitchToMode "Scroll"; }
               bind "Alt t" { SwitchToMode "Tab"; }
               bind "Alt o" { SwitchToMode "Session"; }
+              bind "Alt g" { SwitchToMode "Locked"; }
           }
 
           resize {
@@ -283,6 +284,10 @@ in {
                   }
                   SwitchToMode "Normal"
               }
+          }
+
+          locked {
+              bind "Alt g" { SwitchToMode "Normal"; }
           }
       }
 
