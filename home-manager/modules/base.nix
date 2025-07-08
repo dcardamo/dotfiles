@@ -35,6 +35,7 @@ in {
       exiftool
       rsync
       tree
+      lsd
       pv
 
       # other utils and plugin dependencies

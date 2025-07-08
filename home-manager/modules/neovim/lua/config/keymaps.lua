@@ -84,3 +84,6 @@ keymap("n", "<leader>uw", function() vim.opt.wrap = not vim.opt.wrap:get() end, 
 keymap("n", "<leader>ul", function() vim.opt.number = not vim.opt.number:get() vim.opt.relativenumber = not vim.opt.relativenumber:get() end, { desc = "Toggle Line Numbers" })
 keymap("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, { desc = "Toggle Diagnostics" })
 keymap("n", "<leader>uc", function() vim.opt.conceallevel = vim.opt.conceallevel:get() == 0 and 2 or 0 end, { desc = "Toggle Conceal" })
+
+-- Quick file finder
+keymap("n", "<leader><leader>", "<cmd>Telescope find_files<cr>", { desc = "Find Files" })

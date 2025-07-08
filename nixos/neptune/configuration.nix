@@ -76,7 +76,7 @@
     isNormalUser = true;
     description = "Dan Cardamore";
     shell = pkgs.zsh;
-    extraGroups = ["wheel" "video" "audio" "networkmanager"]; # Enable 'sudo' and hardware access
+    extraGroups = ["wheel" "video" "audio" "networkmanager" "ollama"]; # Enable 'sudo' and hardware access
     openssh.authorizedKeys.keys = vars.authorizedSshKeys;
   };
 
@@ -118,6 +118,18 @@
     jack.enable = true;
   };
 
+  # Ollama service for local LLM inference
+  services.ollama = {
+    enable = true;
+    acceleration = "rocm";  # Use AMD GPU acceleration
+    loadModels = [ ];  # Models already downloaded
+
+    # Environment variables for better AMD GPU support
+    environmentVariables = {
+      OLLAMA_NUM_GPU = "999";  # Use all available GPU layers
+      HSA_OVERRIDE_GFX_VERSION = "11.0.0";  # May be needed for some AMD GPUs
+    };
+  };
+
   system.stateVersion = "24.11"; # Did you read the comment?
 }
-

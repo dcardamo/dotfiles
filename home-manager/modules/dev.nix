@@ -12,6 +12,7 @@
     sqlite
     git
     gitui
+    gh
     just
 
     # for compiling Treesitter parsers
