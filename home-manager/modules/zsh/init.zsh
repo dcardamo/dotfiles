@@ -26,7 +26,8 @@ fi
 
 export PROMPT_DIRTRIM=3
 
-# Enable direnv
+# Enable direnv (quietly)
+export DIRENV_LOG_FORMAT=""
 eval "$(direnv hook zsh)"
 
 # uv shell completions (if uv is installed)
@@ -42,7 +43,7 @@ fi
 # Load ~/.env file if it exists (for secrets)
 if [[ -f "$HOME/.env" ]]; then
     # Check file permissions for security
-    local env_perms=$(stat -f "%Lp" "$HOME/.env" 2>/dev/null || stat -c "%a" "$HOME/.env" 2>/dev/null)
+    local env_perms=$(stat -L -c "%a" "$HOME/.env" 2>/dev/null || stat -f "%Lp" "$HOME/.env" 2>/dev/null)
     if [[ "$env_perms" != "600" ]]; then
         echo "⚠️  Warning: ~/.env has insecure permissions ($env_perms). Run: chmod 600 ~/.env" >&2
     fi

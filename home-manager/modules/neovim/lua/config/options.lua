@@ -59,3 +59,12 @@ if vim.fn.executable("rg") == 1 then
   vim.opt.grepprg = "rg --vimgrep --smart-case --hidden"
   vim.opt.grepformat = "%f:%l:%c:%m"
 end
+
+-- Filetype-specific settings
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true  -- Wrap at word boundaries
+  end,
+})
