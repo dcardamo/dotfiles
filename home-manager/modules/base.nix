@@ -50,7 +50,8 @@ in {
       skim
     ]
     ++ lib.lists.optionals isLinux [
-      browsh # Modern terminal browser with graphics support
+      browsh # Text-based web browser with Firefox rendering
+      firefox # Required dependency for browsh
     ]
     ++ lib.lists.optionals isDarwin [
       #exiftool
