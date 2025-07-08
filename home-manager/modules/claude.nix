@@ -220,7 +220,7 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-      claude-code
+      # claude-code # Using npm version instead
       # nodejs_20 is provided by nodejs.nix
     ];
 
