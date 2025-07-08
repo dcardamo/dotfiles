@@ -64,6 +64,9 @@ in {
 
       # Scrollback
       scrollback-limit = 10000
+      
+      # Mouse scrolling
+      mouse-scroll-multiplier = 3
 
       # Window
       confirm-close-surface = true
