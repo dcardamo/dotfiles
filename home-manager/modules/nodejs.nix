@@ -10,10 +10,11 @@
     typescript
   ];
 
-  home.file = {
-    ".npmrc".text = ''
-      prefix=/Users/dan/.npm-global
-
-    '';
-  };
+  # npmrc is now managed by npm-packages.nix module
+  # home.file = {
+  #   ".npmrc".text = ''
+  #     prefix=/Users/dan/.npm-global
+  #
+  #   '';
+  # };
 }

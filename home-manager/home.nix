@@ -54,6 +54,7 @@ in {
     ./modules/helix
     ./modules/neovim.nix
     ./modules/nodejs.nix
+    ./modules/npm-packages.nix
     ./modules/python.nix
     ./modules/rust.nix
     ./modules/ssh.nix
@@ -86,6 +87,19 @@ in {
     # sqlite.databases = {
     #   "myapp" = "${home.homeDirectory}/databases/myapp.db";
     # };
+  };
+
+  # Enable global npm packages management
+  programs.npmPackages = {
+    enable = true;
+    packages = [
+      # MCP servers required by Claude
+      "@upstash/context7-mcp"
+      "mcp-sqlite"  # SQLite MCP server
+      "@modelcontextprotocol/server-filesystem"
+      # Claude Code CLI
+      "@anthropic-ai/claude-code"
+    ];
   };
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";

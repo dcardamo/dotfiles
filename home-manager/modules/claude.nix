@@ -15,7 +15,7 @@ with lib; let
         command = "npx";
         args = [
           "-y"
-          "@modelcontextprotocol/server-sqlite"
+          "mcp-sqlite"
           "--db-path"
           dbPath
         ];
@@ -224,6 +224,8 @@ in {
       # nodejs_20 is provided by nodejs.nix
     ];
 
+    # Claude Code CLI is now installed via npm-packages module
+
     # Claude configuration directory
     # Don't use home.file to create a read-only symlink
     # Instead, we'll copy the file in the setup script
@@ -270,7 +272,7 @@ in {
           mapAttrsToList (name: dbPath: ''
             if ! claude mcp list 2>/dev/null | grep -q "sqlite-${name}"; then
               echo "Adding SQLite server '${name}' for database: ${dbPath}"
-              claude mcp add --transport stdio --scope user "sqlite-${name}" npx @modelcontextprotocol/server-sqlite --db-path "${dbPath}"
+              claude mcp add --transport stdio --scope user "sqlite-${name}" npx mcp-sqlite --db-path "${dbPath}"
             fi
           '')
           cfg.sqlite.databases
