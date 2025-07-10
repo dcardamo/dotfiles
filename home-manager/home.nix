@@ -99,6 +99,8 @@ in {
       "@modelcontextprotocol/server-filesystem"
       # Claude Code CLI
       "@anthropic-ai/claude-code"
+      # OpenAI Codex
+      "@openai/codex"
     ];
   };
   # Nicely reload system units when changing configs
