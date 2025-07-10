@@ -52,16 +52,19 @@ in {
       # Add npm-global/bin to PATH for this session
       export PATH="${cfg.prefix}/bin:$PATH"
 
+      # Add Node.js from Nix to PATH
+      export PATH="${pkgs.nodejs}/bin:$PATH"
+
       # Function to check if a package is installed
       is_installed() {
-        npm list -g "$1" &>/dev/null
+        ${pkgs.nodejs}/bin/npm list -g "$1" &>/dev/null
       }
 
       # Install packages
       ${concatMapStringsSep "\n" (pkg: ''
         if ! is_installed "${pkg}"; then
           echo "Installing npm package: ${pkg}"
-          npm install -g "${pkg}" || echo "Failed to install ${pkg}"
+          ${pkgs.nodejs}/bin/npm install -g "${pkg}" || echo "Failed to install ${pkg}"
         else
           echo "npm package already installed: ${pkg}"
         fi
