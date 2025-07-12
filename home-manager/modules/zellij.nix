@@ -67,7 +67,7 @@ in {
       default_shell "zsh"
       mouse_mode true
       scroll_buffer_size 10000
-      copy_on_select false
+      copy_on_select true
       scrollback_editor "hx"
       session_serialization true
       pane_viewport_serialization true
