@@ -52,9 +52,7 @@ return {
           model = "claude-sonnet-4-20250514", -- Default to Sonnet 4
           -- Option 1: Use environment variable
           api_key_name = "ANTHROPIC_API_KEY",
-          -- Option 2: Use a password manager (example with 1Password)
-          -- api_key_name = "cmd:op read op://Personal/Claude/api_key",
-          -- Option 3: Use a secure file
+          -- Option 2: Use a secure file
           -- api_key_name = "cmd:cat ~/.config/claude/api_key",
           extra_request_body = {
             max_tokens = 8192,

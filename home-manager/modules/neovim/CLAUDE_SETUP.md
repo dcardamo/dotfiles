@@ -31,8 +31,8 @@ Avante.nvim requires an API key to use Claude. With your Claude Max subscription
    ```
    Then update the config to use: `api_key_name = "cmd:cat ~/.config/claude/api_key"`
 
-   **Option 3: Password Manager**
-   If you use 1Password, Bitwarden, etc., update the config accordingly.
+   **Option 3: Other Methods**
+   You can use password managers or other secure methods by updating the config accordingly.
 
 4. **Apply the configuration**:
    ```bash
