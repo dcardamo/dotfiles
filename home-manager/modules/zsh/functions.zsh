@@ -107,8 +107,8 @@ ghpr() {
     gh pr create --base "$base" --head "$branch" --title "$title" --body "$body"
 }
 
-# AI assistant function
-ai() {
+# Claude Bypass function (CB)
+cb() {
     if [[ -f /.dockerenv ]] || [[ -n "$CONTAINER_ID" ]]; then
         # In Docker container, use claude directly
         claude --dangerously-skip-permissions "$@"

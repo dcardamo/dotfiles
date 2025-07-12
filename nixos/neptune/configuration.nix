@@ -20,9 +20,9 @@
   services.xserver.videoDrivers = ["amdgpu"];
 
   # Graphics support
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
     extraPackages = with pkgs; [
       # OpenCL/ROCm support for AI workloads
       rocmPackages.clr.icd
@@ -45,6 +45,8 @@
       experimental-features = "nix-command flakes";
       # Deduplicate and optimize nix store
       auto-optimise-store = true;
+      # Trust the user to use restricted settings
+      trusted-users = [ "root" "dan" ];
     };
 
     gc = {
@@ -54,8 +56,8 @@
     };
 
     extraOptions = ''
-      extra-substituters = https://devenv.cachix.org;
-      extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=;
+      extra-substituters = https://devenv.cachix.org
+      extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=
     '';
   };
 
@@ -108,7 +110,7 @@
   programs.zsh.enable = true;
 
   # Audio support
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;

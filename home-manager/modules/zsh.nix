@@ -72,6 +72,7 @@ in {
       source ${./zsh/aliases.zsh}
       source ${./zsh/completions.zsh}
       source ${./zsh/prompt.zsh}
+      source ${./zsh/worktree.zsh}
       
       # Set BROWSER for Linux systems to use our wrapper
       ${lib.optionalString isLinux ''

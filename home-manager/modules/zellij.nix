@@ -67,14 +67,7 @@ in {
       default_shell "zsh"
       mouse_mode true
       scroll_buffer_size 10000
-      copy_on_select true
-      copy_command "${
-        if isDarwin
-        then "pbcopy"
-        else if isLinux
-        then "wl-copy"
-        else "xclip -selection clipboard"
-      }"
+      copy_on_select false
       scrollback_editor "hx"
       session_serialization true
       pane_viewport_serialization true
