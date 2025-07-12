@@ -6,3 +6,6 @@ Brewfile
 # Local settings files
 *.local.json
 *.local
+
+# Debug files
+debug.log

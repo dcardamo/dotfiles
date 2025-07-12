@@ -13,7 +13,6 @@ in {
     config = {
       allowUnfree = true;
       # Workaround for https://github.com/nix-community/home-manager/issues/2942
-      # allowUnfreePredicate = (_: true);
     };
   };
 
@@ -46,7 +45,6 @@ in {
     ./modules/claude.nix
     ./modules/dev.nix
     ./modules/devenv.nix
-    #./modules/elixir.nix
     ./modules/env-template.nix
     ./modules/fzf.nix
     ./modules/ghostty.nix
@@ -58,8 +56,6 @@ in {
     ./modules/python.nix
     ./modules/rust.nix
     ./modules/ssh.nix
-    # ./modules/starship
-    # ./modules/tmux.nix
     ./modules/wezterm.nix
     ./modules/zed
     ./modules/zellij.nix
