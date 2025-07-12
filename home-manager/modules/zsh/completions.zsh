@@ -9,7 +9,50 @@ _wt() {
     local projects_dir="$HOME/git"
     local worktrees_dir="$HOME/git/wt"
     
-    # Define the main arguments
+    # Check if we're dealing with --rm or --list
+    if [[ "${words[1]}" == "wt" ]] && ([[ "${words[2]}" == "--rm" ]] || [[ "${words[2]}" == "--list" ]]); then
+        case "${words[2]}" in
+            --list)
+                # No completion needed for --list
+                return 0
+                ;;
+            --rm)
+                # Handle --rm completion
+                case $CURRENT in
+                    3)
+                        # Complete project names
+                        local -a projects
+                        for dir in $projects_dir/*(N/); do
+                            if [[ -d "$dir/.git" ]]; then
+                                projects+=(${dir:t})
+                            fi
+                        done
+                        _describe -t projects 'project' projects && return 0
+                        ;;
+                    4)
+                        # Complete worktree names
+                        local project="${words[3]}"
+                        if [[ -n "$project" && -d "$worktrees_dir/$project" ]]; then
+                            local -a worktrees
+                            for wt in $worktrees_dir/$project/*(N/); do
+                                worktrees+=(${wt:t})
+                            done
+                            if (( ${#worktrees} > 0 )); then
+                                _describe -t worktrees 'worktree to remove' worktrees
+                            fi
+                        fi
+                        return 0
+                        ;;
+                    *)
+                        return 0
+                        ;;
+                esac
+                ;;
+        esac
+        return 0
+    fi
+    
+    # Define the main arguments for normal usage
     _arguments -C \
         '(--rm)--list[List all worktrees]' \
         '(--list)--rm[Remove a worktree]' \
@@ -21,10 +64,6 @@ _wt() {
     
     case $state in
         project)
-            if [[ "${words[1]}" == "--list" ]]; then
-                # No completion needed for --list
-                return 0
-            fi
             
             # Get list of projects (directories in ~/git that are git repos)
             local -a projects
