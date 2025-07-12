@@ -42,6 +42,14 @@ wt() {
     local projects_dir="$HOME/git"
     local worktrees_dir="$HOME/git/wt"
     
+    # Check if no arguments provided
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: wt <project> <worktree> [command...]"
+        echo "       wt --list"
+        echo "       wt --rm <project> <worktree>"
+        return 1
+    fi
+    
     # Handle special flags
     if [[ "$1" == "--list" ]]; then
         echo "=== All Worktrees ==="
@@ -57,6 +65,10 @@ wt() {
         fi
         return 0
     elif [[ "$1" == "--rm" ]]; then
+        if [[ $# -lt 3 ]]; then
+            echo "Usage: wt --rm <project> <worktree>"
+            return 1
+        fi
         shift
         local project="$1"
         local worktree="$2"
@@ -69,15 +81,41 @@ wt() {
             echo "Worktree not found: $wt_path"
             return 1
         fi
-        (cd "$projects_dir/$project" && git worktree remove "$wt_path")
-        return $?
+        
+        # Get the branch name before removing the worktree
+        local branch_name=$(cd "$wt_path" && git branch --show-current)
+        
+        # Remove the worktree
+        echo "Removing worktree: $worktree"
+        (cd "$projects_dir/$project" && git worktree remove "$wt_path") || {
+            echo "Failed to remove worktree"
+            return 1
+        }
+        
+        # Delete the branch if it exists
+        if [[ -n "$branch_name" ]]; then
+            echo "Deleting branch: $branch_name"
+            (cd "$projects_dir/$project" && git branch -D "$branch_name" 2>/dev/null) && {
+                echo "Branch deleted successfully"
+            } || {
+                echo "Branch could not be deleted (might be checked out elsewhere or doesn't exist)"
+            }
+        fi
+        
+        return 0
     fi
     
     # Normal usage: wt <project> <worktree> [command...]
     local project="$1"
     local worktree="$2"
-    shift 2
-    local command=("$@")
+    
+    # Only shift if we have at least 2 arguments
+    if [[ $# -ge 2 ]]; then
+        shift 2
+        local command=("$@")
+    else
+        local command=()
+    fi
     
     if [[ -z "$project" || -z "$worktree" ]]; then
         echo "Usage: wt <project> <worktree> [command...]"
@@ -114,6 +152,18 @@ wt() {
             echo "Failed to create worktree"
             return 1
         }
+        
+        # Copy .env file if it exists in the main project
+        if [[ -f "$projects_dir/$project/.env" ]]; then
+            echo "Found .env file - copying to worktree"
+            cp "$projects_dir/$project/.env" "$wt_path/.env"
+        fi
+        
+        # Auto-allow direnv if .envrc exists
+        if [[ -f "$wt_path/.envrc" ]]; then
+            echo "Found .envrc - running direnv allow"
+            (cd "$wt_path" && direnv allow)
+        fi
     fi
     
     # Execute based on number of arguments
@@ -131,107 +181,3 @@ wt() {
     fi
 }
 
-# Setup completion if not already done
-if [[ ! -f ~/.zsh/completions/_wt ]]; then
-    mkdir -p ~/.zsh/completions
-    cat > ~/.zsh/completions/_wt << 'EOF'
-#compdef wt
-
-_wt() {
-    local curcontext="$curcontext" state line
-    typeset -A opt_args
-    
-    local projects_dir="$HOME/git"
-    local worktrees_dir="$HOME/git/wt"
-    
-    # Define the main arguments
-    _arguments -C \
-        '(--rm)--list[List all worktrees]' \
-        '(--list)--rm[Remove a worktree]' \
-        '1: :->project' \
-        '2: :->worktree' \
-        '3: :->command' \
-        '*:: :->command_args' \
-        && return 0
-    
-    case $state in
-        project)
-            if [[ "${words[1]}" == "--list" ]]; then
-                # No completion needed for --list
-                return 0
-            fi
-            
-            # Get list of projects (directories in ~/git that are git repos)
-            local -a projects
-            for dir in $projects_dir/*(N/); do
-                if [[ -d "$dir/.git" ]]; then
-                    projects+=(${dir:t})
-                fi
-            done
-            
-            _describe -t projects 'project' projects && return 0
-            ;;
-            
-        worktree)
-            local project="${words[2]}"
-            
-            if [[ -z "$project" ]]; then
-                return 0
-            fi
-            
-            local -a worktrees
-            
-            # Check for existing worktrees
-            if [[ -d "$worktrees_dir/$project" ]]; then
-                for wt in $worktrees_dir/$project/*(N/); do
-                    worktrees+=(${wt:t})
-                done
-            fi
-            
-            if (( ${#worktrees} > 0 )); then
-                _describe -t worktrees 'existing worktree' worktrees
-            else
-                _message 'new worktree name'
-            fi
-            ;;
-            
-        command)
-            # Suggest common commands when user has typed project and worktree
-            local -a common_commands
-            common_commands=(
-                'cb:Start Claude Bypass session'
-                'gst:Git status'
-                'gaa:Git add all'
-                'gcmsg:Git commit with message'
-                'gp:Git push'
-                'gco:Git checkout'
-                'gd:Git diff'
-                'gl:Git log'
-                'npm:Run npm commands'
-                'yarn:Run yarn commands'
-                'make:Run make commands'
-            )
-            
-            _describe -t commands 'command' common_commands
-            
-            # Also complete regular commands
-            _command_names -e
-            ;;
-            
-        command_args)
-            # Let zsh handle completion for the specific command
-            words=(${words[4,-1]})
-            CURRENT=$((CURRENT - 3))
-            _normal
-            ;;
-    esac
-}
-
-_wt "$@"
-EOF
-    # Add completions to fpath if not already there
-    fpath=(~/.zsh/completions $fpath)
-fi
-
-# Initialize completions
-autoload -U compinit && compinit

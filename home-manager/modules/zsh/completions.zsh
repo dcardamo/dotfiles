@@ -1,6 +1,99 @@
 #!/usr/bin/env zsh
 # ZSH completions
 
+# wt command completion
+_wt() {
+    local curcontext="$curcontext" state line
+    typeset -A opt_args
+    
+    local projects_dir="$HOME/git"
+    local worktrees_dir="$HOME/git/wt"
+    
+    # Define the main arguments
+    _arguments -C \
+        '(--rm)--list[List all worktrees]' \
+        '(--list)--rm[Remove a worktree]' \
+        '1: :->project' \
+        '2: :->worktree' \
+        '3: :->command' \
+        '*:: :->command_args' \
+        && return 0
+    
+    case $state in
+        project)
+            if [[ "${words[1]}" == "--list" ]]; then
+                # No completion needed for --list
+                return 0
+            fi
+            
+            # Get list of projects (directories in ~/git that are git repos)
+            local -a projects
+            for dir in $projects_dir/*(N/); do
+                if [[ -d "$dir/.git" ]]; then
+                    projects+=(${dir:t})
+                fi
+            done
+            
+            _describe -t projects 'project' projects && return 0
+            ;;
+            
+        worktree)
+            local project="${words[2]}"
+            
+            if [[ -z "$project" ]]; then
+                return 0
+            fi
+            
+            local -a worktrees
+            
+            # Check for existing worktrees
+            if [[ -d "$worktrees_dir/$project" ]]; then
+                for wt in $worktrees_dir/$project/*(N/); do
+                    worktrees+=(${wt:t})
+                done
+            fi
+            
+            if (( ${#worktrees} > 0 )); then
+                _describe -t worktrees 'existing worktree' worktrees
+            else
+                _message 'new worktree name'
+            fi
+            ;;
+            
+        command)
+            # Suggest common commands when user has typed project and worktree
+            local -a common_commands
+            common_commands=(
+                'cb:Start Claude Bypass session'
+                'gst:Git status'
+                'gaa:Git add all'
+                'gcmsg:Git commit with message'
+                'gp:Git push'
+                'gco:Git checkout'
+                'gd:Git diff'
+                'gl:Git log'
+                'npm:Run npm commands'
+                'yarn:Run yarn commands'
+                'make:Run make commands'
+            )
+            
+            _describe -t commands 'command' common_commands
+            
+            # Also complete regular commands
+            _command_names -e
+            ;;
+            
+        command_args)
+            # Let zsh handle completion for the specific command
+            words=(${words[4,-1]})
+            CURRENT=$((CURRENT - 3))
+            _normal
+            ;;
+    esac
+}
+
+compdef _wt wt
+
 # Git worktree completion
 _git-worktree() {
     local curcontext="$curcontext" state line
