@@ -7,6 +7,7 @@ alias "!!"="fc -s"
 alias df="duf"
 alias tar="tar --use-compress-program='pigz -p 24'"
 alias clear="clear && tput cup \$(tput lines)"
+alias sqlite3="litecli"
 
 # ls aliases using lsd
 alias ls="lsd --group-directories-first"

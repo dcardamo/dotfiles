@@ -8,6 +8,7 @@
     gnumake
     direnv
     pgcli
+    litecli
     jq
     sqlite
     git

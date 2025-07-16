@@ -4,21 +4,25 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.npmPackages;
-in {
+in
+{
   options.programs.npmPackages = {
     enable = mkEnableOption "Global npm packages management";
 
     packages = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
+      # ******* NOTE!!!!! this just examples, if you add here it doesn't actually add it! *****
       example = [
         "@upstash/context7-mcp"
         "@modelcontextprotocol/server-sqlite"
         "@modelcontextprotocol/server-filesystem"
         "typescript"
         "prettier"
+        "@google/gemini-cli"
       ];
       description = "List of npm packages to install globally";
     };
@@ -42,13 +46,13 @@ in {
     '';
 
     # Install global npm packages
-    home.activation.npmGlobalPackages = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    home.activation.npmGlobalPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       # Ensure npm-global directory exists
       mkdir -p ${cfg.prefix}
 
       # Ensure npm is configured with the right prefix
       export npm_config_prefix="${cfg.prefix}"
-      
+
       # Add npm-global/bin to PATH for this session
       export PATH="${cfg.prefix}/bin:$PATH"
 

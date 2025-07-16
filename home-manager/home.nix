@@ -97,6 +97,8 @@ in {
       "@anthropic-ai/claude-code"
       # OpenAI Codex
       "@openai/codex"
+      # Google Gemini CLI
+      "@google/gemini-cli"
     ];
   };
   # Nicely reload system units when changing configs
