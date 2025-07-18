@@ -122,6 +122,8 @@ cb() {
 }
 
 # Gemini Bypass function (GB)
+# Unalias gb from oh-my-zsh git plugin
+unalias gb 2>/dev/null || true
 gb() {
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         # On Linux, run without isolation

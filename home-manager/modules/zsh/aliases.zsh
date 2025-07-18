@@ -47,7 +47,7 @@ alias csqlite="claude-mcp sqlite"
 alias cdocs="echo 'Just add \"use context7\" to any Claude prompt for up-to-date docs!'"
 
 # Gemini commands
-alias gb="gb"
+# gb is defined as a function in functions.zsh
 
 # Ghostty shortcuts
 alias gt="ghostty_tab_title"
