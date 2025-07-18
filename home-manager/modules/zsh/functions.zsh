@@ -121,6 +121,17 @@ cb() {
     fi
 }
 
+# Gemini Bypass function (GB)
+gb() {
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        # On Linux, run without isolation
+        gemini --sandbox.mode=linux-user --sandbox.auto-approve "$@"
+    else
+        # On Mac, use seatbelt
+        gemini --sandbox.mode=darwin-seatbelt --sandbox.auto-approve "$@"
+    fi
+}
+
 # Helper function to list worktrees for completion
 __git_worktrees() {
     local -a worktrees

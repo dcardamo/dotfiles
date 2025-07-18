@@ -46,5 +46,8 @@ alias csandbox="claude-mac-sandbox"
 alias csqlite="claude-mcp sqlite"
 alias cdocs="echo 'Just add \"use context7\" to any Claude prompt for up-to-date docs!'"
 
+# Gemini commands
+alias gb="gb"
+
 # Ghostty shortcuts
 alias gt="ghostty_tab_title"
