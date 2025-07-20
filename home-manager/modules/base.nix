@@ -6,6 +6,10 @@
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
   inherit (stdenv) isDarwin;
+  
+  # Control browsh installation - disabled by default
+  # Set to true to enable browsh and firefox
+  enableBrowsh = false;
 in {
   xdg.configFile = {
     "ripgrep_ignore".text = ''
@@ -48,8 +52,9 @@ in {
       pigz
       pwgen
       skim
+      unzip
     ]
-    ++ lib.lists.optionals isLinux [
+    ++ lib.lists.optionals (isLinux && enableBrowsh) [
       browsh # Text-based web browser with Firefox rendering
       firefox # Required dependency for browsh
     ]

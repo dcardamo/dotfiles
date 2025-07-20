@@ -71,7 +71,7 @@
   # Firewall configuration
   networking.firewall = {
     enable = true;  # Firewall is enabled by default, but being explicit
-    allowedTCPPorts = [ 3008 ];
+    allowedTCPPorts = [ 3008 3010 ];
   };
 
   time.timeZone = "Canada/Toronto";

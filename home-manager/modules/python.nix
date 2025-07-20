@@ -33,7 +33,7 @@
     uv
 
     # Python with packages
-    (python3.withPackages
+    (python312.withPackages
       (p:
         with p; [
           black
