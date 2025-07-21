@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# mosh-cleanup - Clean up orphaned mosh-server processes
+#
+# Uses SIGUSR1 to safely clean up detached mosh sessions
+# SIGUSR1 causes mosh-server to exit only if the client is disconnected
+
+VERBOSE=false
+KILL_ALL_EXCEPT_CURRENT=false
+
+usage() {
+    cat << EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Clean up orphaned mosh-server processes.
+
+OPTIONS:
+    -h, --help                    Show this help message
+    -v, --verbose                 Show verbose output
+    -k, --kill-all-except-current Kill all mosh-server processes except the current session
+                                  (uses SIGTERM instead of SIGUSR1)
+
+By default, sends SIGUSR1 to all mosh-server processes, which causes them
+to exit only if they have no active client connection.
+
+EOF
+}
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        -v|--verbose)
+            VERBOSE=true
+            shift
+            ;;
+        -k|--kill-all-except-current)
+            KILL_ALL_EXCEPT_CURRENT=true
+            shift
+            ;;
+        *)
+            echo "Unknown option: $1" >&2
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+# Get current mosh-server PID if we're in a mosh session
+CURRENT_MOSH_PID=""
+if [[ -n "${MOSH_SERVER_PID:-}" ]]; then
+    CURRENT_MOSH_PID="$MOSH_SERVER_PID"
+    if $VERBOSE; then
+        echo "Current mosh session PID: $CURRENT_MOSH_PID"
+    fi
+fi
+
+# Find all mosh-server processes
+MOSH_PIDS=$(pgrep -f "mosh-server" || true)
+
+if [[ -z "$MOSH_PIDS" ]]; then
+    echo "No mosh-server processes found."
+    exit 0
+fi
+
+# Count processes
+TOTAL_COUNT=$(echo "$MOSH_PIDS" | wc -w)
+CLEANED_COUNT=0
+
+if $VERBOSE; then
+    echo "Found $TOTAL_COUNT mosh-server process(es):"
+    ps -p $(echo $MOSH_PIDS | tr '\n' ',') -o pid,ppid,user,start,cmd
+    echo
+fi
+
+# Process each mosh-server
+for pid in $MOSH_PIDS; do
+    # Skip current session
+    if [[ "$pid" == "$CURRENT_MOSH_PID" ]]; then
+        if $VERBOSE; then
+            echo "Skipping current session (PID $pid)"
+        fi
+        continue
+    fi
+    
+    # Verify process still exists and is mosh-server
+    if ! ps -p "$pid" -o comm= | grep -q "mosh-server"; then
+        continue
+    fi
+    
+    if $KILL_ALL_EXCEPT_CURRENT; then
+        # Kill with SIGTERM
+        if $VERBOSE; then
+            echo "Killing mosh-server PID $pid with SIGTERM..."
+        fi
+        if kill -TERM "$pid" 2>/dev/null; then
+            ((CLEANED_COUNT++))
+        fi
+    else
+        # Send SIGUSR1 (safe cleanup)
+        if $VERBOSE; then
+            echo "Sending SIGUSR1 to mosh-server PID $pid..."
+        fi
+        if kill -USR1 "$pid" 2>/dev/null; then
+            ((CLEANED_COUNT++))
+        fi
+    fi
+done
+
+# Summary
+if $KILL_ALL_EXCEPT_CURRENT; then
+    echo "Killed $CLEANED_COUNT mosh-server process(es) (excluded current session)"
+else
+    echo "Sent SIGUSR1 to $CLEANED_COUNT mosh-server process(es)"
+    echo "Note: Only detached sessions will be terminated"
+fi

@@ -29,3 +29,7 @@ alias ztn="zellij_name_tab"
 
 # Ghostty shortcuts
 alias gt="ghostty_tab_title"
+
+# Mosh cleanup aliases
+alias moshkill="mosh-cleanup"
+alias moshls="ps aux | grep -E 'mosh-server|mosh \[' | grep -v grep"
