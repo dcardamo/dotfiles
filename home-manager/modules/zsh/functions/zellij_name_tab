@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+# Manual tab naming command
+
+zellij_name_tab() {
+    if [ -n "$ZELLIJ" ]; then
+        if [ -n "$1" ]; then
+            command zellij action rename-tab "$1"
+        else
+            echo "Usage: zellij_name_tab <tab_name>"
+        fi
+    else
+        echo "Not in a Zellij session"
+    fi
+}

@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+# Claude Bypass function (CB)
+
+cb() {
+    if [[ -f /.dockerenv ]] || [[ -n "$CONTAINER_ID" ]]; then
+        # In Docker container, use claude directly
+        claude --dangerously-skip-permissions "$@"
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        # On Linux, use claude directly
+        claude --dangerously-skip-permissions "$@"
+    else
+        # On Mac, use claude-mac-sandbox
+        claude-mac-sandbox run --dangerously-skip-permissions "$@"
+    fi
+}

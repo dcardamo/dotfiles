@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+# Ghostty tab title function
+
+if [ -n "$GHOSTTY_RESOURCES_DIR" ]; then
+    ghostty_tab_title() {
+        if [ -n "$1" ]; then
+            printf "\033]0;%s\007" "$1"
+        fi
+    }
+fi

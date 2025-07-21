@@ -1,0 +1,22 @@
+#!/usr/bin/env zsh
+# Gemini Bypass function (GB)
+
+# Unalias gb from oh-my-zsh git plugin
+unalias gb 2>/dev/null || true
+
+gb() {
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        # On Linux, run without isolation
+        gemini --sandbox.mode=linux-user --sandbox.auto-approve "$@"
+    else
+        # On Mac, use seatbelt
+        gemini --sandbox.mode=darwin-seatbelt --sandbox.auto-approve "$@"
+    fi
+}
+
+# Helper function to list worktrees for completion
+__git_worktrees() {
+    local -a worktrees
+    worktrees=(${${(f)"$(git worktree list --porcelain 2>/dev/null | grep '^worktree' | cut -d' ' -f2-)"}%%:*})
+    _describe -t worktrees 'worktree' worktrees
+}
