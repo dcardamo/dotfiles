@@ -84,7 +84,7 @@
     isNormalUser = true;
     description = "Dan Cardamore";
     shell = pkgs.zsh;
-    extraGroups = ["wheel" "video" "audio" "networkmanager" "ollama"]; # Enable 'sudo' and hardware access
+    extraGroups = ["wheel" "video" "audio" "networkmanager" "ollama" "docker"]; # Enable 'sudo' and hardware access
     openssh.authorizedKeys.keys = vars.authorizedSshKeys;
   };
 
@@ -137,6 +137,14 @@
       OLLAMA_NUM_GPU = "999";  # Use all available GPU layers
       HSA_OVERRIDE_GFX_VERSION = "11.0.0";  # May be needed for some AMD GPUs
     };
+  };
+
+  # Docker support
+  virtualisation.docker = {
+    enable = true;
+    enableOnBoot = true;
+    # Enable GPU support in Docker containers
+    enableNvidia = false;
   };
 
   system.stateVersion = "24.11"; # Did you read the comment?
