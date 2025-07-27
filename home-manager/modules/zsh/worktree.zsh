@@ -153,10 +153,10 @@ wt() {
             return 1
         }
         
-        # Copy .env file if it exists in the main project
+        # Symlink .env file if it exists in the main project
         if [[ -f "$projects_dir/$project/.env" ]]; then
-            echo "Found .env file - copying to worktree"
-            cp "$projects_dir/$project/.env" "$wt_path/.env"
+            echo "Found .env file - creating symlink in worktree"
+            ln -sf "$projects_dir/$project/.env" "$wt_path/.env"
         fi
         
         # Auto-allow direnv if .envrc exists
