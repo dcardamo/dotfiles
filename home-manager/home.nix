@@ -83,6 +83,12 @@ in {
     # sqlite.databases = {
     #   "myapp" = "${home.homeDirectory}/databases/myapp.db";
     # };
+    
+    # Enable ntfy.sh notifications when Claude completes
+    ntfyNotifications = {
+      enable = true;
+      topicUrl = "https://ntfy.sh/dancardamore_claude_done";
+    };
   };
 
   # Enable global npm packages management

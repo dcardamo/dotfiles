@@ -76,6 +76,20 @@ with lib; let
       {
         model = cfg.defaultModel;
       }
+      // (optionalAttrs cfg.ntfyNotifications.enable {
+        hooks = {
+          Stop = [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = "${config.home.homeDirectory}/.config/claude/send-ntfy-notification.sh";
+                }
+              ];
+            }
+          ];
+        };
+      })
       // cfg.extraSettings
     );
   };
@@ -137,6 +151,21 @@ in {
       type = types.attrsOf types.anything;
       default = {};
       description = "Extra settings to add to Claude configuration";
+    };
+
+    ntfyNotifications = {
+      enable = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable ntfy.sh notifications when Claude completes";
+      };
+      
+      topicUrl = mkOption {
+        type = types.str;
+        default = "";
+        example = "https://ntfy.sh/my_topic";
+        description = "ntfy.sh topic URL for notifications";
+      };
     };
 
     sqlite = {
@@ -296,6 +325,52 @@ in {
 
     # CLAUDE.md template
     home.file.".config/claude/CLAUDE.md.template".source = claudeMdTemplate;
+
+    # ntfy notification script
+    home.file.".config/claude/send-ntfy-notification.sh" = mkIf cfg.ntfyNotifications.enable {
+      text = ''
+        #!/usr/bin/env bash
+
+        # Send notification to ntfy.sh when Claude completes
+        TOPIC_URL="${cfg.ntfyNotifications.topicUrl}"
+        TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+        HOSTNAME=$(hostname)
+
+        # Read the hook input from stdin
+        HOOK_INPUT=$(cat)
+
+        # Extract transcript path from the input
+        TRANSCRIPT_PATH=$(echo "$HOOK_INPUT" | ${pkgs.jq}/bin/jq -r '.transcript_path // empty')
+
+        # Default summary
+        TASK_SUMMARY="Task completed"
+        WORKING_DIR=$(pwd)
+
+        # If we have a transcript, try to extract context
+        if [ -n "$TRANSCRIPT_PATH" ] && [ -f "$TRANSCRIPT_PATH" ]; then
+            # Get the last user message from the transcript (max 100 chars)
+            LAST_USER_MSG=$(tail -n 20 "$TRANSCRIPT_PATH" | ${pkgs.jq}/bin/jq -r 'select(.role == "user") | .content' | tail -1 | head -c 100)
+            
+            # Create a short summary (first 5 words or 30 chars)
+            if [ -n "$LAST_USER_MSG" ]; then
+                # Take first 5 words or 30 characters, whichever is shorter
+                TASK_SUMMARY=$(echo "$LAST_USER_MSG" | awk '{for(i=1;i<=5&&i<=NF;i++)printf "%s ",$i}' | head -c 30 | sed 's/[[:space:]]*$//')
+                [ -n "$TASK_SUMMARY" ] && TASK_SUMMARY="''${TASK_SUMMARY}..."
+            fi
+        fi
+
+        # Send the notification with context
+        ${pkgs.curl}/bin/curl -X POST "''${TOPIC_URL}" \
+          -H "Title: Claude Completed: ''${TASK_SUMMARY}" \
+          -H "Priority: default" \
+          -H "Tags: robot,white_check_mark" \
+          -d "Finished at ''${TIMESTAMP} in ''${WORKING_DIR}"
+
+        # Exit with success to not block Claude
+        exit 0
+      '';
+      executable = true;
+    };
 
     # Claude custom commands
     home.file.".claude/commands/worktree-new.md".source = ./claude/commands/worktree-new.md;
