@@ -98,6 +98,7 @@
     neofetch
     pciutils
     usbutils
+    docker-compose
   ];
 
   # Enable firmware updates
