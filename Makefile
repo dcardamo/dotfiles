@@ -1,9 +1,6 @@
 install-darwin:
 	./bin/install-darwin.bash
 
-sudo:
-	sudo echo "authenticated"
-
 backup:
 	./bin/backup-dotfiles.sh
 
@@ -16,7 +13,7 @@ update-system:
 update-docker-services:
 	./bin/update-docker-services.sh
 
-update-all: sudo backup update-system update update-docker-services
+update-all: backup update-system update update-docker-services
 
 format:
 	alejandra .

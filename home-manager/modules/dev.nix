@@ -46,6 +46,6 @@
     docker-compose-language-service
     dockerfile-language-server-nodejs
     yaml-language-server
-    elixir-ls
+    (pkgs.lowPrio elixir-ls)
   ];
 }

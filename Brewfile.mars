@@ -9,9 +9,10 @@ brew "mas"
 brew "ollama", restart_service: true
 #brew "syncthing", restart_service: true
 
-cask "android-file-transfer"
+#cask "android-file-transfer"
 cask "android-platform-tools"
-cask "arq"
+#cask "android-studio"
+#cask "arq"
 cask "bambu-studio"
 cask "beeper"
 cask "betterdisplay"
@@ -29,9 +30,9 @@ cask "qmk-toolbox"
 cask "reader"
 cask "stats"
 cask "steermouse", args: { appdir: "/Applications" }
-cask "utm"
+#cask "utm"
 #cask "wezterm"
-cask "windsurf"
+#cask "windsurf"
 cask "zed"
 
 #cask "github"
