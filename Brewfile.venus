@@ -4,18 +4,16 @@ tap "buo/cask-upgrade"
 cask_args appdir: "~/Applications", require_sha: true
 
 brew "mas"
-#brew "docker-compose"
 
 cask "arq"
 cask "bambu-studio"
 cask "filen"
 cask "font-fira-code-nerd-font"
+cask "ghostty"
 cask "keka"
 cask "orbstack"
 cask "stats"
-#cask "sync"
 cask "font-victor-mono-nerd-font"
-cask "wezterm"
 
 mas "Daisy Disk", id: 411643860
 
