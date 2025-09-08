@@ -384,6 +384,14 @@ in {
       CLAUDE_DEFAULT_MODEL = cfg.defaultModel;
       # Ensure no API key is accidentally used
       ANTHROPIC_API_KEY = "";
+      # Force color output for Claude Code (fixes Termius/SSH color issues)
+      COLORTERM = "truecolor";
+      FORCE_COLOR = "3";
+      CLICOLOR = "1";
+      CLICOLOR_FORCE = "1";
+      # Additional color support
+      TERM = lib.mkDefault "xterm-256color";
+      NO_COLOR = "";  # Ensure NO_COLOR is not set
     };
   };
 }

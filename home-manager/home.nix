@@ -56,6 +56,7 @@ in {
     ./modules/python.nix
     ./modules/rust.nix
     ./modules/ssh.nix
+    ./modules/tmux.nix
     ./modules/wezterm.nix
     ./modules/zed
     ./modules/zellij.nix

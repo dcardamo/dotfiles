@@ -3,6 +3,12 @@
 
 # Claude Bypass function (CB)
 cb() {
+    # Force color output for Claude
+    export FORCE_COLOR=3
+    export COLORTERM=truecolor
+    export CLICOLOR=1
+    export CLICOLOR_FORCE=1
+    
     if [[ -f /.dockerenv ]] || [[ -n "$CONTAINER_ID" ]]; then
         # In Docker container, use claude directly
         claude --dangerously-skip-permissions "$@"
