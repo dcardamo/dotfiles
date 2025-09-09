@@ -87,7 +87,7 @@
     useRoutingFeatures = "server"; # Enables IP forwarding automatically
     authKeyFile = "/run/secrets/tailscale-auth"; # Required for extraUpFlags to work
     extraUpFlags = [
-      "--advertise-routes=10.0.0.0/24"
+      "--advertise-routes=10.0.3.0/24"
       "--accept-routes"
       "--advertise-exit-node" # This makes it an exit node
     ];
