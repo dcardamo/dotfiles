@@ -10,7 +10,7 @@ set -e
 
 # Configuration
 REMOTE="astro@jupiter"
-LOCAL_DIR="$HOME/jupiter"
+LOCAL_DIR="$HOME/astro/jupiter"
 PLIST_NAME="com.user.sync-jupiter"
 PLIST_PATH="$HOME/Library/LaunchAgents/${PLIST_NAME}.plist"
 LOG_DIR="$HOME/Library/Logs"
