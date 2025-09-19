@@ -1,5 +1,7 @@
-{pkgs, ...}: {
-  home.packages = with pkgs;
+{ pkgs, ... }:
+{
+  home.packages =
+    with pkgs;
     [
       rustc
       cargo
@@ -35,13 +37,14 @@
       gdb
     ]
     ++ lib.optionals pkgs.stdenv.isDarwin (
-      with pkgs.darwin.apple_sdk; [
-        frameworks.Security
-        frameworks.SystemConfiguration
-        frameworks.CoreServices
-        frameworks.CoreFoundation
-        pkgs.libiconv
-      ]
+      [ ]
+      # with pkgs.darwin.apple_sdk; [
+      #   frameworks.Security
+      #   frameworks.SystemConfiguration
+      #   frameworks.CoreServices
+      #   frameworks.CoreFoundation
+      #   pkgs.libiconv
+      # ]
     );
 
   # Rust environment variables

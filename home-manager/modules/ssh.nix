@@ -1,6 +1,10 @@
 {
   programs.ssh = {
     enable = true;
-    forwardAgent = true;
+    enableDefaultConfig = false;
+
+    matchBlocks."*" = {
+      forwardAgent = true;
+    };
   };
 }
