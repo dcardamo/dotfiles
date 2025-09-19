@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Simple astrophotography sync script
+# Simple astrophotography sync and backup script
 # Usage:
 #   ./sync-jupiter.sh              - Run sync normally regardless of power status
 #   ./sync-jupiter.sh --cron       - Only run if on AC power (for scheduled runs)
@@ -156,6 +156,36 @@ do_sync() {
     log_message "Sync complete!"
 }
 
+# Function to perform daily backups
+do_backup() {
+    BACKUP_PATHS=(
+        "/mnt/c/Users/astro/AppData/Local/NINA/Profiles"
+        "/mnt/c/Users/astro/Documents/N.I.N.A"
+    )
+
+    local date_dir
+    date_dir="$(date +%Y.%m.%d)"
+    local backup_base="$LOCAL_DIR/backups"
+    local backup_dir="$backup_base/$date_dir"
+
+    mkdir -p "$backup_dir"
+
+    for src in "${BACKUP_PATHS[@]}"; do
+        local dest="$backup_dir$src"
+        log_message "Backing up $src to $dest"
+        mkdir -p "$(dirname "$dest")"
+        rsync -avz --progress "$REMOTE:$src/" "$dest/"
+    done
+
+    log_message "Backup complete!"
+}
+
+# Combined sync and daily backup
+do_sync_and_backup() {
+    do_sync
+    do_backup
+}
+
 # Function to show usage
 show_usage() {
     echo "Usage: $0 [OPTION]"
@@ -184,7 +214,7 @@ case "${1:-}" in
         fi
 
         log_message "On AC power, proceeding with sync..."
-        do_sync
+do_sync_and_backup
         ;;
     "--cron-install")
         install_cron_service
@@ -198,7 +228,7 @@ case "${1:-}" in
     "")
         # No arguments, run sync normally
         log_message "Running sync..."
-        do_sync
+        do_sync_and_backup
         ;;
     *)
         echo "❌ Error: Unknown option '$1'"
