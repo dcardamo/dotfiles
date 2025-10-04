@@ -24,6 +24,7 @@ cask "fmail3"
 cask "font-iosevka-nerd-font"
 cask "font-fira-code-nerd-font"
 cask "font-victor-mono-nerd-font"
+cask "ghostty"
 cask "keka"
 cask "notesnook"
 cask "orbstack"
@@ -32,14 +33,13 @@ cask "qmk-toolbox"
 cask "reader"
 cask "stats"
 cask "steermouse", args: { appdir: "/Applications" }
-cask "thunderbird"
+#cask "thunderbird"
 #cask "utm"
 #cask "wezterm"
 #cask "windsurf"
 cask "zed"
 
 #cask "github"
-cask "ghostty"
 #cask "shutter-encoder" # no sha
 #cask "chromedriver" # motive e2e tests
 #cask "cursor"
@@ -54,7 +54,6 @@ cask "ghostty"
 #cask "steam" # no sha
 #cask "visual-studio-code"
 
-#mas "AdGuard for Safari", id: 1440147259
 mas "1Password for Safari", id: 1569813296
 mas "Daisy Disk", id: 411643860
 mas "Home Assistant", id: 1099568401
@@ -67,8 +66,10 @@ mas "Pages", id: 409201541
 mas "Passepartout", id: 1433648537
 mas "reMarkable", id: 1276493162
 mas "Soulver 3", id: 1508732804
-#mas "xSearch", id: 1579902068
+mas "Todoist", id: 585829637
 
+#mas "AdGuard for Safari", id: 1440147259
+#mas "xSearch", id: 1579902068
 #mas "Affinity Publisher 2", id: 1606941598
 #mas "Paprika Recipe Manager 3", id: 1303222628
 #mas "Save to Reader", id: 1640236961
