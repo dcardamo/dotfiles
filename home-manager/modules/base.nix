@@ -44,7 +44,7 @@ in {
 
       # other utils and plugin dependencies
       fd
-      catimg
+      #catimg -- failing build
       #luajitPackages.jsregexp #not sure what this is for.  comment out for now.
       fzf
       # pv # visualize pipe streams

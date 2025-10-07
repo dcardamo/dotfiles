@@ -26,10 +26,8 @@
     extraPackages = with pkgs; [
       # OpenCL/ROCm support for AI workloads
       rocmPackages.clr.icd
-      amdvlk
     ];
     extraPackages32 = with pkgs; [
-      driversi686Linux.amdvlk
     ];
   };
 
