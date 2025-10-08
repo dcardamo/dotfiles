@@ -4,11 +4,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (pkgs) stdenv;
   inherit (stdenv) isLinux;
   inherit (stdenv) isDarwin;
-in {
+in
+{
   nixpkgs = {
     config = {
       allowUnfree = true;
@@ -23,10 +25,7 @@ in {
   manual.json.enable = false;
 
   home.username = "dan";
-  home.homeDirectory =
-    if isLinux
-    then "/home/dan"
-    else "/Users/dan";
+  home.homeDirectory = if isLinux then "/home/dan" else "/Users/dan";
 
   home.packages =
     lib.lists.optionals isDarwin [
@@ -84,7 +83,7 @@ in {
     # sqlite.databases = {
     #   "myapp" = "${home.homeDirectory}/databases/myapp.db";
     # };
-    
+
     # Enable ntfy.sh notifications when Claude completes
     ntfyNotifications = {
       enable = true;
@@ -98,7 +97,7 @@ in {
     packages = [
       # MCP servers required by Claude
       "@upstash/context7-mcp"
-      "mcp-sqlite"  # SQLite MCP server
+      "mcp-sqlite" # SQLite MCP server
       "@modelcontextprotocol/server-filesystem"
       # Claude Code CLI
       "@anthropic-ai/claude-code"
@@ -106,6 +105,9 @@ in {
       "@openai/codex"
       # Google Gemini CLI
       "@google/gemini-cli"
+
+      # Zed editor agent support
+      "zedcode-acps"
     ];
   };
   # Nicely reload system units when changing configs
