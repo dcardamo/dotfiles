@@ -59,19 +59,17 @@ in
       # Add Node.js from Nix to PATH
       export PATH="${pkgs.nodejs}/bin:$PATH"
 
-      # Function to check if a package is installed
-      is_installed() {
-        ${pkgs.nodejs}/bin/npm list -g "$1" &>/dev/null
+      ensure_package() {
+        local pkg="$1"
+        echo "Ensuring npm package: $pkg"
+        if ! ${pkgs.nodejs}/bin/npm install -g "$pkg"; then
+          echo "Failed to install $pkg"
+        fi
       }
 
       # Install packages
       ${concatMapStringsSep "\n" (pkg: ''
-        if ! is_installed "${pkg}"; then
-          echo "Installing npm package: ${pkg}"
-          ${pkgs.nodejs}/bin/npm install -g "${pkg}" || echo "Failed to install ${pkg}"
-        else
-          echo "npm package already installed: ${pkg}"
-        fi
+        ensure_package ${lib.escapeShellArg pkg}
       '') cfg.packages}
 
       echo "npm global packages installation complete"

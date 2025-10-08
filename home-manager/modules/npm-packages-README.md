@@ -22,15 +22,14 @@ programs.npmPackages = {
 
 ## Features
 
-- Automatically installs npm packages globally when running `home-manager switch`
-- Checks if packages are already installed to avoid redundant installations
+- Automatically installs or updates npm packages globally when running `home-manager switch`
 - Configures npm prefix to `~/.npm-global` by default
 - Integrates with the PATH configuration (already set up in zsh)
 
 ## How it works
 
 1. The module creates/updates `.npmrc` with the global prefix
-2. During `home.activation`, it runs npm install for each package
+2. During `home.activation`, it runs `npm install -g` for each requested package (updating if already present)
 3. Packages are installed to `~/.npm-global`
 4. The PATH already includes `~/.npm-global/bin` (from zsh configuration)
 

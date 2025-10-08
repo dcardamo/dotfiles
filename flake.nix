@@ -17,7 +17,12 @@
     nixpkgs,
     home-manager,
     ...
-  } @ inputs: {
+  } @ inputs:
+    let
+      overlays = [
+        (import ./overlays/clblast.nix)
+      ];
+    in {
     nixosConfigurations = {
       # GMKtec EVO-X2 with AMD Ryzen AI Max 395
       neptune = nixpkgs.lib.nixosSystem {
@@ -25,6 +30,7 @@
         pkgs = import nixpkgs {
           system = "x86_64-linux";
           config.allowUnfree = true;
+          inherit overlays;
         };
         specialArgs = {
           inherit inputs;
@@ -58,6 +64,7 @@
         pkgs = import nixpkgs {
           system = "x86_64-linux";
           config.allowUnfree = true;
+          inherit overlays;
         };
         specialArgs = {
           inherit inputs;
@@ -91,6 +98,7 @@
         pkgs = import nixpkgs {
           system = "x86_64-linux";
           config.allowUnfree = true;
+          inherit overlays;
         };
         specialArgs = {
           inherit inputs;
@@ -122,6 +130,7 @@
         pkgs = import nixpkgs {
           system = "aarch64-linux";
           config.allowUnfree = true;
+          inherit overlays;
         };
         specialArgs = {
           inherit inputs;
@@ -152,7 +161,11 @@
     # Available through 'home-manager --flake .#your-username@your-hostname'
     homeConfigurations = {
       "mac" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+        pkgs = import nixpkgs {
+          system = "aarch64-darwin";
+          config.allowUnfree = true;
+          inherit overlays;
+        };
         extraSpecialArgs = {
           inherit inputs;
           vars = (import ./lib/vars.nix) {isDarwin = true;};
@@ -160,7 +173,11 @@
         modules = [./home-manager/home.nix];
       };
       "linux-aarch64" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.aarch64-linux;
+        pkgs = import nixpkgs {
+          system = "aarch64-linux";
+          config.allowUnfree = true;
+          inherit overlays;
+        };
         extraSpecialArgs = {
           inherit inputs;
           vars = (import ./lib/vars.nix) {
@@ -171,7 +188,11 @@
         modules = [./home-manager/home.nix];
       };
       "container-aarch64" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.aarch64-linux;
+        pkgs = import nixpkgs {
+          system = "aarch64-linux";
+          config.allowUnfree = true;
+          inherit overlays;
+        };
         extraSpecialArgs = {
           inherit inputs;
           vars = (import ./lib/vars.nix) {
@@ -182,7 +203,11 @@
         modules = [./home-manager/home.nix];
       };
       "container-x86_64" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+          inherit overlays;
+        };
         extraSpecialArgs = {
           inherit inputs;
           vars = (import ./lib/vars.nix) {
