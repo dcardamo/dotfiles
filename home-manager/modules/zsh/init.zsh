@@ -56,6 +56,11 @@ else
     echo "   Run: cp ~/.env.template ~/.env && chmod 600 ~/.env" >&2
 fi
 
+# Some sandboxes export NO_COLOR to strip ANSI sequences; drop it so the prompt keeps colors
+if [[ -n "${NO_COLOR-}" ]]; then
+    unset NO_COLOR
+fi
+
 # Fix terminal colors for SSH and mosh sessions (especially Termius)
 if [[ -n "$SSH_CONNECTION" ]] || [[ -n "$MOSH_CONNECTION" ]] || [[ -n "$MOSH" ]]; then
     # Termius often reports as plain "xterm" but supports 256 colors
