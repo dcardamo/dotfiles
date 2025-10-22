@@ -14,6 +14,7 @@ LOCAL_DIR="$HOME/astro/jupiter"
 PLIST_NAME="com.user.sync-jupiter"
 PLIST_PATH="$HOME/Library/LaunchAgents/${PLIST_NAME}.plist"
 LOG_DIR="$HOME/Library/Logs"
+SYNC_ROOT_REALPATH=""
 
 # Function to check if on AC power
 is_on_ac_power() {
@@ -31,6 +32,32 @@ is_on_ac_power() {
 # Function to log with timestamp
 log_message() {
     echo "$(date): $1"
+}
+
+# Function to ensure rsync destinations stay inside the sync root
+ensure_safe_destination() {
+    local dest="$1"
+
+    if [[ -z "$SYNC_ROOT_REALPATH" ]]; then
+        mkdir -p "$LOCAL_DIR"
+        SYNC_ROOT_REALPATH="$(cd "$LOCAL_DIR" && pwd -P)" || {
+            echo "❌ Error: Unable to resolve sync root '$LOCAL_DIR'"
+            exit 1
+        }
+    fi
+
+    mkdir -p "$dest"
+
+    local resolved_dest
+    resolved_dest="$(cd "$dest" && pwd -P)" || {
+        echo "❌ Error: Unable to resolve destination path '$dest'"
+        exit 1
+    }
+
+    if [[ "$resolved_dest" != "$SYNC_ROOT_REALPATH" && "$resolved_dest" != "$SYNC_ROOT_REALPATH"/* ]]; then
+        echo "❌ Error: Destination '$resolved_dest' is outside of sync root '$SYNC_ROOT_REALPATH'"
+        exit 1
+    fi
 }
 
 # Function to get the absolute path of this script
@@ -143,15 +170,18 @@ uninstall_cron_service() {
 
 # Function to perform the actual sync
 do_sync() {
-    # Create local directory
-    mkdir -p "$LOCAL_DIR"
+    local danastro_dest="$LOCAL_DIR/danastro"
+    local astrophoto_dest="$LOCAL_DIR/Astrophotography"
+
+    ensure_safe_destination "$danastro_dest"
+    ensure_safe_destination "$astrophoto_dest"
 
     # Sync folders
     log_message "Syncing danastro folder..."
-    rsync -avz --progress "$REMOTE:/mnt/d/danastro/" "$LOCAL_DIR/danastro/"
+    rsync -avz --delete --progress "$REMOTE:/mnt/d/danastro/" "$danastro_dest/"
 
     log_message "Syncing Astrophotography folder..."
-    rsync -avz --progress "$REMOTE:/mnt/d/Astrophotography/" "$LOCAL_DIR/Astrophotography/"
+    rsync -avz --delete --progress "$REMOTE:/mnt/d/Astrophotography/" "$astrophoto_dest/"
 
     log_message "Sync complete!"
 }
