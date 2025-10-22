@@ -13,14 +13,10 @@
       "username": "dan",
       "projects": [
         {
-          "paths": [
-            "~/git/dotfiles"
-          ]
+          "paths": ["~/git/dotfiles"]
         },
         {
-          "paths": [
-            "~/services"
-          ]
+          "paths": ["~/services"]
         }
       ]
     },
@@ -28,19 +24,13 @@
       "host": "heatwave",
       "projects": [
         {
-          "paths": [
-            "/home/dan/git/dotfiles"
-          ]
+          "paths": ["/home/dan/git/dotfiles"]
         },
         {
-          "paths": [
-            "~/services"
-          ]
+          "paths": ["~/services"]
         },
         {
-          "paths": [
-            "~/services/changedetection"
-          ]
+          "paths": ["~/services/changedetection"]
         }
       ]
     },
@@ -49,14 +39,10 @@
       "username": "dan",
       "projects": [
         {
-          "paths": [
-            "/home/dan/git/dotfiles"
-          ]
+          "paths": ["/home/dan/git/dotfiles"]
         },
         {
-          "paths": [
-            "~/services"
-          ]
+          "paths": ["~/services"]
         }
       ]
     },
@@ -65,39 +51,25 @@
       "username": "dan",
       "projects": [
         {
-          "paths": [
-            "/home/dan/git/dotfiles"
-          ]
+          "paths": ["/home/dan/git/dotfiles"]
         },
         {
-          "paths": [
-            "/home/dan/git/idx"
-          ]
+          "paths": ["/home/dan/git/idx"]
         },
         {
-          "paths": [
-            "/home/dan/git/index"
-          ]
+          "paths": ["/home/dan/git/index"]
         },
         {
-          "paths": [
-            "/home/dan/git/index/CLAUDE.md"
-          ]
+          "paths": ["/home/dan/git/index/CLAUDE.md"]
         },
         {
-          "paths": [
-            "/home/dan/git/wt/idx"
-          ]
+          "paths": ["/home/dan/git/wt/idx"]
         },
         {
-          "paths": [
-            "/home/dan/git/wt/idx/scrapemodule"
-          ]
+          "paths": ["/home/dan/git/wt/idx/scrapemodule"]
         },
         {
-          "paths": [
-            "/home/dan/git/wt/idx/scrapetool"
-          ]
+          "paths": ["/home/dan/git/wt/idx/scrapetool"]
         }
       ]
     }
@@ -112,6 +84,15 @@
       "model": "claude-sonnet-4"
     },
     "version": "2"
+  },
+  "agent_servers": {
+    "Codex": {
+      "command": "codex-acp",
+      "args": [],
+      "env": {
+        "RUST_LOG": "info"
+      }
+    }
   },
   "language_models": {
     "ollama": {

@@ -124,7 +124,7 @@
   };
 
   # Configure git to use nvim
-  programs.git.extraConfig = {
+  programs.git.settings = {
     core.editor = "nvim";
     sequence.editor = "nvim";
   };

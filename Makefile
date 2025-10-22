@@ -21,3 +21,8 @@ format:
 # Identify dead code in nix files
 deadnix:
 	nix run github:astro/deadnix
+
+cleanup:
+	nix-collect-garbage -d
+	sudo nix-collect-garbage -d
+	docker system prune -a

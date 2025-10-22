@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+# Codex CLI bypass helper that fully auto-approves actions
+
+codexcli() {
+    # Forward all args to Codex using the full-auto preset
+    codex --full-auto "$@"
+}

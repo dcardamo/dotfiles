@@ -4,7 +4,8 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.claude;
 
   # MCP server configurations
@@ -37,12 +38,11 @@ with lib; let
     filesystem = paths: {
       "filesystem" = {
         command = "npx";
-        args =
-          [
-            "-y"
-            "@modelcontextprotocol/server-filesystem"
-          ]
-          ++ map (p: "--allowed-path=${p}") paths;
+        args = [
+          "-y"
+          "@modelcontextprotocol/server-filesystem"
+        ]
+        ++ map (p: "--allowed-path=${p}") paths;
       };
     };
   };
@@ -50,20 +50,21 @@ with lib; let
   # Generate MCP configuration file
   mcpConfig = pkgs.writeTextFile {
     name = "claude-mcp-config.json";
-    text = let
-      servers = mkMerge (
-        [
-          # Always include Context7 for documentation
-          mcpServers.context7
-        ]
-        ++ optionals (cfg.sqlite.databases != {}) (
-          mapAttrsToList (name: dbPath: mcpServers.sqlite name dbPath) cfg.sqlite.databases
-        )
-        ++ optionals (cfg.filesystem.paths != []) [
-          (mcpServers.filesystem cfg.filesystem.paths)
-        ]
-      );
-    in
+    text =
+      let
+        servers = mkMerge (
+          [
+            # Always include Context7 for documentation
+            mcpServers.context7
+          ]
+          ++ optionals (cfg.sqlite.databases != { }) (
+            mapAttrsToList (name: dbPath: mcpServers.sqlite name dbPath) cfg.sqlite.databases
+          )
+          ++ optionals (cfg.filesystem.paths != [ ]) [
+            (mcpServers.filesystem cfg.filesystem.paths)
+          ]
+        );
+      in
       builtins.toJSON {
         mcpServers = servers;
       };
@@ -122,18 +123,19 @@ with lib; let
     ## Available MCP Servers
 
     ${optionalString (
-      cfg.sqlite.databases != {}
+      cfg.sqlite.databases != { }
     ) "- SQLite databases: ${concatStringsSep ", " (attrNames cfg.sqlite.databases)}"}
     ${optionalString cfg.context7.enable "- Context7: Use 'use context7' in prompts for up-to-date documentation"}
     ${optionalString (
-      cfg.filesystem.paths != []
+      cfg.filesystem.paths != [ ]
     ) "- Filesystem access: ${concatStringsSep ", " cfg.filesystem.paths}"}
 
     ## Notes
 
     [Any additional notes]
   '';
-in {
+in
+{
   options.programs.claude = {
     enable = mkEnableOption "Claude Code configuration";
 
@@ -149,7 +151,7 @@ in {
 
     extraSettings = mkOption {
       type = types.attrsOf types.anything;
-      default = {};
+      default = { };
       description = "Extra settings to add to Claude configuration";
     };
 
@@ -159,7 +161,7 @@ in {
         default = false;
         description = "Enable ntfy.sh notifications when Claude completes";
       };
-      
+
       topicUrl = mkOption {
         type = types.str;
         default = "";
@@ -171,7 +173,7 @@ in {
     sqlite = {
       databases = mkOption {
         type = types.attrsOf types.str;
-        default = {};
+        default = { };
         example = literalExpression ''
           {
             "myapp" = "/path/to/myapp.db";
@@ -193,7 +195,7 @@ in {
     filesystem = {
       paths = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         example = [
           "$HOME/projects"
           "/tmp"
@@ -303,17 +305,16 @@ in {
               echo "Adding SQLite server '${name}' for database: ${dbPath}"
               claude mcp add --transport stdio --scope user "sqlite-${name}" npx mcp-sqlite --db-path "${dbPath}"
             fi
-          '')
-          cfg.sqlite.databases
+          '') cfg.sqlite.databases
         )}
 
         # Add filesystem paths
-        ${optionalString (cfg.filesystem.paths != []) ''
+        ${optionalString (cfg.filesystem.paths != [ ]) ''
           if ! claude mcp list 2>/dev/null | grep -q "filesystem"; then
             echo "Adding filesystem server with paths: ${concatStringsSep ", " cfg.filesystem.paths}"
             claude mcp add --transport stdio --scope user filesystem npx @modelcontextprotocol/server-filesystem ${
-            concatMapStringsSep " " (p: "--allowed-path=\"${p}\"") cfg.filesystem.paths
-          }
+              concatMapStringsSep " " (p: "--allowed-path=\"${p}\"") cfg.filesystem.paths
+            }
           fi
         ''}
 
@@ -350,7 +351,7 @@ in {
         if [ -n "$TRANSCRIPT_PATH" ] && [ -f "$TRANSCRIPT_PATH" ]; then
             # Get the last user message from the transcript (max 100 chars)
             LAST_USER_MSG=$(tail -n 20 "$TRANSCRIPT_PATH" | ${pkgs.jq}/bin/jq -r 'select(.role == "user") | .content' | tail -1 | head -c 100)
-            
+
             # Create a short summary (first 5 words or 30 chars)
             if [ -n "$LAST_USER_MSG" ]; then
                 # Take first 5 words or 30 characters, whichever is shorter
@@ -386,12 +387,8 @@ in {
       ANTHROPIC_API_KEY = "";
       # Force color output for Claude Code (fixes Termius/SSH color issues)
       COLORTERM = "truecolor";
-      FORCE_COLOR = "3";
-      CLICOLOR = "1";
-      CLICOLOR_FORCE = "1";
       # Additional color support
       TERM = lib.mkDefault "xterm-256color";
-      NO_COLOR = "";  # Ensure NO_COLOR is not set
     };
   };
 }

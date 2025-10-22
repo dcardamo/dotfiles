@@ -13,7 +13,6 @@
     jq
     sqlite
     git
-    gitui
     gh
     just
 

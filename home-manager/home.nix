@@ -105,9 +105,6 @@ in
       "@openai/codex"
       # Google Gemini CLI
       "@google/gemini-cli"
-
-      # Zed editor agent support
-      "zedcode-acps"
     ];
   };
   # Nicely reload system units when changing configs

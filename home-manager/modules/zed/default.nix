@@ -1,7 +1,8 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     nixd # nix language server
-    solargraph #ruby language server
+    # solargraph #ruby language server -- failing to build
     bash-language-server
     shellcheck
   ];

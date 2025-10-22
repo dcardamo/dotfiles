@@ -21,6 +21,12 @@ cb() {
     fi
 }
 
+# Codex CLI bypass helper
+codexcli() {
+    # Forward all args to Codex using the full-auto preset
+    codex --full-auto "$@"
+}
+
 # Gemini Bypass function (GB)
 # Unalias gb from oh-my-zsh git plugin
 unalias gb 2>/dev/null || true

@@ -11,212 +11,220 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = {
-    nixpkgs,
-    home-manager,
-    ...
-  } @ inputs:
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      ...
+    }@inputs:
     let
       overlays = [
+        inputs.rust-overlay.overlays.default
         (import ./overlays/clblast.nix)
       ];
-    in {
-    nixosConfigurations = {
-      # GMKtec EVO-X2 with AMD Ryzen AI Max 395
-      neptune = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        pkgs = import nixpkgs {
+    in
+    {
+      nixosConfigurations = {
+        # GMKtec EVO-X2 with AMD Ryzen AI Max 395
+        neptune = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          config.allowUnfree = true;
-          inherit overlays;
-        };
-        specialArgs = {
-          inherit inputs;
-          vars = (import ./lib/vars.nix) {
-            isDarwin = false;
-            isLinux = true;
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            config.allowUnfree = true;
+            inherit overlays;
           };
-        };
-        modules = [
-          ./nixos/neptune/configuration.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useUserPackages = true;
-            home-manager.users.dan = import ./home-manager/home.nix;
-            home-manager.extraSpecialArgs = {
-              inherit inputs;
-              vars = (import ./lib/vars.nix) {
-                isDarwin = false;
-                isLinux = true;
-              };
+          specialArgs = {
+            inherit inputs;
+            vars = (import ./lib/vars.nix) {
+              isDarwin = false;
+              isLinux = true;
             };
-          }
-        ];
+          };
+          modules = [
+            ./nixos/neptune/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useUserPackages = true;
+              home-manager.users.dan = import ./home-manager/home.nix;
+              home-manager.extraSpecialArgs = {
+                inherit inputs;
+                vars = (import ./lib/vars.nix) {
+                  isDarwin = false;
+                  isLinux = true;
+                };
+              };
+            }
+          ];
+        };
+
+        # Home docker server
+        arcee = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          # old way
+          # pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            config.allowUnfree = true;
+            inherit overlays;
+          };
+          specialArgs = {
+            inherit inputs;
+            vars = (import ./lib/vars.nix) {
+              isDarwin = false;
+              isLinux = true;
+            };
+          };
+          modules = [
+            ./nixos/arcee/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useUserPackages = true;
+              home-manager.users.dan = import ./home-manager/home.nix;
+              home-manager.extraSpecialArgs = {
+                inherit inputs;
+                vars = (import ./lib/vars.nix) {
+                  isDarwin = false;
+                  isLinux = true;
+                };
+              };
+            }
+          ];
+        };
+
+        # cottage docker server
+        heatwave = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          # old way
+          # pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            config.allowUnfree = true;
+            inherit overlays;
+          };
+          specialArgs = {
+            inherit inputs;
+            vars = (import ./lib/vars.nix) {
+              isDarwin = false;
+              isLinux = true;
+            };
+          };
+          modules = [
+            ./nixos/heatwave/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useUserPackages = true;
+              home-manager.users.dan = import ./home-manager/home.nix;
+              home-manager.extraSpecialArgs = {
+                inherit inputs;
+                vars = (import ./lib/vars.nix) {
+                  isDarwin = false;
+                  isLinux = true;
+                };
+              };
+            }
+          ];
+        };
+
+        # Development container configuration
+        devcontainer = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux"; # For Apple Silicon Macs
+          pkgs = import nixpkgs {
+            system = "aarch64-linux";
+            config.allowUnfree = true;
+            inherit overlays;
+          };
+          specialArgs = {
+            inherit inputs;
+            vars = (import ./lib/vars.nix) {
+              isDarwin = false;
+              isLinux = true;
+            };
+          };
+          modules = [
+            ./nixos/devcontainer/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useUserPackages = true;
+              home-manager.users.dan = import ./home-manager/home.nix;
+              home-manager.extraSpecialArgs = {
+                inherit inputs;
+                vars = (import ./lib/vars.nix) {
+                  isDarwin = false;
+                  isLinux = true;
+                };
+              };
+            }
+          ];
+        };
       };
 
-      # Home docker server
-      arcee = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        # old way
-        # pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-          inherit overlays;
-        };
-        specialArgs = {
-          inherit inputs;
-          vars = (import ./lib/vars.nix) {
-            isDarwin = false;
-            isLinux = true;
+      # Standalone home-manager configuration entrypoint
+      # Available through 'home-manager --flake .#your-username@your-hostname'
+      homeConfigurations = {
+        "mac" = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs {
+            system = "aarch64-darwin";
+            config.allowUnfree = true;
+            inherit overlays;
           };
-        };
-        modules = [
-          ./nixos/arcee/configuration.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useUserPackages = true;
-            home-manager.users.dan = import ./home-manager/home.nix;
-            home-manager.extraSpecialArgs = {
-              inherit inputs;
-              vars = (import ./lib/vars.nix) {
-                isDarwin = false;
-                isLinux = true;
-              };
-            };
-          }
-        ];
-      };
-
-      # cottage docker server
-      heatwave = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        # old way
-        # pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-          inherit overlays;
-        };
-        specialArgs = {
-          inherit inputs;
-          vars = (import ./lib/vars.nix) {
-            isDarwin = false;
-            isLinux = true;
+          extraSpecialArgs = {
+            inherit inputs;
+            vars = (import ./lib/vars.nix) { isDarwin = true; };
           };
+          modules = [ ./home-manager/home.nix ];
         };
-        modules = [
-          ./nixos/heatwave/configuration.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useUserPackages = true;
-            home-manager.users.dan = import ./home-manager/home.nix;
-            home-manager.extraSpecialArgs = {
-              inherit inputs;
-              vars = (import ./lib/vars.nix) {
-                isDarwin = false;
-                isLinux = true;
-              };
-            };
-          }
-        ];
-      };
-
-      # Development container configuration
-      devcontainer = nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux"; # For Apple Silicon Macs
-        pkgs = import nixpkgs {
-          system = "aarch64-linux";
-          config.allowUnfree = true;
-          inherit overlays;
-        };
-        specialArgs = {
-          inherit inputs;
-          vars = (import ./lib/vars.nix) {
-            isDarwin = false;
-            isLinux = true;
+        "linux-aarch64" = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs {
+            system = "aarch64-linux";
+            config.allowUnfree = true;
+            inherit overlays;
           };
-        };
-        modules = [
-          ./nixos/devcontainer/configuration.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useUserPackages = true;
-            home-manager.users.dan = import ./home-manager/home.nix;
-            home-manager.extraSpecialArgs = {
-              inherit inputs;
-              vars = (import ./lib/vars.nix) {
-                isDarwin = false;
-                isLinux = true;
-              };
+          extraSpecialArgs = {
+            inherit inputs;
+            vars = (import ./lib/vars.nix) {
+              isDarwin = false;
+              isLinux = true;
             };
-          }
-        ];
+          };
+          modules = [ ./home-manager/home.nix ];
+        };
+        "container-aarch64" = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs {
+            system = "aarch64-linux";
+            config.allowUnfree = true;
+            inherit overlays;
+          };
+          extraSpecialArgs = {
+            inherit inputs;
+            vars = (import ./lib/vars.nix) {
+              isDarwin = false;
+              isLinux = true;
+            };
+          };
+          modules = [ ./home-manager/home.nix ];
+        };
+        "container-x86_64" = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            config.allowUnfree = true;
+            inherit overlays;
+          };
+          extraSpecialArgs = {
+            inherit inputs;
+            vars = (import ./lib/vars.nix) {
+              isDarwin = false;
+              isLinux = true;
+            };
+          };
+          modules = [ ./home-manager/home.nix ];
+        };
       };
     };
-
-    # Standalone home-manager configuration entrypoint
-    # Available through 'home-manager --flake .#your-username@your-hostname'
-    homeConfigurations = {
-      "mac" = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "aarch64-darwin";
-          config.allowUnfree = true;
-          inherit overlays;
-        };
-        extraSpecialArgs = {
-          inherit inputs;
-          vars = (import ./lib/vars.nix) {isDarwin = true;};
-        };
-        modules = [./home-manager/home.nix];
-      };
-      "linux-aarch64" = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "aarch64-linux";
-          config.allowUnfree = true;
-          inherit overlays;
-        };
-        extraSpecialArgs = {
-          inherit inputs;
-          vars = (import ./lib/vars.nix) {
-            isDarwin = false;
-            isLinux = true;
-          };
-        };
-        modules = [./home-manager/home.nix];
-      };
-      "container-aarch64" = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "aarch64-linux";
-          config.allowUnfree = true;
-          inherit overlays;
-        };
-        extraSpecialArgs = {
-          inherit inputs;
-          vars = (import ./lib/vars.nix) {
-            isDarwin = false;
-            isLinux = true;
-          };
-        };
-        modules = [./home-manager/home.nix];
-      };
-      "container-x86_64" = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-          inherit overlays;
-        };
-        extraSpecialArgs = {
-          inherit inputs;
-          vars = (import ./lib/vars.nix) {
-            isDarwin = false;
-            isLinux = true;
-          };
-        };
-        modules = [./home-manager/home.nix];
-      };
-    };
-  };
 }
