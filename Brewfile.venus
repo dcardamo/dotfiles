@@ -9,13 +9,14 @@ cask "arq"
 cask "bambu-studio"
 cask "filen"
 cask "font-fira-code-nerd-font"
+cask "font-victor-mono-nerd-font"
 cask "ghostty"
 cask "keka"
 cask "proton-mail-bridge"
 cask "orbstack"
+cask "spamsieve"
 cask "stats"
-cask "font-victor-mono-nerd-font"
+#cask "thunderbird"
 
 mas "Daisy Disk", id: 411643860
 
-#cask "bluebubbles"
