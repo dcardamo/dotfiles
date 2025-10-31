@@ -85,15 +85,6 @@
     },
     "version": "2"
   },
-  "agent_servers": {
-    "Codex": {
-      "command": "codex-acp",
-      "args": [],
-      "env": {
-        "RUST_LOG": "info"
-      }
-    }
-  },
   "language_models": {
     "ollama": {
       "api_url": "http://localhost:11434"
