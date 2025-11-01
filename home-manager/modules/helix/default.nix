@@ -5,7 +5,6 @@
     marksman
     nil
     taplo
-    taplo-lsp
     # terraform-ls
     vscode-langservers-extracted
 
