@@ -6,11 +6,10 @@ cask_args appdir: "~/Applications", require_sha: true
 #brew "code-server", restart_server: true
 brew "gh"
 brew "mas"
-brew "ollama", restart_service: true
-#brew "syncthing", restart_service: true
+#brew "ollama", restart_service: true
 
 #cask "android-file-transfer"
-cask "android-platform-tools"
+#cask "android-platform-tools"
 #cask "android-studio"
 #cask "arq"
 cask "bambu-studio"
@@ -18,6 +17,8 @@ cask "beeper"
 cask "betterdisplay"
 cask "brave-browser"
 cask "calibre"
+cask "chatgpt"
+cask "claude"
 cask "filen"
 cask "font-iosevka-nerd-font"
 cask "font-fira-code-nerd-font"
@@ -26,15 +27,13 @@ cask "ghostty"
 cask "keka"
 cask "notesnook"
 cask "orbstack"
+cask "phocus"
 cask "proton-mail"
+cask "rustdesk"
 cask "qmk-toolbox"
 cask "reader"
-cask "stats"
-cask "steermouse", args: { appdir: "/Applications" }
-#cask "thunderbird"
-#cask "utm"
-#cask "wezterm"
-#cask "windsurf"
+#cask "stats"
+#cask "steermouse", args: { appdir: "/Applications" }
 cask "zed"
 
 #cask "github"
@@ -54,14 +53,14 @@ cask "zed"
 
 mas "1Password for Safari", id: 1569813296
 mas "Daisy Disk", id: 411643860
-mas "Home Assistant", id: 1099568401
-mas "iMovie", id: 408981434
-mas "Keynote", id: 409183694
+#mas "Home Assistant", id: 1099568401
+#mas "iMovie", id: 408981434
+#mas "Keynote", id: 409183694
 mas "Microsoft Excel", id: 462058435
 mas "Microsoft Word", id: 462054704
 mas "Numbers", id:  409203825
 mas "Pages", id: 409201541
-mas "Passepartout", id: 1433648537
+#mas "Passepartout", id: 1433648537
 mas "reMarkable", id: 1276493162
 mas "Soulver 3", id: 1508732804
 mas "Todoist", id: 585829637
