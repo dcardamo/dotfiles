@@ -24,6 +24,8 @@ if ! test -f "/etc/NIXOS" && ! command -v home-manager >/dev/null 2>&1; then
 	echo
 	echo "home-manager installed successfully."
 	echo
+
+  echo "# Allow user to set restricted settings like keep-derivations and keep-outputs trusted-users = root dan" | sudo tee -a /etc/nix/nix.custom.conf
 fi
 
 if [ "$(uname -s)" == "Darwin" ]; then
