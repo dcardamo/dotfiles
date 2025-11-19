@@ -10,7 +10,7 @@
 in {
   home.packages = with pkgs;
     [
-      tealdeer
+      # tealdeer # Temporarily disabled due to build failure
       tokei
     ]
     ++ lib.lists.optionals isLinux [];

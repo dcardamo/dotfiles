@@ -2,8 +2,7 @@
 
 if [ "$(uname)" = "Darwin" ]; then
   # Update the determinate systems nix installer
-  echo "Skipping upgrade-nix, its currently broken"
-  #sudo -i nix upgrade-nix
+  sudo -i determinate-nixd upgrade
 
   echo "Updating homebrew"
   /opt/homebrew/bin/brew analytics off
@@ -11,8 +10,9 @@ if [ "$(uname)" = "Darwin" ]; then
   /opt/homebrew/bin/brew update
   /opt/homebrew/bin/brew bundle --force cleanup
 
-  echo "Updating app store apps"
-  /opt/homebrew/bin/mas upgrade
+  # Commenting this out because mas is broken on mac 26
+  #echo "Updating app store apps"
+  #/opt/homebrew/bin/mas upgrade
 fi
 
 echo "Update nix system"
