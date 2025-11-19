@@ -6,6 +6,11 @@ in {
   # Ghostty is installed via Homebrew (Brewfile.mars)
   # This module only provides configuration
 
+  # Copy the Tokyo Night Moon theme file
+  xdg.configFile."ghostty/themes/tokyonight_moon" = {
+    source = ../config/ghostty/themes/tokyonight_moon;
+  };
+
   xdg.configFile."ghostty/config" = {
     text = ''
       # Theme

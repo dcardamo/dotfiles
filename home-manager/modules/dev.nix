@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   programs.git.enable = true;
   # direnv integration for flakes
@@ -46,6 +46,6 @@
     docker-compose-language-service
     dockerfile-language-server
     yaml-language-server
-    (pkgs.lowPrio elixir-ls)
+    (lib.lowPrio elixir-ls)
   ];
 }
