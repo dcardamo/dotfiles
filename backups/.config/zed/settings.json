@@ -7,6 +7,7 @@
 // custom settings, run `zed: open default settings` from the
 // command palette
 {
+  "buffer_font_family": "VictorMono Nerd Font Mono",
   "ssh_connections": [
     {
       "host": "venus",
