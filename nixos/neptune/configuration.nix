@@ -129,7 +129,7 @@
   # Ollama service for local LLM inference
   services.ollama = {
     enable = true;
-    acceleration = "rocm";  # Use AMD GPU acceleration
+    # acceleration = "rocm";  # Use AMD GPU acceleration
     loadModels = [ ];  # Models already downloaded
 
     # Environment variables for better AMD GPU support
