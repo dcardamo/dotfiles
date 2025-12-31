@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "This script isn't needed with Adobe Lightroom"
+exit
+
 # Set DRYRUN to 1 for a dry run, 0 for actual execution
 DRYRUN=0
 
